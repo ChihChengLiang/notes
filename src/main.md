@@ -9,11 +9,11 @@ sequenceDiagram
     participant B as Bob
     participant C as Charlie
 
-    A->>B: {pubk(A), NA}pubk(B)
-    A->>C: {pubk(A), NA}pubk(B)
+    A->>B: $$\{ pubk(A), N_A \}pubk(B)$$
+    A->>C: $$\{ pubk(A), N_A \}pubk(B)$$
 
-    alt β holds (C = B and pubk(A) ∈ SC)
-        B->>A: {NA, NC, pubk(B)}pubk(A)
+    alt β holds (C = B and $$pubk(A) ∈ S_C$$)
+        B->>A: $$\{ N_A, N_C, pubk(B) \}pubk(A)$$
     else ¬β
         C->>A: {N}K
     end
