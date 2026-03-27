@@ -2,6 +2,16 @@
 
 Yes, but are we talking about [private messaging like] applications or [zeroknowledge proof like] applications?
 
+## Recent advances in formal verification
+
+github.com/zksecurity/evm-asm/blob/main/EvmAsm/Evm64/Add/Program.lean
+
+https://blog.zksecurity.xyz/posts/clean/
+
+
+## private messaging like protocols
+
+[@rajaonaEpistemicModelChecking2024] targets private auth protocols, where messages are sent to designated targets.
 
 ```mermaid
 sequenceDiagram
@@ -19,8 +29,14 @@ sequenceDiagram
     end
 ```
 
-Some relevant work includes [@costaDynamicEpistemicVerification].
+### What failure mode looks like?
 
+## Tornado Cash like situation
+
+[@costaDynamicEpistemicVerification].
+
+
+## What real Tornado Cash like system hacks look like?
 
 
 
