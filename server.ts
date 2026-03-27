@@ -131,19 +131,45 @@ watch("./", { recursive: false }, (_event, filename) => {
   }
 });
 
+// Watch for template changes
+watch("./templates", { recursive: false }, (_event, filename) => {
+  if (filename?.endsWith(".css") || filename?.endsWith(".js") || filename?.endsWith(".html")) {
+    console.log(`Template file changed: ${filename}, notifying clients...`);
+    // Notify all connected clients
+    for (const client of clients) {
+      try {
+        client.enqueue(`data: reload\n\n`);
+      } catch (e) {
+        clients.delete(client);
+      }
+    }
+  }
+});
+
 // Start the server
 const server = Bun.serve({
   port: 3000,
   async fetch(req) {
     const url = new URL(req.url);
 
-    // Serve theme.css
-    if (url.pathname === "/theme.css") {
-      const css = await Bun.file("./theme.css").text();
-      return new Response(css, {
-        headers: {
-          "Content-Type": "text/css",
-        },
+    // Serve static files from templates directory
+    const staticFiles: Record<string, string> = {
+      "/theme.css": "./theme.css",
+      "/styles.css": "./templates/styles.css",
+      "/client.js": "./templates/client.js",
+      "/mermaid-init.js": "./templates/mermaid-init.js",
+    };
+
+    if (staticFiles[url.pathname]) {
+      const file = await Bun.file(staticFiles[url.pathname]).text();
+      const contentType = url.pathname.endsWith(".css")
+        ? "text/css"
+        : url.pathname.endsWith(".js")
+        ? "application/javascript"
+        : "text/plain";
+
+      return new Response(file, {
+        headers: { "Content-Type": contentType },
       });
     }
 
@@ -177,157 +203,9 @@ const server = Bun.serve({
     // Parse markdown to HTML
     const htmlContent = md.render(markdownContent);
 
-    // Create the full HTML page
-    const fullHtml = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Formal Verification</title>
-  <link rel="stylesheet" href="/theme.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      background-color: var(--custom-1);
-      color: var(--custom-12);
-    }
-    h1 {
-      border-bottom: 2px solid var(--custom-6);
-      padding-bottom: 0.5rem;
-      color: var(--custom-12);
-    }
-    h2 {
-      color: var(--custom-12);
-    }
-    h3 {
-      color: var(--custom-11);
-    }
-    a {
-      color: var(--custom-11);
-      text-decoration: none;
-    }
-    a:hover {
-      color: var(--custom-9);
-      text-decoration: underline;
-    }
-    code {
-      background-color: var(--custom-3);
-      padding: 0.2em 0.4em;
-      border-radius: 3px;
-      color: var(--custom-12);
-    }
-    .citation {
-      color: var(--custom-9);
-      cursor: help;
-      position: relative;
-      font-weight: 500;
-    }
-    .citation:hover {
-      color: var(--custom-10);
-      text-decoration: underline;
-    }
-    .bibliography {
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: 2px solid var(--custom-6);
-    }
-    .bibliography h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: var(--custom-12);
-    }
-    .csl-entry {
-      color: var(--custom-11);
-      margin-bottom: 0.5rem;
-    }
-    /* Mermaid diagram styling */
-    .mermaid {
-      // background-color: var(--custom-2);
-      padding: 1.5rem;
-      // border-radius: 8px;
-      // border: 1px solid var(--custom-6);
-    }
-  </style>
-  <script>
-    // Auto-reload on file changes
-    const eventSource = new EventSource('/events');
-    eventSource.onmessage = (event) => {
-      if (event.data === 'reload') {
-        location.reload();
-      }
-    };
-    eventSource.onerror = () => {
-      console.log('SSE connection lost, attempting to reconnect...');
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script type="module">
-    // Import and initialize Mermaid with KaTeX support and custom theme
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-
-    // Get computed custom colors
-    const rootStyles = getComputedStyle(document.documentElement);
-    const custom1 = rootStyles.getPropertyValue('--custom-a1').trim();
-    const custom2 = rootStyles.getPropertyValue('--custom-a2').trim();
-    const custom3 = rootStyles.getPropertyValue('--custom-a3').trim();
-    const custom6 = rootStyles.getPropertyValue('--custom-a6').trim();
-    const custom9 = rootStyles.getPropertyValue('--custom-a9').trim();
-    const custom10 = rootStyles.getPropertyValue('--custom-a10').trim();
-    const custom11 = rootStyles.getPropertyValue('--custom-a11').trim();
-    const custom12 = rootStyles.getPropertyValue('--custom-a12').trim();
-
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'base',
-      securityLevel: 'loose',
-      themeVariables: {
-        primaryColor: custom2,
-        primaryTextColor: custom12,
-        primaryBorderColor: custom9,
-        lineColor: custom9,
-        secondaryColor: custom3,
-        tertiaryColor: custom1,
-        background: custom1,
-        mainBkg: custom2,
-        secondBkg: custom3,
-        labelBackground: custom2,
-        labelColor: custom12,
-        edgeLabelBackground: custom2,
-        clusterBkg: custom2,
-        clusterBorder: custom6,
-        defaultLinkColor: custom9,
-        titleColor: custom12,
-        actorBorder: custom9,
-        actorBkg: custom2,
-        actorTextColor: custom12,
-        actorLineColor: custom9,
-        signalColor: custom12,
-        signalTextColor: custom12,
-        labelBoxBkgColor: custom2,
-        labelBoxBorderColor: custom6,
-        labelTextColor: custom12,
-        loopTextColor: custom12,
-        noteBorderColor: custom6,
-        noteBkgColor: custom2,
-        noteTextColor: custom11,
-        activationBorderColor: custom9,
-        activationBkgColor: custom3,
-        sequenceNumberColor: custom1,
-      }
-    });
-  </script>
-</head>
-<body>
-  ${htmlContent}
-</body>
-</html>
-`;
+    // Load HTML template and inject content
+    const template = await Bun.file("./templates/index.html").text();
+    const fullHtml = template.replace("{{content}}", htmlContent);
 
     return new Response(fullHtml, {
       headers: {
