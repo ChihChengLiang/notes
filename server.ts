@@ -116,22 +116,7 @@ watch("./src", { recursive: true }, (_event, filename) => {
   }
 });
 
-// Watch for theme.css changes
-watch("./", { recursive: false }, (_event, filename) => {
-  if (filename === "theme.css") {
-    console.log(`Theme changed, notifying clients...`);
-    // Notify all connected clients
-    for (const client of clients) {
-      try {
-        client.enqueue(`data: reload\n\n`);
-      } catch (e) {
-        clients.delete(client);
-      }
-    }
-  }
-});
-
-// Watch for template changes
+// Watch for template changes (includes theme.css)
 watch("./templates", { recursive: false }, (_event, filename) => {
   if (filename?.endsWith(".css") || filename?.endsWith(".js") || filename?.endsWith(".html")) {
     console.log(`Template file changed: ${filename}, notifying clients...`);
@@ -154,7 +139,7 @@ const server = Bun.serve({
 
     // Serve static files from templates directory
     const staticFiles: Record<string, string> = {
-      "/theme.css": "./theme.css",
+      "/theme.css": "./templates/theme.css",
       "/styles.css": "./templates/styles.css",
       "/client.js": "./templates/client.js",
       "/mermaid-init.js": "./templates/mermaid-init.js",
