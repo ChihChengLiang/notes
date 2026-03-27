@@ -190,7 +190,8 @@ const server = Bun.serve({
 
     // Load HTML template and inject content
     const template = await Bun.file("./templates/index.html").text();
-    const fullHtml = template.replace("{{content}}", htmlContent);
+    // Use a function to avoid $$ being interpreted as special replacement pattern
+    const fullHtml = template.replace("{{content}}", () => htmlContent);
 
     return new Response(fullHtml, {
       headers: {
