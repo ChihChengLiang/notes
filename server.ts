@@ -2,6 +2,8 @@ import MarkdownIt from "markdown-it";
 // @ts-ignore
 import markdownItBiblatex from "@arothuis/markdown-it-biblatex";
 import { watch } from "fs";
+// @ts-ignore
+import { BibLatexParser } from "biblatex-csl-converter";
 
 const md = new MarkdownIt();
 
@@ -10,6 +12,86 @@ md.use(markdownItBiblatex, {
   bibPath: "./src/citation.biblatex",
   alwaysReloadFiles: true, // Reload bib file on every render
 });
+
+// Parse the biblatex file to create a lookup for tooltips
+async function loadBibliography() {
+  const bibContent = await Bun.file("./src/citation.biblatex").text();
+  const parser = new BibLatexParser(bibContent, { processUnexpected: true, processUnknown: true });
+  return parser.parse().entries;
+}
+
+let bibCache: any = null;
+
+// Store the original renderer
+const originalCitationRenderer = md.renderer.rules.biblatex_reference;
+
+// Custom renderer for citations to add tooltips
+md.renderer.rules.biblatex_reference = function (tokens, idx, options, env, slf) {
+  // Get the original rendered HTML
+  const originalHtml = originalCitationRenderer
+    ? originalCitationRenderer(tokens, idx, options, env, slf)
+    : slf.renderToken(tokens, idx, options);
+
+  // Extract citation info for tooltip
+  const token = tokens[idx];
+  const citation = token.meta?.citation;
+
+  if (!citation || !bibCache) {
+    return originalHtml;
+  }
+
+  const items = citation.citationItems || [];
+  let tooltip = "";
+
+  if (items.length > 0) {
+    const item = items[0];
+    const label = item.label; // The original citation key
+
+    // Find the bib entry by the label
+    const bibEntry = Object.values(bibCache).find((entry: any) =>
+      entry.entry_key === label
+    ) as any;
+
+    if (bibEntry?.fields) {
+      // Extract title - concatenate all text parts
+      const title = bibEntry.fields.title
+        ?.map((part: any) => part.text || "")
+        .join(" ") || "";
+
+      // Extract abstract - concatenate all text parts
+      const abstract = bibEntry.fields.abstract
+        ?.map((part: any) => part.text || "")
+        .join(" ") || "";
+
+      const year = bibEntry.fields.date || bibEntry.fields.year || "";
+
+      const authors = bibEntry.fields.author?.map((a: any) => {
+        const parts = [];
+        if (a.given?.[0]?.text) parts.push(a.given[0].text);
+        if (a.family?.[0]?.text) parts.push(a.family[0].text);
+        return parts.join(" ");
+      }).join(", ") || "";
+
+      const parts = [];
+      if (authors) parts.push(authors);
+      if (year) parts.push(`(${year})`);
+      if (title) parts.push(`\n${title}`);
+      if (abstract) parts.push(`\n\n${abstract}`);
+
+      tooltip = parts.join(" ");
+    }
+  }
+
+  // Add title attribute to the existing HTML
+  if (tooltip) {
+    return originalHtml.replace(
+      /<span([^>]*)>/,
+      `<span$1 title="${tooltip.replace(/"/g, "&quot;")}">`
+    );
+  }
+
+  return originalHtml;
+};
 
 // Track connected clients for SSE
 const clients = new Set<ReadableStreamDefaultController>();
@@ -59,6 +141,9 @@ const server = Bun.serve({
     // Read the markdown file on each request (watch mode)
     const markdownContent = await Bun.file("./src/main.md").text();
 
+    // Load bibliography for tooltips
+    bibCache = await loadBibliography();
+
     // Parse markdown to HTML
     const htmlContent = md.render(markdownContent);
 
@@ -84,10 +169,12 @@ const server = Bun.serve({
       padding-bottom: 0.5rem;
     }
     .citation {
-      background: #f5f5f5;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-left: 3px solid #007bff;
+      color: #C53211;
+      cursor: help;
+      position: relative;
+    }
+    .citation:hover {
+      text-decoration: underline;
     }
     .bibliography {
       margin-top: 2rem;
