@@ -1,0 +1,69 @@
+:root, .light, .light-theme {
+  --custom-1: #fdfcfd;
+  --custom-2: #fbf8fb;
+  --custom-3: #f3eef3;
+  --custom-4: #ece6ec;
+  --custom-5: #e6dee6;
+  --custom-6: #dfd6df;
+  --custom-7: #d6cbd6;
+  --custom-8: #c3b7c3;
+  --custom-9: #958a95;
+  --custom-10: #897e89;
+  --custom-11: #6b616b;
+  --custom-12: #251d25;
+
+  --custom-a1: #55005503;
+  --custom-a2: #6e006e07;
+  --custom-a3: #4b004b11;
+  --custom-a4: #3e003e19;
+  --custom-a5: #3e003e21;
+  --custom-a6: #38003829;
+  --custom-a7: #36003634;
+  --custom-a8: #2b002b48;
+  --custom-a9: #18001875;
+  --custom-a10: #16001681;
+  --custom-a11: #1000109e;
+  --custom-a12: #090009e2;
+
+  --custom-contrast: #fff;
+  --custom-surface: #faf6facc;
+  --custom-indicator: #958a95;
+  --custom-track: #958a95;
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+  @media (color-gamut: p3) {
+    :root, .light, .light-theme {
+      --custom-1: oklch(99.2% 0.0025 325.7);
+      --custom-2: oklch(98.3% 0.0045 325.7);
+      --custom-3: oklch(95.6% 0.0081 325.7);
+      --custom-4: oklch(93.2% 0.0107 325.7);
+      --custom-5: oklch(90.9% 0.0138 325.7);
+      --custom-6: oklch(88.6% 0.0158 325.7);
+      --custom-7: oklch(85.4% 0.0195 325.7);
+      --custom-8: oklch(79.4% 0.0206 325.7);
+      --custom-9: oklch(64.6% 0.0206 325.7);
+      --custom-10: oklch(60.6% 0.0206 325.7);
+      --custom-11: oklch(50.5% 0.0206 325.7);
+      --custom-12: oklch(24.5% 0.0183 325.7);
+
+      --custom-a1: color(display-p3 0.349 0.0235 0.349 / 0.012);
+      --custom-a2: color(display-p3 0.302 0.0235 0.4431 / 0.028);
+      --custom-a3: color(display-p3 0.2392 0.0078 0.298 / 0.067);
+      --custom-a4: color(display-p3 0.2078 0.0118 0.251 / 0.099);
+      --custom-a5: color(display-p3 0.2196 0.0078 0.2196 / 0.13);
+      --custom-a6: color(display-p3 0.1725 0.0039 0.2 / 0.161);
+      --custom-a7: color(display-p3 0.1765 0.0039 0.1961 / 0.204);
+      --custom-a8: color(display-p3 0.1412 0.0039 0.1569 / 0.283);
+      --custom-a9: color(display-p3 0.0784 0.0039 0.0863 / 0.459);
+      --custom-a10: color(display-p3 0.0706 0 0.0784 / 0.506);
+      --custom-a11: color(display-p3 0.051 0 0.0588 / 0.62);
+      --custom-a12: color(display-p3 0.0314 0 0.0314 / 0.887);
+
+      --custom-contrast: #fff;
+      --custom-surface: color(display-p3 0.9804 0.9647 0.9804 / 0.8);
+      --custom-indicator: oklch(64.6% 0.0206 325.7);
+      --custom-track: oklch(64.6% 0.0206 325.7);
+    }
+  }
+}

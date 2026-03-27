@@ -101,10 +101,25 @@ md.renderer.rules.biblatex_reference = function (tokens, idx, options, env, slf)
 // Track connected clients for SSE
 const clients = new Set<ReadableStreamDefaultController>();
 
-// Watch for file changes
+// Watch for file changes in src directory
 watch("./src", { recursive: true }, (_event, filename) => {
   if (filename?.endsWith(".md") || filename?.endsWith(".biblatex")) {
     console.log(`File changed: ${filename}, notifying clients...`);
+    // Notify all connected clients
+    for (const client of clients) {
+      try {
+        client.enqueue(`data: reload\n\n`);
+      } catch (e) {
+        clients.delete(client);
+      }
+    }
+  }
+});
+
+// Watch for theme.css changes
+watch("./", { recursive: false }, (_event, filename) => {
+  if (filename === "theme.css") {
+    console.log(`Theme changed, notifying clients...`);
     // Notify all connected clients
     for (const client of clients) {
       try {
@@ -121,6 +136,16 @@ const server = Bun.serve({
   port: 3000,
   async fetch(req) {
     const url = new URL(req.url);
+
+    // Serve theme.css
+    if (url.pathname === "/theme.css") {
+      const css = await Bun.file("./theme.css").text();
+      return new Response(css, {
+        headers: {
+          "Content-Type": "text/css",
+        },
+      });
+    }
 
     // SSE endpoint for live reload
     if (url.pathname === "/events") {
@@ -160,6 +185,7 @@ const server = Bun.serve({
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Formal Verification</title>
+  <link rel="stylesheet" href="/theme.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <style>
     body {
@@ -168,28 +194,64 @@ const server = Bun.serve({
       max-width: 800px;
       margin: 0 auto;
       padding: 2rem;
-      color: #333;
+      background-color: var(--custom-1);
+      color: var(--custom-12);
     }
     h1 {
-      border-bottom: 2px solid #eee;
+      border-bottom: 2px solid var(--custom-6);
       padding-bottom: 0.5rem;
+      color: var(--custom-12);
+    }
+    h2 {
+      color: var(--custom-12);
+    }
+    h3 {
+      color: var(--custom-11);
+    }
+    a {
+      color: var(--custom-11);
+      text-decoration: none;
+    }
+    a:hover {
+      color: var(--custom-9);
+      text-decoration: underline;
+    }
+    code {
+      background-color: var(--custom-3);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      color: var(--custom-12);
     }
     .citation {
-      color: #C53211;
+      color: var(--custom-9);
       cursor: help;
       position: relative;
+      font-weight: 500;
     }
     .citation:hover {
+      color: var(--custom-10);
       text-decoration: underline;
     }
     .bibliography {
       margin-top: 2rem;
       padding-top: 2rem;
-      border-top: 2px solid #eee;
+      border-top: 2px solid var(--custom-6);
     }
     .bibliography h2 {
       font-size: 1.5rem;
       margin-bottom: 1rem;
+      color: var(--custom-12);
+    }
+    .csl-entry {
+      color: var(--custom-11);
+      margin-bottom: 0.5rem;
+    }
+    /* Mermaid diagram styling */
+    .mermaid {
+      // background-color: var(--custom-2);
+      padding: 1.5rem;
+      // border-radius: 8px;
+      // border: 1px solid var(--custom-6);
     }
   </style>
   <script>
@@ -206,12 +268,58 @@ const server = Bun.serve({
   </script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script type="module">
-    // Import and initialize Mermaid with KaTeX support
+    // Import and initialize Mermaid with KaTeX support and custom theme
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    // Get computed custom colors
+    const rootStyles = getComputedStyle(document.documentElement);
+    const custom1 = rootStyles.getPropertyValue('--custom-a1').trim();
+    const custom2 = rootStyles.getPropertyValue('--custom-a2').trim();
+    const custom3 = rootStyles.getPropertyValue('--custom-a3').trim();
+    const custom6 = rootStyles.getPropertyValue('--custom-a6').trim();
+    const custom9 = rootStyles.getPropertyValue('--custom-a9').trim();
+    const custom10 = rootStyles.getPropertyValue('--custom-a10').trim();
+    const custom11 = rootStyles.getPropertyValue('--custom-a11').trim();
+    const custom12 = rootStyles.getPropertyValue('--custom-a12').trim();
+
     mermaid.initialize({
       startOnLoad: true,
-      theme: 'default',
-      securityLevel: 'loose'
+      theme: 'base',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: custom2,
+        primaryTextColor: custom12,
+        primaryBorderColor: custom9,
+        lineColor: custom9,
+        secondaryColor: custom3,
+        tertiaryColor: custom1,
+        background: custom1,
+        mainBkg: custom2,
+        secondBkg: custom3,
+        labelBackground: custom2,
+        labelColor: custom12,
+        edgeLabelBackground: custom2,
+        clusterBkg: custom2,
+        clusterBorder: custom6,
+        defaultLinkColor: custom9,
+        titleColor: custom12,
+        actorBorder: custom9,
+        actorBkg: custom2,
+        actorTextColor: custom12,
+        actorLineColor: custom9,
+        signalColor: custom12,
+        signalTextColor: custom12,
+        labelBoxBkgColor: custom2,
+        labelBoxBorderColor: custom6,
+        labelTextColor: custom12,
+        loopTextColor: custom12,
+        noteBorderColor: custom6,
+        noteBkgColor: custom2,
+        noteTextColor: custom11,
+        activationBorderColor: custom9,
+        activationBkgColor: custom3,
+        sequenceNumberColor: custom1,
+      }
     });
   </script>
 </head>
