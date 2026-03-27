@@ -1,6 +1,8 @@
 import MarkdownIt from "markdown-it";
 // @ts-ignore
 import markdownItBiblatex from "@arothuis/markdown-it-biblatex";
+// @ts-ignore
+import markdownItMermaid from "markdown-it-mermaid";
 import { watch } from "fs";
 // @ts-ignore
 import { BibLatexParser } from "biblatex-csl-converter";
@@ -12,6 +14,9 @@ md.use(markdownItBiblatex, {
   bibPath: "./src/citation.biblatex",
   alwaysReloadFiles: true, // Reload bib file on every render
 });
+
+// Configure the mermaid plugin for diagram rendering
+md.use(markdownItMermaid);
 
 // Parse the biblatex file to create a lookup for tooltips
 async function loadBibliography() {
@@ -197,6 +202,11 @@ const server = Bun.serve({
     eventSource.onerror = () => {
       console.log('SSE connection lost, attempting to reconnect...');
     };
+  </script>
+  <script type="module">
+    // Import and initialize Mermaid
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
   </script>
 </head>
 <body>
