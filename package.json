@@ -1,0 +1,19 @@
+{
+  "name": "y",
+  "module": "n",
+  "type": "module",
+  "scripts": {
+    "start": "bun run server.ts",
+    "dev": "bun run server.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@arothuis/markdown-it-biblatex": "github:arothuis/markdown-it-biblatex",
+    "markdown-it": "^14.1.1"
+  }
+}

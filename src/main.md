@@ -2,4 +2,7 @@
 
 Yes, but are we talking about [private messaging like] applications or [zeroknowledge proof like] applications?
 
+Some relevant work includes [@costaDynamicEpistemicVerification].
 
+
+[bibliography]
