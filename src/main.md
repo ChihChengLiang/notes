@@ -31,9 +31,35 @@ sequenceDiagram
 
 ### What failure mode looks like?
 
-## Tornado Cash like situation
+## Formally defining Zeroknowledge
 
 [@costaDynamicEpistemicVerification].
+
+Broken Key Protocol. V has two keys and one of them is compromised. P has the compromised key and proves it to V without revealing which key is compromised.
+
+```mermaid
+sequenceDiagram
+    participant P as Prover (P)
+    participant V as Verifier (V)
+
+    P->>V: ∗
+    V->>V: Generate fresh m
+    V->>P: enc(k₁, m), enc(k₂, m), h(m)
+    P->>P: check(enc(k₁,m), enc(k₂,m))
+    P->>V: m
+```
+
+### What failure mode looks like?
+
+## Tornado Cash like situation
+
+What are still required?
+
+- DY attacker to see all messages
+- Modelling ZK in Epistemic logic
+- Dynamism
+- Actual tooling to use
+
 
 
 ## What real Tornado Cash like system hacks look like?
