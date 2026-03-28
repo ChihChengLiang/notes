@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "bun run server.ts",
-    "dev": "bun run server.ts"
+    "dev": "bun run server.ts",
+    "build": "bun run build.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
