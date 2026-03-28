@@ -24,6 +24,8 @@ Snarks are usually defined in complexity/computational model. "Given poly attack
 
 Epistemic approach models things in more binary approach. "If I learn private key, I can't break ciphertext."
 
+- Cryptography is assumed perfect. 
+
 ## private messaging like protocols
 
 [@rajaonaEpistemicModelChecking2024] targets private auth protocols, where messages are sent to designated targets.
