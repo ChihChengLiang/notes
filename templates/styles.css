@@ -70,6 +70,72 @@ pre.hljs code {
   text-decoration: underline;
 }
 
+/* Custom tooltip for citations */
+.citation-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 12px 16px;
+  background-color: var(--custom-2);
+  border: 1px solid var(--custom-6);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  max-width: 500px;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.citation:hover .citation-tooltip,
+.citation-tooltip:hover {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Bridge the gap between citation and tooltip so hover doesn't break */
+.citation-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
+.citation-tooltip-content {
+  color: var(--custom-12);
+}
+
+.citation-tooltip-doi {
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--custom-11);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.citation-tooltip-doi:hover {
+  color: var(--custom-9);
+  text-decoration: underline;
+}
+
+/* Tooltip arrow */
+.citation-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--custom-2);
+}
+
 .bibliography {
   margin-top: 2rem;
   padding-top: 2rem;

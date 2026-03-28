@@ -71,7 +71,6 @@ export function setupCitationRenderer(md: MarkdownIt, getBibCache: () => any) {
     }
 
     const items = citation.citationItems || [];
-    let tooltip = "";
 
     if (items.length > 0) {
       const item = items[0];
@@ -83,41 +82,43 @@ export function setupCitationRenderer(md: MarkdownIt, getBibCache: () => any) {
       ) as any;
 
       if (bibEntry?.fields) {
-        // Extract title - concatenate all text parts
-        const title = bibEntry.fields.title
-          ?.map((part: any) => part.text || "")
-          .join(" ") || "";
+        // Extract first author's family name
+        const firstAuthor = bibEntry.fields.author?.[0];
+        const authorName = firstAuthor?.family?.[0]?.text || firstAuthor?.literal?.[0]?.text || "Unknown";
 
-        // Extract abstract - concatenate all text parts
-        const abstract = bibEntry.fields.abstract
-          ?.map((part: any) => part.text || "")
-          .join(" ") || "";
+        // Add "et al." if there are multiple authors
+        const hasMultipleAuthors = bibEntry.fields.author?.length > 1;
+        const authorText = hasMultipleAuthors ? `${authorName} et al.` : authorName;
 
+        // Extract year
         const year = bibEntry.fields.date || bibEntry.fields.year || "";
 
-        const authors = bibEntry.fields.author?.map((a: any) => {
-          const parts = [];
-          if (a.given?.[0]?.text) parts.push(a.given[0].text);
-          if (a.family?.[0]?.text) parts.push(a.family[0].text);
-          return parts.join(" ");
-        }).join(", ") || "";
+        // Extract title - concatenate all text parts and truncate if too long
+        const fullTitle = bibEntry.fields.title
+          ?.map((part: any) => part.text || "")
+          .join(" ") || "";
+        const maxTitleLength = 60;
+        const title = fullTitle.length > maxTitleLength
+          ? fullTitle.substring(0, maxTitleLength) + "..."
+          : fullTitle;
 
-        const parts = [];
-        if (authors) parts.push(authors);
-        if (year) parts.push(`(${year})`);
-        if (title) parts.push(`\n${title}`);
-        if (abstract) parts.push(`\n\n${abstract}`);
+        // Extract DOI
+        const doi = bibEntry.fields.doi || "";
 
-        tooltip = parts.join(" ");
+        // Build data attributes for the custom tooltip
+        const tooltipData = {
+          author: authorText,
+          year: year,
+          title: title,
+          doi: doi
+        };
+
+        // Add data attributes to the existing HTML
+        return originalHtml.replace(
+          /<span([^>]*)>/,
+          `<span$1 data-citation-author="${escapeHtml(tooltipData.author)}" data-citation-year="${escapeHtml(tooltipData.year)}" data-citation-title="${escapeHtml(tooltipData.title)}" data-citation-doi="${escapeHtml(tooltipData.doi)}">`
+        );
       }
-    }
-
-    // Add title attribute to the existing HTML
-    if (tooltip) {
-      return originalHtml.replace(
-        /<span([^>]*)>/,
-        `<span$1 title="${tooltip.replace(/"/g, "&quot;")}">`
-      );
     }
 
     return originalHtml;
