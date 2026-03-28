@@ -6,8 +6,31 @@ import markdownItMermaid from "markdown-it-mermaid";
 import { watch } from "fs";
 // @ts-ignore
 import { BibLatexParser } from "biblatex-csl-converter";
+import hljs from "highlight.js";
 
-const md = new MarkdownIt();
+// Simple HTML escape function
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+const md = new MarkdownIt({
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return '<pre class="hljs"><code>' +
+               hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
+               '</code></pre>';
+      } catch (__) {}
+    }
+
+    return '<pre class="hljs"><code>' + escapeHtml(str) + '</code></pre>';
+  }
+});
 
 // Configure the biblatex plugin with alwaysReloadFiles for watch mode
 md.use(markdownItBiblatex, {

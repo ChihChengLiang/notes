@@ -37,6 +37,25 @@ code {
   padding: 0.2em 0.4em;
   border-radius: 3px;
   color: var(--custom-12);
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+/* Code blocks with syntax highlighting */
+pre.hljs {
+  background-color: var(--custom-2);
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+pre.hljs code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: var(--custom-10);
+  font-size: 0.95em;
+  line-height: 1.5;
 }
 
 .citation {
