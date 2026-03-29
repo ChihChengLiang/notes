@@ -1,7 +1,5 @@
 # Can we formally verify privacy properties?
 
-Yes, but are we talking about [private messaging like] applications or [zeroknowledge proof like] applications?
-
 ## Motivations
 
 We're interested in finding some stupid bugs in Tornado Cash like applications, Semaphore, Privacy Pools. What if a developer accidentally asks a user to input their deposit index into the Solidity withdrawal function? This is likely if people are vibe coding things. Can we automatically detect this without relying a manual check?
@@ -22,13 +20,27 @@ For privacy, we need to reason how information spread between parties. That's wh
 
 Snarks are usually defined in complexity/computational model. "Given poly attacker, the probability of breaking soundness is negaligible"
 
-Epistemic approach models things in more binary approach. "If I learn private key, I can't break ciphertext."
+Epistemic approach models things in more binary approach. "Without learning the private key, I can't break ciphertext."
 
 - Cryptography is assumed perfect. 
 
-## private messaging like protocols
+### Process
 
-[@rajaonaEpistemicModelChecking2024] targets private auth protocols, where messages are sent to designated targets.
+- Decribe the protocol in a math language. Specify what states and state transition this system can have.
+- Specify the security goal in this language. Usually specifing the knowledge an agent has. Like attacker shouldn't learn my private key.
+- Run the intepreter and tracks the knowledge posessed by attackers and honest parties.
+- See if security goal holds in the end.
+
+## What a complete tooling should look like?
+
+[@rajaonaEpistemicModelChecking2024] is a proof of concept of how a full fledged epistemic logic tooling can achieve. Exsiting tooling either have these problems:
+
+- Exsiting tooling can either check attacker-reasoning or Honest-party reasoning, but not both
+- Exsiting toolings verify only partial properties. But this paper handles anonymity, unlinkability (weak and strong), whitelist privacy, etc.
+- Exsiting toolings verify some properties approximately. False positive exists.
+
+
+The paper exhibited cases like private auth protocols, where messages are sent to designated targets.
 
 ```mermaid
 sequenceDiagram
@@ -46,6 +58,11 @@ sequenceDiagram
     end
 ```
 
+### Performance Note
+
+51 minutes for some Basic-Hash cases, timeouts beyond that
+
+
 ### What failure mode looks like?
 
 ### Notes
@@ -53,9 +70,9 @@ sequenceDiagram
 Note that unlinkability is defined differently. In epistemic model, unlinkability means there's no way to tell which world you are in. 
 In Tornado Cash, unlinkability is defined probabilistically. It's unlikely to link people in the anon set, if they do things right.
 
-## Formally defining Zeroknowledge
+## Defining ZKPs in Epistemic logic
 
-[@costaDynamicEpistemicVerification].
+[@costaDynamicEpistemicVerification] Specifies the security properties for ZKPs.
 
 Broken Key Protocol. V has two keys and one of them is compromised. P has the compromised key and proves it to V without revealing which key is compromised.
 
@@ -73,21 +90,9 @@ sequenceDiagram
 
 ### What failure mode looks like?
 
-### Pipeine
+### What's missing?
 
-```
-Write S_P and S_V in SPEC
-        ↓
-Apply interpretation ⟨⟨·⟩⟩ to get action models
-        ↓
-Apply model update to ℐ_BKP
-        ↓  ℳ ⊗ 𝔄
-Obtain ℱ_BKP^P  and  ℱ_BKP^V
-        ↓
-Evaluate φ_ZK, φ_PoK, φ_NR (The security goals)
-        ↓
-All hold → BKP is verified
-```
+The DY attacker. It seems modeling them involves complexities. (Like what?)
 
 ## Tornado Cash like situation
 
@@ -98,13 +103,15 @@ What are required?
 - Dynamism
 - Actual tooling to use
 
-### Unaddressed challenges
+### Other concerns
 
 - Complexity explosion. Epistemic method requires tracking knowledges. Few interactions can blow the states to track.
 - Public chain nature. In Tornado Cash like applications, messages are boradcasted public. Most of the Epistemic models target private interactions.
 
 
 ## What real Tornado Cash like system hacks look like?
+
+Real world TC like system did stupid bugs, but stupid in a different way.
 
 2026 Feb: Foom and Veil Cash. Skipped trusted setup. [Foom](https://smartcontractshacking.com/hacks/foom-cash-hack-2026), [Veil](https://github.com/DK27ss/VeilCash-5K-PoC)
 
