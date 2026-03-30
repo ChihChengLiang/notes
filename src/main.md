@@ -1,46 +1,46 @@
-# Can we formally verify privacy properties?
+# Can We Formally Verify Privacy Properties?
 
 ## Motivations
 
-We're interested in finding some stupid bugs in Tornado Cash like applications, Semaphore, Privacy Pools. What if a developer accidentally asks a user to input their deposit index into the Solidity withdrawal function? This is likely if people are vibe coding things. Can we automatically detect this without relying a manual check?
+We're interested in finding subtle bugs in Tornado Cash-like applications, Semaphore, and Privacy Pools. For example, what if a developer accidentally asks a user to input their deposit index into the Solidity withdrawal function? This is plausible when developers are building quickly. Can we automatically detect this without relying on manual checks?
 
-The automation might pay more dividends if we are to design a complicated privacy applications, say the old Unirep.
+Automation could be even more valuable when designing complex privacy applications, such as the old Unirep.
 
-## Recent advances in formal verification
+## Recent Advances in Formal Verification
 
-We can kind of handle completeness and soundness this way. Because it is about reasoning the program inputs and outputs.
+Recent advances allow us to handle completeness and soundness by reasoning about program inputs and outputs.
 
-github.com/zksecurity/evm-asm/blob/main/EvmAsm/Evm64/Add/Program.lean
+[github.com/zksecurity/evm-asm/blob/main/EvmAsm/Evm64/Add/Program.lean](https://github.com/zksecurity/evm-asm/blob/main/EvmAsm/Evm64/Add/Program.lean)
 
-https://blog.zksecurity.xyz/posts/clean/
+[blog.zksecurity.xyz/posts/clean/](https://blog.zksecurity.xyz/posts/clean/)
 
-For privacy, we need to reason how information spread between parties. That's where epistemic logic comes in.
+However, privacy requires reasoning about how information spreads between parties. That's where epistemic logic comes in.
 
-## Epistemic approach
+## Epistemic Approach
 
-Snarks are usually defined in complexity/computational model. "Given poly attacker, the probability of breaking soundness is negaligible"
+SNARKs are usually defined in a complexity/computational model: "Given a polynomial-time attacker, the probability of breaking soundness is negligible."
 
-Epistemic approach models things in more binary approach. "Without learning the private key, I can't break ciphertext."
+The epistemic approach models things more binarily: "Without learning the private key, I can't break the ciphertext."
 
-- Cryptography is assumed perfect. 
+- Cryptography is assumed to be perfect. 
 
 ### Process
 
-- Decribe the protocol in a math language. Specify what states and state transition this system can have.
-- Specify the security goal in this language. Usually specifing the knowledge an agent has. Like attacker shouldn't learn my private key.
-- Run the intepreter and tracks the knowledge posessed by attackers and honest parties.
-- See if security goal holds in the end.
+- Describe the protocol in a mathematical language. Specify what states and state transitions the system can have.
+- Specify the security goal in this language, usually defining the knowledge an agent has. For example, an attacker shouldn't learn my private key.
+- Run the interpreter and track the knowledge possessed by attackers and honest parties.
+- Verify whether the security goal holds in the end.
 
-## What a complete tooling should look like?
+## What Should Complete Tooling Look Like?
 
-[@rajaonaEpistemicModelChecking2024] is a proof of concept of how a full fledged epistemic logic tooling can achieve. Exsiting tooling either have these problems:
+[@rajaonaEpistemicModelChecking2024] is a proof of concept for what full-fledged epistemic logic tooling can achieve. Existing tools have these limitations:
 
-- Exsiting tooling can either check attacker-reasoning or Honest-party reasoning, but not both
-- Exsiting toolings verify only partial properties. But this paper handles anonymity, unlinkability (weak and strong), whitelist privacy, etc.
-- Exsiting toolings verify some properties approximately. False positive exists.
+- Existing tooling can check either attacker-reasoning or honest-party reasoning, but not both
+- Existing tooling verifies only partial properties, whereas this paper handles anonymity, unlinkability (weak and strong), whitelist privacy, etc.
+- Existing tooling verifies some properties approximately, leading to false positives.
 
 
-The paper exhibited cases like private auth protocols, where messages are sent to designated targets.
+The paper demonstrates cases like private authentication protocols, where messages are sent to designated targets.
 
 ```mermaid
 sequenceDiagram
@@ -60,21 +60,17 @@ sequenceDiagram
 
 ### Performance Note
 
-51 minutes for some Basic-Hash cases, timeouts beyond that
-
-
-### What failure mode looks like?
+51 minutes for some Basic-Hash cases, with timeouts beyond that.
 
 ### Notes
 
-Note that unlinkability is defined differently. In epistemic model, unlinkability means there's no way to tell which world you are in. 
-In Tornado Cash, unlinkability is defined probabilistically. It's unlikely to link people in the anon set, if they do things right.
+Note that unlinkability is defined differently in different contexts. In epistemic models, unlinkability means there's no way to tell which world you are in. In Tornado Cash, unlinkability is defined probabilistically: it's unlikely to link participants in the anonymity set if they follow best practices.
 
-## Defining ZKPs in Epistemic logic
+## Defining ZKPs in Epistemic Logic
 
-[@costaDynamicEpistemicVerification] Specifies the security properties for ZKPs.
+[@costaDynamicEpistemicVerification] specifies security properties for ZKPs.
 
-Broken Key Protocol. V has two keys and one of them is compromised. P has the compromised key and proves it to V without revealing which key is compromised.
+**Broken Key Protocol:** V has two keys, one of which is compromised. P has the compromised key and proves it to V without revealing which key is compromised.
 
 ```mermaid
 sequenceDiagram
@@ -88,32 +84,30 @@ sequenceDiagram
     P->>V: m
 ```
 
-### What failure mode looks like?
+### What's Missing?
 
-### What's missing?
+The Dolev-Yao (DY) attacker model. Modeling DY attackers appears to involve additional complexities.
 
-The DY attacker. It seems modeling them involves complexities. (Like what?)
+## Tornado Cash-Like Situations
 
-## Tornado Cash like situation
+What's required?
 
-What are required?
-
-- DY attacker to see all messages
-- Modelling ZK in Epistemic logic
+- DY attacker model to observe all messages
+- Modeling ZK in epistemic logic
 - Dynamism
-- Actual tooling to use
+- Practical tooling
 
-### Other concerns
+### Other Concerns
 
-- Complexity explosion. Epistemic method requires tracking knowledges. Few interactions can blow the states to track.
-- Public chain nature. In Tornado Cash like applications, messages are boradcasted public. Most of the Epistemic models target private interactions.
+- **Complexity explosion:** The epistemic method requires tracking knowledge. A few interactions can cause the state space to explode.
+- **Public chain nature:** In Tornado Cash-like applications, messages are broadcast publicly. Most epistemic models target private interactions.
 
 
-## What real Tornado Cash like system hacks look like?
+## What Do Real Tornado Cash-Like System Hacks Look Like?
 
-Real world TC like system did stupid bugs, but stupid in a different way.
+Real-world Tornado Cash-like systems have had critical bugs, though often different from what epistemic verification would catch.
 
-2026 Feb: Foom and Veil Cash. Skipped trusted setup. [Foom](https://smartcontractshacking.com/hacks/foom-cash-hack-2026), [Veil](https://github.com/DK27ss/VeilCash-5K-PoC)
+**February 2026: Foom and Veil Cash** - Skipped the trusted setup entirely. [Foom](https://smartcontractshacking.com/hacks/foom-cash-hack-2026), [Veil](https://github.com/DK27ss/VeilCash-5K-PoC)
 
 
 [bibliography]
