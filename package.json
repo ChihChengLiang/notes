@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@arothuis/markdown-it-biblatex": "github:arothuis/markdown-it-biblatex",
+    "@marp-team/marp-core": "^3.0.0",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.1",
     "markdown-it-mermaid": "^0.2.5"

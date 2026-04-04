@@ -17,7 +17,7 @@ function escapeHtml(text: string): string {
     .replace(/'/g, "&#039;");
 }
 
-export function createMarkdownProcessor(options?: { alwaysReloadFiles?: boolean }) {
+export function createMarkdownProcessor(bibPath: string, options?: { alwaysReloadFiles?: boolean }) {
   const md = new MarkdownIt({
     highlight: function (str, lang) {
       if (lang && hljs.getLanguage(lang)) {
@@ -34,7 +34,7 @@ export function createMarkdownProcessor(options?: { alwaysReloadFiles?: boolean 
 
   // Configure the biblatex plugin
   md.use(markdownItBiblatex, {
-    bibPath: "./src/citation.biblatex",
+    bibPath,
     alwaysReloadFiles: options?.alwaysReloadFiles ?? false,
   });
 
@@ -44,8 +44,8 @@ export function createMarkdownProcessor(options?: { alwaysReloadFiles?: boolean 
   return md;
 }
 
-export async function loadBibliography() {
-  const bibContent = await Bun.file("./src/citation.biblatex").text();
+export async function loadBibliography(bibPath: string) {
+  const bibContent = await Bun.file(bibPath).text();
   const parser = new BibLatexParser(bibContent, { processUnexpected: true, processUnknown: true });
   return parser.parse().entries;
 }
