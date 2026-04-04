@@ -153,6 +153,19 @@ pre.hljs code {
   margin-bottom: 0.5rem;
 }
 
+blockquote {
+  border-left: 4px solid var(--custom-6);
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  background-color: var(--custom-2);
+  color: var(--custom-11);
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p {
+  margin: 0;
+}
+
 /* Mermaid diagram styling */
 .mermaid {
   padding: 1.5rem;
