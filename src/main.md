@@ -109,5 +109,13 @@ Real-world Tornado Cash-like systems have had critical bugs, though often differ
 
 **February 2026: Foom and Veil Cash** - Skipped the trusted setup entirely. [Foom](https://smartcontractshacking.com/hacks/foom-cash-hack-2026), [Veil](https://github.com/DK27ss/VeilCash-5K-PoC)
 
+### Zcash Wallet App Threat Model
+
+[The threat model](https://zcash.readthedocs.io/en/latest/rtd_pages/wallet_threat_model.html) doc lists many privacy related invariants. These might be in interest to model in epistemic logic.
+
+> - Can't tell what the user's current shielded balance is (aside from it being zero when the wallet is created)
+> - Can't learn information about the value, memo field, etc. of shielded transactions the user sends/receives.
+> - Can't find out one of the user's wallet addresses unless the user has given it out or the adversary has a guess for what it is.
+> - ...
 
 [bibliography]
