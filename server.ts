@@ -48,8 +48,10 @@ async function getTopicTitle(topic: string): Promise<string> {
   }
 }
 
-function renderSlides(markdown: string): string {
+async function renderSlides(markdown: string): Promise<string> {
+  const themeCSS = await Bun.file("./templates/marp-theme.css").text();
   const marp = new Marp({ html: true });
+  marp.themeSet.add(themeCSS);
   const { html, css } = marp.render(markdown);
   return `<!DOCTYPE html>
 <html>
@@ -137,7 +139,7 @@ const server = Bun.serve({
         return new Response("Not found", { status: 404 });
       }
       const markdown = await file.text();
-      return new Response(renderSlides(markdown), {
+      return new Response(await renderSlides(markdown), {
         headers: { "Content-Type": "text/html" },
       });
     }

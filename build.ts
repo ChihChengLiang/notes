@@ -4,7 +4,9 @@ import Marp from "@marp-team/marp-core";
 import { createMarkdownProcessor, loadBibliography, setupCitationRenderer } from "./markdown-processor";
 
 async function renderSlides(markdown: string): Promise<string> {
+  const themeCSS = await Bun.file("./templates/marp-theme.css").text();
   const marp = new Marp({ html: true });
+  marp.themeSet.add(themeCSS);
   const { html, css } = marp.render(markdown);
   return `<!DOCTYPE html>
 <html>

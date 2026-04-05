@@ -1,0 +1,127 @@
+/* @theme notes */
+@import url('theme://default');
+
+/* ── Color palette (mirrors templates/theme.css) ─────────────────────────── */
+section {
+  --custom-1: #fdfcfd;
+  --custom-2: #fbf8fb;
+  --custom-3: #f3eef3;
+  --custom-4: #ece6ec;
+  --custom-5: #e6dee6;
+  --custom-6: #dfd6df;
+  --custom-7: #d6cbd6;
+  --custom-8: #c3b7c3;
+  --custom-9: #958a95;
+  --custom-10: #897e89;
+  --custom-11: #6b616b;
+  --custom-12: #251d25;
+  --custom-contrast: #fff;
+  --custom-surface: #faf6facc;
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+  @media (color-gamut: p3) {
+    section {
+      --custom-1: oklch(99.2% 0.0025 325.7);
+      --custom-2: oklch(98.3% 0.0045 325.7);
+      --custom-3: oklch(95.6% 0.0081 325.7);
+      --custom-4: oklch(93.2% 0.0107 325.7);
+      --custom-5: oklch(90.9% 0.0138 325.7);
+      --custom-6: oklch(88.6% 0.0158 325.7);
+      --custom-7: oklch(85.4% 0.0195 325.7);
+      --custom-8: oklch(79.4% 0.0206 325.7);
+      --custom-9: oklch(64.6% 0.0206 325.7);
+      --custom-10: oklch(60.6% 0.0206 325.7);
+      --custom-11: oklch(50.5% 0.0206 325.7);
+      --custom-12: oklch(24.5% 0.0183 325.7);
+      --custom-contrast: #fff;
+      --custom-surface: color(display-p3 0.9804 0.9647 0.9804 / 0.8);
+    }
+  }
+}
+
+/* ── Base slide ───────────────────────────────────────────────────────────── */
+:root {
+  font-size: 40px;
+  padding: 1rem;
+  background-color: var(--custom-1);
+  color: var(--custom-12);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Page numbers */
+section::after {
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #fff;
+  color: var(--custom-9);
+}
+
+/* ── Headings ─────────────────────────────────────────────────────────────── */
+h1, h2, h3 {
+  color: var(--custom-12);
+}
+
+h1 {
+  border-bottom: 2px solid var(--custom-6);
+  padding-bottom: 0.2em;
+}
+
+/* ── Links ────────────────────────────────────────────────────────────────── */
+ a {
+  color: var(--custom-11);
+}
+
+/* ── Code ─────────────────────────────────────────────────────────────────── */
+ code {
+  background: var(--custom-3);
+  color: var(--custom-12);
+  border-radius: 3px;
+  padding: 0.1em 0.3em;
+}
+
+ pre {
+  background: var(--custom-3);
+  border: 1px solid var(--custom-5);
+  border-radius: 6px;
+}
+
+ pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* ── Blockquote ───────────────────────────────────────────────────────────── */
+ blockquote {
+  background: var(--custom-2);
+  border-left: 4px solid var(--custom-6);
+  color: var(--custom-11);
+  padding: 0.5em 1em;
+  margin: 0.5em 0;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ── Title slide (_class: title-slide) ───────────────────────────────────── */
+.title-slide {
+  background-color: var(--custom-12);
+  color: var(--custom-1);
+  justify-content: center;
+  text-align: center;
+}
+
+.title-slide h1 {
+  color: var(--custom-1);
+  border-bottom-color: var(--custom-9);
+}
+
+.title-slide p,
+.title-slide strong {
+  color: var(--custom-7);
+}
+
+.title-slide a {
+  color: var(--custom-8);
+}
+
+.title-slide::after {
+  display: none;
+}

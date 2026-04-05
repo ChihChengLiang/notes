@@ -1,192 +1,7 @@
 ---
 marp: true
-theme: default
+theme: notes
 paginate: true
-style: |
-  :root {
-    --color-bg: #0d0f14;
-    --color-surface: #161b27;
-    --color-accent: #4fffb0;
-    --color-accent2: #7c6af7;
-    --color-text: #e8eaf0;
-    --color-muted: #7a8099;
-    --color-danger: #ff5f6d;
-    font-family: 'Courier New', 'Menlo', monospace;
-  }
-
-  section {
-    background: var(--color-bg);
-    color: var(--color-text);
-    padding: 52px 64px;
-    font-size: 18px;
-    line-height: 1.6;
-  }
-
-  section::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 4px; height: 100%;
-    background: linear-gradient(180deg, var(--color-accent), var(--color-accent2));
-  }
-
-  h1 {
-    font-family: 'Georgia', serif;
-    font-size: 2.4em;
-    color: var(--color-accent);
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    margin-bottom: 0.3em;
-    border: none;
-  }
-
-  h2 {
-    font-family: 'Georgia', serif;
-    font-size: 1.7em;
-    color: var(--color-accent);
-    border-bottom: 1px solid #2a3040;
-    padding-bottom: 0.3em;
-    margin-bottom: 0.8em;
-  }
-
-  h3 {
-    color: var(--color-accent2);
-    font-size: 1.1em;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 0.5em;
-  }
-
-  p, li {
-    color: var(--color-text);
-    line-height: 1.75;
-  }
-
-  ul {
-    padding-left: 1.4em;
-  }
-
-  li {
-    margin-bottom: 0.5em;
-  }
-
-  li::marker {
-    color: var(--color-accent);
-  }
-
-  strong {
-    color: var(--color-accent);
-    font-weight: 700;
-  }
-
-  em {
-    color: var(--color-accent2);
-    font-style: normal;
-  }
-
-  code {
-    background: #1e2535;
-    color: var(--color-accent);
-    padding: 2px 7px;
-    border-radius: 3px;
-    font-size: 0.9em;
-  }
-
-  pre {
-    background: #1e2535;
-    border: 1px solid #2a3a50;
-    border-left: 3px solid var(--color-accent);
-    border-radius: 6px;
-    padding: 20px 24px;
-    font-size: 0.82em;
-    line-height: 1.6;
-  }
-
-  pre code {
-    background: none;
-    padding: 0;
-    color: #c8e6c9;
-  }
-
-  blockquote {
-    border-left: 3px solid var(--color-accent2);
-    background: #1a2035;
-    margin: 0;
-    padding: 16px 24px;
-    border-radius: 0 6px 6px 0;
-    font-style: italic;
-    color: #b0b8cc;
-  }
-
-  blockquote p {
-    color: #b0b8cc;
-    margin: 0;
-  }
-
-  .label {
-    display: inline-block;
-    background: var(--color-accent);
-    color: #000;
-    font-size: 0.65em;
-    padding: 2px 10px;
-    border-radius: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: bold;
-    vertical-align: middle;
-    margin-right: 8px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9em;
-  }
-
-  th {
-    background: #1e2535;
-    color: var(--color-accent);
-    padding: 10px 16px;
-    text-align: left;
-    border-bottom: 2px solid var(--color-accent);
-  }
-
-  td {
-    padding: 9px 16px;
-    border-bottom: 1px solid #252d40;
-  }
-
-  tr:nth-child(even) td {
-    background: #131820;
-  }
-
-  section.title-slide {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  section.title-slide h1 {
-    font-size: 2.8em;
-  }
-
-  section.centered {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-
-  footer {
-    color: var(--color-muted);
-    font-size: 0.65em;
-  }
-
-  section[data-marpit-pagination]::after {
-    color: var(--color-muted);
-    font-size: 0.7em;
-  }
 ---
 
 <!-- _class: title-slide -->
@@ -194,9 +9,6 @@ style: |
 # Can We Formally Verify Privacy Properties?
 
 **Epistemic logic, ZKPs, and the tools we don't have yet**
-
----
-*30-min talk · Privacy Research/Engineering audience*
 
 ---
 
@@ -328,12 +140,16 @@ This is expressible — and checkable — in epistemic logic.
 - Prover P knows the compromised key
 - P proves knowledge *without revealing which key is compromised*
 
-```
-P  →  V : ∗
-V  →  V : generate fresh m
-V  →  P : enc(k₁, m),  enc(k₂, m),  h(m)
-P  →  P : check(enc(k₁,m), enc(k₂,m))
-P  →  V : m
+```mermaid
+sequenceDiagram
+    participant P as Prover (P)
+    participant V as Verifier (V)
+
+    P->>V: ∗
+    V->>V: Generate fresh m
+    V->>P: enc(k₁, m), enc(k₂, m), h(m)
+    P->>P: check(enc(k₁,m), enc(k₂,m))
+    P->>V: m
 ```
 
 **Property to verify:** V learns that P has *a* key, but not *which* key.
