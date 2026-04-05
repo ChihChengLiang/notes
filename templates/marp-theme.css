@@ -2,7 +2,7 @@
 @import url('theme://default');
 
 /* ── Color palette (mirrors templates/theme.css) ─────────────────────────── */
-section {
+:root {
   --custom-1: #fdfcfd;
   --custom-2: #fbf8fb;
   --custom-3: #f3eef3;
@@ -17,6 +17,15 @@ section {
   --custom-12: #251d25;
   --custom-contrast: #fff;
   --custom-surface: #faf6facc;
+
+  --custom-a1: #55005503;
+  --custom-a2: #6e006e07;
+  --custom-a3: #4b004b11;
+  --custom-a6: #38003829;
+  --custom-a9: #18001875;
+  --custom-a10: #16001681;
+  --custom-a11: #1000109e;
+  --custom-a12: #090009e2;
 }
 
 @supports (color: color(display-p3 1 1 1)) {
@@ -42,7 +51,7 @@ section {
 
 /* ── Base slide ───────────────────────────────────────────────────────────── */
 :root {
-  font-size: 40px;
+  font-size: 30px;
   padding: 1rem;
   background-color: var(--custom-1);
   color: var(--custom-12);

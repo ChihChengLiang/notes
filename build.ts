@@ -1,12 +1,15 @@
 import { mkdir, rm } from "fs/promises";
 import { readdirSync, existsSync } from "fs";
 import Marp from "@marp-team/marp-core";
+// @ts-ignore
+import markdownItMermaid from "markdown-it-mermaid";
 import { createMarkdownProcessor, loadBibliography, setupCitationRenderer } from "./markdown-processor";
 
 async function renderSlides(markdown: string): Promise<string> {
   const themeCSS = await Bun.file("./templates/marp-theme.css").text();
   const marp = new Marp({ html: true });
   marp.themeSet.add(themeCSS);
+  marp.use(markdownItMermaid);
   const { html, css } = marp.render(markdown);
   return `<!DOCTYPE html>
 <html>
@@ -14,6 +17,7 @@ async function renderSlides(markdown: string): Promise<string> {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>${css}</style>
+  <script type="module" src="../mermaid-init.js"></script>
 </head>
 <body>
 ${html}

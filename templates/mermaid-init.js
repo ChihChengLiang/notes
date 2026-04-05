@@ -1,16 +1,20 @@
 // Import and initialize Mermaid with KaTeX support and custom theme
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 
-// Get computed custom colors
+// Get computed custom colors — Marp scopes :root vars to section, so fall back to section element
 const rootStyles = getComputedStyle(document.documentElement);
-const custom1 = rootStyles.getPropertyValue('--custom-a1').trim();
-const custom2 = rootStyles.getPropertyValue('--custom-a2').trim();
-const custom3 = rootStyles.getPropertyValue('--custom-a3').trim();
-const custom6 = rootStyles.getPropertyValue('--custom-a6').trim();
-const custom9 = rootStyles.getPropertyValue('--custom-a9').trim();
-const custom10 = rootStyles.getPropertyValue('--custom-a10').trim();
-const custom11 = rootStyles.getPropertyValue('--custom-a11').trim();
-const custom12 = rootStyles.getPropertyValue('--custom-a12').trim();
+const styleSource = rootStyles.getPropertyValue('--custom-a1').trim()
+  ? document.documentElement
+  : (document.querySelector('section') ?? document.documentElement);
+const styles = getComputedStyle(styleSource);
+const custom1 = styles.getPropertyValue('--custom-a1').trim();
+const custom2 = styles.getPropertyValue('--custom-a2').trim();
+const custom3 = styles.getPropertyValue('--custom-a3').trim();
+const custom6 = styles.getPropertyValue('--custom-a6').trim();
+const custom9 = styles.getPropertyValue('--custom-a9').trim();
+const custom10 = styles.getPropertyValue('--custom-a10').trim();
+const custom11 = styles.getPropertyValue('--custom-a11').trim();
+const custom12 = styles.getPropertyValue('--custom-a12').trim();
 
 mermaid.initialize({
   startOnLoad: true,
