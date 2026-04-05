@@ -5,9 +5,11 @@
   "scripts": {
     "start": "bun run server.ts",
     "dev": "bun run server.ts",
-    "build": "bun run build.ts"
+    "build": "bun run build.ts",
+    "present": "marp --preview -o dist/slides-preview.html"
   },
   "devDependencies": {
+    "@marp-team/marp-cli": "^4.3.1",
     "@types/bun": "latest",
     "@types/markdown-it": "^14.1.2"
   },
