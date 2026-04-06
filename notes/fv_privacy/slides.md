@@ -22,25 +22,11 @@ paginate: true
 
 ---
 
-<!-- _class: centered -->
+## What are privacy bugs to catch?
 
-## Let's start with a real incident
+- February 2026: Foom & Veil Cash
 
----
-
-## February 2026: Foom & Veil Cash
-
-Two Tornado Cash-like mixers launched and were exploited within days.
-
-> **Root cause:** The trusted setup was skipped entirely.
-
-- Not a cryptographic attack
-- Not a sophisticated exploit
-- A **developer mistake** that formal checks should have caught
-
-### The uncomfortable question
-
-What other classes of bugs are we *not* catching?
+Two Tornado Cash-like mixers exploits: The app specific trusted setup was skipped.
 
 ---
 
@@ -60,8 +46,6 @@ function withdraw(
 
 **The deposit index links withdrawals back to deposits.**
 
-This completely breaks anonymity — and it's the kind of mistake that happens when moving fast.
-
 > Can we *automatically* detect this without manual review?
 
 ---
@@ -70,13 +54,14 @@ This completely breaks anonymity — and it's the kind of mistake that happens w
 
 Recent advances handle **soundness** and **completeness** well:
 
-- Reasoning about program inputs and outputs
-- EVM bytecode verification (e.g. `evm-asm` in Lean 4)
-- Circuit constraint verification (CLEAN framework)
+- `evm-asm`: "a RISC-V implementation of EVM opcode"
+- CLEAN framework:
+  - Write circuit in Lean 4
+  - Prove soundness/completeness properties
 
-### The blind spot
+### Privacy is another beast
 
-These tools reason about *computation*.
+These tools reason about *computation*. (program inputs and outputs)
 
 **Privacy requires reasoning about *information flow* between parties.**
 
