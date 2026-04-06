@@ -166,6 +166,39 @@ blockquote p {
   margin: 0;
 }
 
+/* Table styling */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+thead tr {
+  background-color: var(--custom-4);
+}
+
+th {
+  padding: 0.6rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--custom-12);
+  letter-spacing: 0.02em;
+}
+
+td {
+  padding: 0.5rem 1rem;
+  color: var(--custom-11);
+}
+
+tbody tr:hover {
+  background-color: var(--custom-3);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
 /* Mermaid diagram styling */
 .mermaid {
   padding: 1.5rem;

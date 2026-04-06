@@ -109,6 +109,39 @@ h1 {
   border-radius: 0 4px 4px 0;
 }
 
+/* ── Tables ───────────────────────────────────────────────────────────────── */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.8em;
+  margin: 0.5em 0;
+}
+
+thead tr {
+  background-color: var(--custom-4);
+}
+
+th {
+  padding: 0.4em 0.8em;
+  text-align: left;
+  font-weight: 600;
+  color: var(--custom-12);
+  letter-spacing: 0.02em;
+}
+
+td {
+  padding: 0.35em 0.8em;
+  color: var(--custom-11);
+}
+
+tbody tr:nth-child(even) {
+  background-color: var(--custom-2);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
 /* ── Title slide (_class: title-slide) ───────────────────────────────────── */
 .title-slide {
   background-color: var(--custom-12);
