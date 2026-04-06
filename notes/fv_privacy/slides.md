@@ -74,7 +74,7 @@ These tools reason about *computation*. (program inputs and outputs)
 | Can an attacker *compute* X? | Does an attacker *know* X? |
 | Probabilistic / complexity-based | Binary / possible-worlds |
 | "negligible advantage" | "without the key, they can't learn it" |
-| Handles ZK proofs well | Better for anonymity & unlinkability |
+| Handles ZK proofs well | Modelling ZKP is still open problem |
 
 **Epistemic logic** gives us a framework to formally state and verify privacy properties.
 
@@ -99,7 +99,16 @@ These tools reason about *computation*. (program inputs and outputs)
 
 ## Example: Private Authentication
 
+<div class="columns">
+<div>
 Alice wants to authenticate to Bob without Charlie learning she did so.
+
+**What we're verifying:** Charlie cannot learn that Alice authenticated to Bob.
+
+This is expressible — and checkable — in epistemic logic. (Rajaona et al. 2024).
+
+</div>
+<div>
 
 ```mermaid
 sequenceDiagram
@@ -116,20 +125,29 @@ sequenceDiagram
         C->>A: $$\{N\}_K$$
     end
 ```
-
-**What we're verifying:** Charlie cannot learn that Alice authenticated to Bob.
-
-This is expressible — and checkable — in epistemic logic.
+</div>
+</div>
 
 ---
 
 ## ZKPs in Epistemic Logic
+
+<div class="columns">
+
+<div>
 
 **Broken Key Protocol** — a concrete ZK example:
 
 - Verifier V has two keys, one compromised
 - Prover P knows the compromised key
 - P proves knowledge *without revealing which key is compromised*
+
+**Property to verify:** V learns that P has *a* key, but not *which* key.
+
+This is expressible in dynamic epistemic logic (Costa & Brogi).
+
+</div>
+<div>
 
 ```mermaid
 sequenceDiagram
@@ -143,9 +161,9 @@ sequenceDiagram
     P->>V: m
 ```
 
-**Property to verify:** V learns that P has *a* key, but not *which* key.
+</div>
+</div>
 
-This is expressible in dynamic epistemic logic (Rajaona et al. 2024).
 
 ---
 
@@ -158,8 +176,6 @@ This is expressible in dynamic epistemic logic (Rajaona et al. 2024).
 | **Epistemic models** | No way to distinguish which possible world you're in |
 | **Tornado Cash** | *Probabilistically* unlikely to link depositor/withdrawer given anonymity set + best practices |
 
-This distinction matters when choosing a verification approach.
-
 The epistemic definition is **stronger** — and harder to achieve in practice.
 
 ---
@@ -170,12 +186,13 @@ The epistemic definition is **stronger** — and harder to achieve in practice.
 
 ### What existing tools can do
 
-- ✅ Check attacker reasoning *or* honest-party reasoning
-- ✅ Verify some properties (anonymity, weak unlinkability)
+- ✅ Check attacker reasoning and honest-party reasoning (For non-ZKP use cases)
+- ✅ Verify some properties (anonymity, weak unlinkability) (For non-ZKP use cases)
+- honest-party reasoning (For ZKP)
 
 ### What's still missing
 
-- ❌ Cannot check *both* attacker and honest-party reasoning simultaneously
+- ❌ Cannot check *both* attacker and honest-party reasoning simultaneously (For ZKP)
 - ❌ Approximate verification → false positives
 - ❌ No **Dolev-Yao attacker model** for ZK settings
 - ❌ No native support for ZKP semantics
@@ -192,9 +209,9 @@ The **Dolev-Yao (DY) model** is the standard attacker for cryptographic protocol
 
 **Why it matters for Tornado Cash-like systems:**
 
-All messages are broadcast publicly on-chain. The DY attacker is the *minimum* threat model.
+All messages are broadcast publicly on-chain. Is DY attacker a suitable threat model?
 
-Current epistemic tools don't handle DY attackers well. This is a significant open problem.
+Current epistemic tools don't handle DY attackers well. This is still a open problem.
 
 ---
 
@@ -265,17 +282,3 @@ These feel tractable — not fundamental barriers:
 **We cannot yet automatically verify privacy.**
 
 Epistemic logic is the right framework — the tooling just isn't there yet.
-
-*The bugs are real. The motivation is there. The research frontier is open.*
-
----
-
-<!-- _class: centered -->
-
-## Thanks
-
-Questions?
-
----
-
-*References: Rajaona et al. (2024) · Costa et al. · Zcash Wallet Threat Model · Foom/Veil Cash post-mortems*
