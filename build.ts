@@ -1,15 +1,24 @@
 import { mkdir, rm } from "fs/promises";
 import { readdirSync, existsSync } from "fs";
-import Marp from "@marp-team/marp-core";
-// @ts-ignore
-import markdownItMermaid from "markdown-it-mermaid";
+import { Marp } from "@marp-team/marp-core";
 import { createMarkdownProcessor, loadBibliography, setupCitationRenderer } from "./markdown-processor";
 
 async function renderSlides(markdown: string): Promise<string> {
   const themeCSS = await Bun.file("./templates/marp-theme.css").text();
   const marp = new Marp({ html: true });
   marp.themeSet.add(themeCSS);
-  marp.use(markdownItMermaid);
+
+  // Render mermaid fences as <pre class="mermaid"> for client-side mermaid v10+
+  // (markdown-it-mermaid calls mermaid.parse() which requires browser APIs and fails in Bun)
+  const md = marp.markdown;
+  const defaultFence = md.renderer.rules.fence!.bind(md.renderer.rules);
+  md.renderer.rules.fence = (tokens: any[], idx: number, options: any, env: any, slf: any) => {
+    const token = tokens[idx];
+    if (token.info.trim() === 'mermaid') {
+      return `<pre class="mermaid">${token.content}</pre>`;
+    }
+    return defaultFence(tokens, idx, options, env, slf);
+  };
   const { html, css } = marp.render(markdown);
   return `<!DOCTYPE html>
 <html>

@@ -116,14 +116,20 @@ These tools reason about *computation*.
 
 Alice wants to authenticate to Bob without Charlie learning she did so.
 
-```
-A → B : { pubk(A), N_A } encrypted with pubk(B)
-A → C : { pubk(A), N_A } encrypted with pubk(B)
+```mermaid
+sequenceDiagram
+    participant A as Alice
+    participant B as Bob
+    participant C as Charlie
 
-If β holds (C = B and pubk(A) ∈ S_C):
-    B → A : { N_A, N_C, pubk(B) } encrypted with pubk(A)
-Else:
-    C → A : { N } encrypted with K
+    A->>B: $$\{ pubk(A), N_A \}_{pubk(B)}$$
+    A->>C: $$\{ pubk(A), N_A \}_{pubk(B)}$$
+
+    alt β holds (C = B and $$pubk(A) ∈ S_C$$)
+        B->>A: $$\{ N_A, N_C, pubk(B) \}_{pubk(A)}$$
+    else ¬β
+        C->>A: $$\{N\}_K$$
+    end
 ```
 
 **What we're verifying:** Charlie cannot learn that Alice authenticated to Bob.

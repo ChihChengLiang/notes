@@ -2,8 +2,6 @@ import MarkdownIt from "markdown-it";
 // @ts-ignore
 import markdownItBiblatex from "@arothuis/markdown-it-biblatex";
 // @ts-ignore
-import markdownItMermaid from "markdown-it-mermaid";
-// @ts-ignore
 import { BibLatexParser } from "biblatex-csl-converter";
 import hljs from "highlight.js";
 
@@ -38,8 +36,15 @@ export function createMarkdownProcessor(bibPath: string, options?: { alwaysReloa
     alwaysReloadFiles: options?.alwaysReloadFiles ?? false,
   });
 
-  // Configure the mermaid plugin for diagram rendering
-  md.use(markdownItMermaid);
+  // Render mermaid fences as <pre class="mermaid"> for client-side rendering
+  const defaultFence = md.renderer.rules.fence?.bind(md.renderer.rules);
+  md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
+    const token = tokens[idx];
+    if (token.info.trim() === 'mermaid') {
+      return `<pre class="mermaid">${escapeHtml(token.content)}</pre>`;
+    }
+    return defaultFence ? defaultFence(tokens, idx, options, env, slf) : slf.renderToken(tokens, idx, options);
+  };
 
   return md;
 }
