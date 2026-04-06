@@ -10,6 +10,8 @@ paginate: true
 
 **Epistemic logic, ZKPs, and the tools we don't have yet**
 
+2026-04-09 CC @ privateeth.tokyo
+
 ---
 
 ## Agenda
