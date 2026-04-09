@@ -69,7 +69,7 @@ These tools reason about *computation*. (program inputs and outputs)
 
 ---
 
-## A Different Kind of Question
+## A Different Kind of Way of Reasoning
 
 | Computational model | Epistemic model |
 |---|---|
@@ -82,7 +82,7 @@ These tools reason about *computation*. (program inputs and outputs)
 
 ---
 
-## Epistemic Logic in One Slide
+## Epistemic Logic
 
 **Core idea:** model what each agent *knows* as a set of possible worlds.
 
@@ -92,7 +92,7 @@ These tools reason about *computation*. (program inputs and outputs)
 
 ### The process
 
-1. Describe the protocol as states + transitions
+1. Describe the protocol as states + transitions (sending, receiving, conditional, sequence)
 2. Specify the security goal (e.g. "attacker doesn't learn Alice's identity")
 3. Run the interpreter, track knowledge per agent
 4. Check whether the goal holds
@@ -246,6 +246,11 @@ The Zcash wallet threat model lists exactly the kind of invariants we'd want to 
 These are *epistemic* properties. They're about what an attacker *knows*.
 
 Encoding these in a verifiable formal language is the end goal.
+
+<!--
+Thank you YingTong for the Zcash case
+Nam: Designer wants to verify the design
+-->
 
 ---
 
