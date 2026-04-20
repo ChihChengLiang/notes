@@ -1,10 +1,11 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Noto Serif JP", Georgia, "Times New Roman", serif;
   line-height: 1.6;
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
   background-color: var(--custom-1);
+  background-image: url("/assets/bedge-grunge.png");
   color: var(--custom-12);
 }
 
@@ -43,10 +44,22 @@ code {
 
 /* Code blocks with syntax highlighting */
 pre.hljs {
+  position: relative;
   background-color: var(--custom-2);
   padding: 1rem;
   overflow-x: auto;
   margin: 1rem 0;
+  border-radius: 8px;
+}
+
+pre.hljs::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
 }
 
 pre.hljs code {
@@ -154,12 +167,22 @@ pre.hljs code {
 }
 
 blockquote {
-  border-left: 4px solid var(--custom-6);
+  position: relative;
   margin: 1rem 0;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   background-color: var(--custom-2);
   color: var(--custom-11);
-  border-radius: 0 4px 4px 0;
+  border-radius: 8px;
+}
+
+blockquote::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
 }
 
 blockquote p {
@@ -167,11 +190,32 @@ blockquote p {
 }
 
 /* Table styling */
-table {
-  border-collapse: collapse;
+.table-wrap {
+  position: relative;
+  display: inline-block;
   width: 100%;
+  padding: 4px;
   margin: 1rem 0;
+}
+
+.table-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
   font-size: 0.95em;
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 thead tr {
@@ -184,11 +228,13 @@ th {
   font-weight: 600;
   color: var(--custom-12);
   letter-spacing: 0.02em;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
 td {
   padding: 0.5rem 1rem;
   color: var(--custom-11);
+  border-top: 1px solid var(--custom-4);
 }
 
 tbody tr:hover {

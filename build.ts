@@ -29,6 +29,14 @@ async function renderSlides(markdown: string): Promise<string> {
   <script type="module" src="../mermaid-init.js"></script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <filter id="hand-drawn" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="turbulence" baseFrequency="0.025" numOctaves="3" seed="8" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 ${html}
 </body>
 </html>`;
@@ -65,6 +73,11 @@ async function build() {
     await Bun.write(`${distDir}/${file}`, content);
     console.log(`✓ Copied ${file}`);
   }
+
+  // Copy binary assets
+  await mkdir(`${distDir}/assets`);
+  await Bun.write(`${distDir}/assets/bedge-grunge.png`, Bun.file("./assets/bedge-grunge.png"));
+  console.log("✓ Copied assets/bedge-grunge.png");
 
   // Load article template (assets at root level — will be adjusted per-topic)
   const articleTemplate = await Bun.file("./templates/article.html").text();

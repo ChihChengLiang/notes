@@ -3,20 +3,20 @@
 
 /* ── Color palette (mirrors templates/theme.css) ─────────────────────────── */
 :root {
-  --custom-1: #fdfcfd;
-  --custom-2: #fbf8fb;
-  --custom-3: #f3eef3;
-  --custom-4: #ece6ec;
-  --custom-5: #e6dee6;
-  --custom-6: #dfd6df;
-  --custom-7: #d6cbd6;
-  --custom-8: #c3b7c3;
-  --custom-9: #958a95;
-  --custom-10: #897e89;
-  --custom-11: #6b616b;
-  --custom-12: #251d25;
+  --custom-1: #fdfcf5;
+  --custom-2: #faf8ec;
+  --custom-3: #f2ece0;
+  --custom-4: #e8e2d4;
+  --custom-5: #dfd8c8;
+  --custom-6: #d4ccba;
+  --custom-7: #c8bfa8;
+  --custom-8: #b0a68e;
+  --custom-9: #8a7e64;
+  --custom-10: #7d7157;
+  --custom-11: #625849;
+  --custom-12: #28200d;
   --custom-contrast: #fff;
-  --custom-surface: #faf6facc;
+  --custom-surface: #faf4e8cc;
 
   --custom-a1: #55005503;
   --custom-a2: #6e006e07;
@@ -31,20 +31,20 @@
 @supports (color: color(display-p3 1 1 1)) {
   @media (color-gamut: p3) {
     section {
-      --custom-1: oklch(99.2% 0.0025 325.7);
-      --custom-2: oklch(98.3% 0.0045 325.7);
-      --custom-3: oklch(95.6% 0.0081 325.7);
-      --custom-4: oklch(93.2% 0.0107 325.7);
-      --custom-5: oklch(90.9% 0.0138 325.7);
-      --custom-6: oklch(88.6% 0.0158 325.7);
-      --custom-7: oklch(85.4% 0.0195 325.7);
-      --custom-8: oklch(79.4% 0.0206 325.7);
-      --custom-9: oklch(64.6% 0.0206 325.7);
-      --custom-10: oklch(60.6% 0.0206 325.7);
-      --custom-11: oklch(50.5% 0.0206 325.7);
-      --custom-12: oklch(24.5% 0.0183 325.7);
+      --custom-1: oklch(99.1% 0.011 78);
+      --custom-2: oklch(98.1% 0.018 78);
+      --custom-3: oklch(95.3% 0.031 78);
+      --custom-4: oklch(92.5% 0.040 78);
+      --custom-5: oklch(89.8% 0.044 78);
+      --custom-6: oklch(87.0% 0.046 78);
+      --custom-7: oklch(83.7% 0.052 78);
+      --custom-8: oklch(77.5% 0.053 78);
+      --custom-9: oklch(62.2% 0.054 78);
+      --custom-10: oklch(57.7% 0.054 78);
+      --custom-11: oklch(47.5% 0.052 78);
+      --custom-12: oklch(23.2% 0.043 78);
       --custom-contrast: #fff;
-      --custom-surface: color(display-p3 0.9804 0.9647 0.9804 / 0.8);
+      --custom-surface: color(display-p3 0.9804 0.9725 0.9098 / 0.8);
     }
   }
 }
@@ -54,6 +54,7 @@
   font-size: 30px;
   padding: 1rem;
   background-color: var(--custom-1);
+  background-image: url("../assets/bedge-grunge.png");
   color: var(--custom-12);
   font-family: system-ui, -apple-system, sans-serif;
 }
@@ -81,40 +82,77 @@ h1 {
 }
 
 /* ── Code ─────────────────────────────────────────────────────────────────── */
- code {
+code {
   background: var(--custom-3);
   color: var(--custom-12);
   border-radius: 3px;
   padding: 0.1em 0.3em;
 }
 
- pre {
-  background: var(--custom-3);
-  border: 1px solid var(--custom-5);
-  border-radius: 6px;
+pre {
+  position: relative;
+  background: var(--custom-2);
+  border-radius: 8px;
+  padding: 0.75em 1em;
 }
 
- pre code {
+pre::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
+}
+
+pre code {
   background: transparent;
   padding: 0;
 }
 
 /* ── Blockquote ───────────────────────────────────────────────────────────── */
- blockquote {
+blockquote {
+  position: relative;
   background: var(--custom-2);
-  border-left: 4px solid var(--custom-6);
   color: var(--custom-11);
   padding: 0.5em 1em;
   margin: 0.5em 0;
-  border-radius: 0 4px 4px 0;
+  border-radius: 8px;
+}
+
+blockquote::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
 }
 
 /* ── Tables ───────────────────────────────────────────────────────────────── */
 table {
-  border-collapse: collapse;
+  position: relative;
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
   font-size: 0.8em;
   margin: 0.5em 0;
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
+  z-index: 1;
 }
 
 thead tr {
@@ -132,10 +170,7 @@ th {
 td {
   padding: 0.35em 0.8em;
   color: var(--custom-11);
-}
-
-tbody tr:nth-child(even) {
-  background-color: var(--custom-2);
+  border-top: 1px solid var(--custom-4);
 }
 
 tbody tr:last-child td {

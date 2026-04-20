@@ -36,6 +36,12 @@ export function createMarkdownProcessor(bibPath: string, options?: { alwaysReloa
     alwaysReloadFiles: options?.alwaysReloadFiles ?? false,
   });
 
+  // Wrap tables in .table-wrap for rounded border + hand-drawn jitter effect
+  md.renderer.rules.table_open = (tokens, idx, options, env, slf) =>
+    `<div class="table-wrap">${slf.renderToken(tokens, idx, options)}`;
+  md.renderer.rules.table_close = (tokens, idx, options, env, slf) =>
+    `${slf.renderToken(tokens, idx, options)}</div>`;
+
   // Render mermaid fences as <pre class="mermaid"> for client-side rendering
   const defaultFence = md.renderer.rules.fence?.bind(md.renderer.rules);
   md.renderer.rules.fence = (tokens, idx, options, env, slf) => {

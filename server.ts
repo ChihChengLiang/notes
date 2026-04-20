@@ -65,6 +65,14 @@ async function renderSlides(markdown: string): Promise<string> {
   <script type="module" src="/mermaid-init.js"></script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <filter id="hand-drawn" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="turbulence" baseFrequency="0.025" numOctaves="3" seed="8" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 ${html}
 </body>
 </html>`;
@@ -75,6 +83,7 @@ const staticFiles: Record<string, string> = {
   "/styles.css": "./templates/styles.css",
   "/client.js": "./templates/client.js",
   "/mermaid-init.js": "./templates/mermaid-init.js",
+  "/assets/bedge-grunge.png": "./assets/bedge-grunge.png",
 };
 
 // Start the server
@@ -85,7 +94,12 @@ const server = Bun.serve({
 
     // Static files
     if (staticFiles[url.pathname]) {
-      const file = await Bun.file(staticFiles[url.pathname]).text();
+      const filePath = staticFiles[url.pathname];
+      if (url.pathname.endsWith(".png")) {
+        const file = Bun.file(filePath);
+        return new Response(file, { headers: { "Content-Type": "image/png" } });
+      }
+      const file = await Bun.file(filePath).text();
       const contentType = url.pathname.endsWith(".css")
         ? "text/css"
         : "application/javascript";
