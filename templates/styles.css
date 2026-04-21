@@ -245,6 +245,19 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
+time.note-date {
+  font-size: 0.85em;
+  color: var(--custom-9);
+  margin-left: 0.75em;
+}
+
+.note-meta {
+  margin-top: -0.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85em;
+  color: var(--custom-9);
+}
+
 /* Mermaid diagram styling */
 .mermaid {
   padding: 1.5rem;

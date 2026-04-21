@@ -1,3 +1,7 @@
+---
+date: 2026-03-30
+---
+
 # Can We Formally Verify Privacy Properties?
 
 ## Motivations

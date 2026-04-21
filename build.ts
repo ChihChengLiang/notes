@@ -1,7 +1,7 @@
 import { mkdir, rm } from "fs/promises";
 import { readdirSync, existsSync } from "fs";
 import { Marp } from "@marp-team/marp-core";
-import { createMarkdownProcessor, loadBibliography, setupCitationRenderer } from "./markdown-processor";
+import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter } from "./markdown-processor";
 
 async function renderSlides(markdown: string): Promise<string> {
   const themeCSS = await Bun.file("./templates/marp-theme.css").text();
@@ -57,6 +57,16 @@ async function getTopicTitle(topic: string): Promise<string> {
   }
 }
 
+async function getTopicDate(topic: string): Promise<string | null> {
+  try {
+    const content = await Bun.file(`./notes/${topic}/main.md`).text();
+    const match = content.match(/^---\s*\ndate:\s*(.+?)\s*\n/);
+    return match?.[1] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 async function build() {
   console.log("Building static site...");
 
@@ -94,12 +104,13 @@ async function build() {
   // Build index page
   const indexItems = await Promise.all(
     topics.map(async (topic) => {
-      const title = await getTopicTitle(topic);
+      const [title, date] = await Promise.all([getTopicTitle(topic), getTopicDate(topic)]);
       const hasSlides = existsSync(`./notes/${topic}/slides.md`);
       const slidesLink = hasSlides
         ? ` — <a href="./${topic}/slides.html">slides</a>`
         : "";
-      return `<li><a href="./${topic}/">${title}</a>${slidesLink}</li>`;
+      const dateHtml = date ? ` <time class="note-date" datetime="${date}">${date}</time>` : "";
+      return `<li><a href="./${topic}/">${title}</a>${slidesLink}${dateHtml}</li>`;
     })
   );
 
@@ -135,8 +146,15 @@ async function build() {
         bibCache = await loadBibliography(bibPath);
       }
 
-      const markdownContent = await Bun.file(mainPath).text();
-      const htmlContent = md.render(markdownContent);
+      const raw = await Bun.file(mainPath).text();
+      const { markdown: markdownContent, date } = parseFrontmatter(raw);
+      let htmlContent = md.render(markdownContent);
+      if (date) {
+        htmlContent = htmlContent.replace(
+          /(<\/h1>)/,
+          `$1<div class="note-meta"><time datetime="${date}">${date}</time></div>`
+        );
+      }
       const fullHtml = topicTemplate.replace("{{content}}", () => htmlContent);
       await Bun.write(`${topicDir}/index.html`, fullHtml);
       console.log(`✓ Generated ${topic}/index.html`);

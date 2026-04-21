@@ -15,6 +15,16 @@ function escapeHtml(text: string): string {
     .replace(/'/g, "&#039;");
 }
 
+export function parseFrontmatter(content: string): { markdown: string; date: string | null } {
+  const match = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
+  if (!match) return { markdown: content, date: null };
+  const dateMatch = match[1].match(/^date:\s*(.+)$/m);
+  return {
+    markdown: content.slice(match[0].length),
+    date: dateMatch?.[1]?.trim() ?? null,
+  };
+}
+
 export function createMarkdownProcessor(bibPath: string, options?: { alwaysReloadFiles?: boolean }) {
   const md = new MarkdownIt({
     highlight: function (str, lang) {
