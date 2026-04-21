@@ -138,10 +138,12 @@ async function build() {
 
     // Render draft
     if (existsSync(mainPath)) {
-      const md = createMarkdownProcessor(bibPath);
+      const bibExists = existsSync(bibPath);
+      let bib = bibExists ? bibPath : null;
+      const md = createMarkdownProcessor(bib);
       let bibCache: any = null;
 
-      if (existsSync(bibPath)) {
+      if (bibExists) {
         setupCitationRenderer(md, () => bibCache);
         bibCache = await loadBibliography(bibPath);
       }
