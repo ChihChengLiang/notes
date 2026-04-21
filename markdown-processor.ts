@@ -25,7 +25,7 @@ export function parseFrontmatter(content: string): { markdown: string; date: str
   };
 }
 
-export function createMarkdownProcessor(bibPath: string, options?: { alwaysReloadFiles?: boolean }) {
+export function createMarkdownProcessor(bibPath: string | null, options?: { alwaysReloadFiles?: boolean }) {
   const md = new MarkdownIt({
     highlight: function (str, lang) {
       if (lang && hljs.getLanguage(lang)) {
@@ -40,11 +40,13 @@ export function createMarkdownProcessor(bibPath: string, options?: { alwaysReloa
     }
   });
 
-  // Configure the biblatex plugin
-  md.use(markdownItBiblatex, {
-    bibPath,
-    alwaysReloadFiles: options?.alwaysReloadFiles ?? false,
-  });
+  // Configure the biblatex plugin only when a bib file is provided
+  if (bibPath !== null) {
+    md.use(markdownItBiblatex, {
+      bibPath,
+      alwaysReloadFiles: options?.alwaysReloadFiles ?? false,
+    });
+  }
 
   // Wrap tables in .table-wrap for rounded border + hand-drawn jitter effect
   md.renderer.rules.table_open = (tokens, idx, options, env, slf) =>

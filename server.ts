@@ -182,11 +182,12 @@ const server = Bun.serve({
         return new Response("Not found", { status: 404 });
       }
 
+      const hasBib = await Bun.file(bibPath).exists();
+
       // Create a fresh processor per request (watch mode — always reload)
-      const md = createMarkdownProcessor(bibPath, { alwaysReloadFiles: true });
+      const md = createMarkdownProcessor(hasBib ? bibPath : null, { alwaysReloadFiles: true });
       let bibCache: any = null;
 
-      const hasBib = await Bun.file(bibPath).exists();
       if (hasBib) {
         setupCitationRenderer(md, () => bibCache);
         bibCache = await loadBibliography(bibPath);
