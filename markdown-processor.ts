@@ -28,15 +28,19 @@ export function parseFrontmatter(content: string): { markdown: string; date: str
 export function createMarkdownProcessor(bibPath: string | null, options?: { alwaysReloadFiles?: boolean }) {
   const md = new MarkdownIt({
     highlight: function (str, lang) {
-      if (lang && hljs.getLanguage(lang)) {
-        try {
-          return '<pre class="hljs"><code>' +
-                 hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
-                 '</code></pre>';
-        } catch (__) {}
+      if (lang) {
+        const langSpan = `<span>${lang}</span>`
+        if (hljs.getLanguage(lang)) {
+          try {
+            return `<pre class="hljs">${langSpan}<code>
+              ${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}
+              </code></pre>`;
+          } catch (__) {}
+        }
+        return `<pre class="hljs">${langSpan}<code>${escapeHtml(str)}</code></pre>`;
       }
 
-      return '<pre class="hljs"><code>' + escapeHtml(str) + '</code></pre>';
+      return `<pre class="hljs"><code>${escapeHtml(str)}</code></pre>`;
     }
   });
 

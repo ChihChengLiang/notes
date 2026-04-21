@@ -47,8 +47,8 @@ pre.hljs {
   position: relative;
   background-color: var(--custom-2);
   padding: 1rem;
-  overflow-x: auto;
-  margin: 1rem 0;
+  overflow-x: visible;
+  margin: 2rem 0;
   border-radius: 8px;
 }
 
@@ -69,6 +69,20 @@ pre.hljs code {
   color: var(--custom-10);
   font-size: 0.95em;
   line-height: 1.5;
+}
+
+pre.hljs span {
+    position: absolute;
+    top: -1em;
+    right: 1em;
+    transform: translateX(-.3em) rotate(-5deg);
+    padding: .5em 1.5em;
+    border-right: 2px dotted rgb(0 0 0 / 10%);
+    border-left: 2px dotted rgb(0 0 0 / 10%);
+    box-shadow: 0 0 5px rgb(0 0 0 / 20%);
+    background-color: color-mix(in srgb, var(--custom-6) 60%, transparent);
+    font-weight: 600;
+    color: var(--custom-9);
 }
 
 hr {
