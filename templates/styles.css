@@ -71,6 +71,13 @@ pre.hljs code {
   line-height: 1.5;
 }
 
+hr {
+  filter: url(#hand-drawn);
+  color: var(--custom-7);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 .citation {
   color: var(--custom-9);
   cursor: help;
