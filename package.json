@@ -6,7 +6,8 @@
     "start": "bun run server.ts",
     "dev": "bun run server.ts",
     "build": "bun run build.ts",
-    "present": "marp --preview -o dist/slides-preview.html"
+    "present": "marp --preview -o dist/slides-preview.html",
+    "new-note": "bash new-note.sh"
   },
   "devDependencies": {
     "@marp-team/marp-cli": "^4.3.1",
