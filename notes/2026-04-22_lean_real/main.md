@@ -129,3 +129,5 @@ Use `ring` instead for these cases:
 ```lean
 example : Real.sqrt 2 - Real.sqrt 2 = 0 := by ring -- works
 ```
+
+Update 2026-04-22 : The project is not compatible with the new Lean version yet. Here's my attempt to [upgrade](https://github.com/Timeroot/ComputableReal/pull/3) the version.
