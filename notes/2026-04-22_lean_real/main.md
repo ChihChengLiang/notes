@@ -34,6 +34,8 @@ Works great. Breaks down when you need irrationals like `√2`.
 
 ### Float — do not use for matrices
 
+We don't use *real* real numbers in practice right? We use something like floating numbers in our code. Can we just prove properties with `Float` instead of real numbers? The answer is no.
+
 `Float` lacks `AddCommMonoid` because floating-point addition is not associative:
 
 ```lean
