@@ -1,23 +1,25 @@
-import { watch, readdirSync } from "fs";
-import Marp from "@marp-team/marp-core";
-// @ts-ignore
-import markdownItMermaid from "markdown-it-mermaid";
+import { watch } from "fs";
 import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter } from "./markdown-processor";
+import { getTopics, getTopicTitle, getTopicDate, renderSlides, STATIC_FILES } from "./site";
 
 // Track connected clients for SSE
 const clients = new Set<ReadableStreamDefaultController>();
+
+function notifyClients() {
+  for (const client of clients) {
+    try {
+      client.enqueue(`data: reload\n\n`);
+    } catch (e) {
+      clients.delete(client);
+    }
+  }
+}
 
 // Watch for file changes in notes directory
 watch("./notes", { recursive: true }, (_event, filename) => {
   if (filename?.endsWith(".md") || filename?.endsWith(".biblatex")) {
     console.log(`File changed: ${filename}, notifying clients...`);
-    for (const client of clients) {
-      try {
-        client.enqueue(`data: reload\n\n`);
-      } catch (e) {
-        clients.delete(client);
-      }
-    }
+    notifyClients();
   }
 });
 
@@ -25,74 +27,12 @@ watch("./notes", { recursive: true }, (_event, filename) => {
 watch("./templates", { recursive: false }, (_event, filename) => {
   if (filename?.endsWith(".css") || filename?.endsWith(".js") || filename?.endsWith(".html")) {
     console.log(`Template file changed: ${filename}, notifying clients...`);
-    for (const client of clients) {
-      try {
-        client.enqueue(`data: reload\n\n`);
-      } catch (e) {
-        clients.delete(client);
-      }
-    }
+    notifyClients();
   }
 });
 
-function getTopics(): string[] {
-  const entries = readdirSync("./notes", { withFileTypes: true });
-  return entries.filter((e) => e.isDirectory()).map((e) => e.name);
-}
-
-async function getTopicTitle(topic: string): Promise<string> {
-  try {
-    const content = await Bun.file(`./notes/${topic}/main.md`).text();
-    const match = content.match(/^#\s+(.+)$/m);
-    return match?.[1] ?? topic;
-  } catch {
-    return topic;
-  }
-}
-
-async function getTopicDate(topic: string): Promise<string | null> {
-  try {
-    const content = await Bun.file(`./notes/${topic}/main.md`).text();
-    const match = content.match(/^---\s*\ndate:\s*(.+?)\s*\n/);
-    return match?.[1] ?? null;
-  } catch {
-    return null;
-  }
-}
-
-async function renderSlides(markdown: string): Promise<string> {
-  const themeCSS = await Bun.file("./templates/marp-theme.css").text();
-  const marp = new Marp({ html: true });
-  marp.themeSet.add(themeCSS);
-  marp.use(markdownItMermaid);
-  const { html, css } = marp.render(markdown);
-  return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>${css}</style>
-  <script type="module" src="/mermaid-init.js"></script>
-</head>
-<body>
-<svg width="0" height="0" style="position:absolute;overflow:hidden">
-  <defs>
-    <filter id="hand-drawn" x="-5%" y="-5%" width="110%" height="110%">
-      <feTurbulence type="turbulence" baseFrequency="0.025" numOctaves="3" seed="8" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-</svg>
-${html}
-</body>
-</html>`;
-}
-
-const staticFiles: Record<string, string> = {
-  "/theme.css": "./templates/theme.css",
-  "/styles.css": "./templates/styles.css",
-  "/client.js": "./templates/client.js",
-  "/mermaid-init.js": "./templates/mermaid-init.js",
+const staticFileMap: Record<string, string> = {
+  ...Object.fromEntries(STATIC_FILES.map((f) => [`/${f}`, `./templates/${f}`])),
   "/assets/bedge-grunge.png": "./assets/bedge-grunge.png",
 };
 
@@ -103,8 +43,8 @@ const server = Bun.serve({
     const url = new URL(req.url);
 
     // Static files
-    if (staticFiles[url.pathname]) {
-      const filePath = staticFiles[url.pathname];
+    if (staticFileMap[url.pathname]) {
+      const filePath = staticFileMap[url.pathname];
       if (url.pathname.endsWith(".png")) {
         const file = Bun.file(filePath);
         return new Response(file, { headers: { "Content-Type": "image/png" } });
@@ -168,13 +108,13 @@ const server = Bun.serve({
         return new Response("Not found", { status: 404 });
       }
       const markdown = await file.text();
-      return new Response(await renderSlides(markdown), {
+      return new Response(await renderSlides(markdown, "/mermaid-init.js"), {
         headers: { "Content-Type": "text/html" },
       });
     }
 
-    // Topic draft route: /:topic
-    if (sub === undefined) {
+    // Topic draft route: /:topic or /:topic/
+    if (sub === undefined || sub === "") {
       const mainPath = `./notes/${topic}/main.md`;
       const bibPath = `./notes/${topic}/citation.biblatex`;
       const mainFile = Bun.file(mainPath);
