@@ -56,7 +56,7 @@ pre.hljs::before {
   content: '';
   position: absolute;
   inset: 0;
-  border: 1.5px solid var(--custom-9);
+  border: 1.5px solid var(--custom-6);
   border-radius: 8px;
   pointer-events: none;
   filter: url(#hand-drawn);
