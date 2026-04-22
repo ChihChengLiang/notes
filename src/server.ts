@@ -24,7 +24,7 @@ watch("./notes", { recursive: true }, (_event, filename) => {
 });
 
 // Watch for template changes (includes theme.css)
-watch("./templates", { recursive: false }, (_event, filename) => {
+watch("./src/templates", { recursive: false }, (_event, filename) => {
   if (filename?.endsWith(".css") || filename?.endsWith(".js") || filename?.endsWith(".html")) {
     console.log(`Template file changed: ${filename}, notifying clients...`);
     notifyClients();
@@ -32,8 +32,8 @@ watch("./templates", { recursive: false }, (_event, filename) => {
 });
 
 const staticFileMap: Record<string, string> = {
-  ...Object.fromEntries(STATIC_FILES.map((f) => [`/${f}`, `./templates/${f}`])),
-  "/assets/bedge-grunge.png": "./assets/bedge-grunge.png",
+  ...Object.fromEntries(STATIC_FILES.map((f) => [`/${f}`, `./src/templates/${f}`])),
+  "/assets/bedge-grunge.png": "./src/assets/bedge-grunge.png",
 };
 
 // Start the server
@@ -90,7 +90,7 @@ const server = Bun.serve({
           return `<li><a href="/${topic}">${title}</a>${slidesLink}${dateHtml}</li>`;
         })
       );
-      const template = await Bun.file("./templates/article.html").text();
+      const template = await Bun.file("./src/templates/article.html").text();
       const body = `<h1>Research Topics</h1><ul>${items.join("\n")}</ul>`;
       const html = template.replace("{{content}}", () => body);
       return new Response(html, { headers: { "Content-Type": "text/html" } });
@@ -142,7 +142,7 @@ const server = Bun.serve({
           `$1<div class="note-meta"><time datetime="${date}">${date}</time></div>`
         );
       }
-      const template = await Bun.file("./templates/article.html").text();
+      const template = await Bun.file("./src/templates/article.html").text();
       const fullHtml = template.replace("{{content}}", () => htmlContent);
       return new Response(fullHtml, { headers: { "Content-Type": "text/html" } });
     }

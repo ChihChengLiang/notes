@@ -14,18 +14,18 @@ async function build() {
 
   // Copy static assets
   for (const file of STATIC_FILES) {
-    const content = await Bun.file(`./templates/${file}`).text();
+    const content = await Bun.file(`./src/templates/${file}`).text();
     await Bun.write(`${distDir}/${file}`, content);
     console.log(`✓ Copied ${file}`);
   }
 
   // Copy binary assets
   await mkdir(`${distDir}/assets`);
-  await Bun.write(`${distDir}/assets/bedge-grunge.png`, Bun.file("./assets/bedge-grunge.png"));
+  await Bun.write(`${distDir}/assets/bedge-grunge.png`, Bun.file("./src/assets/bedge-grunge.png"));
   console.log("✓ Copied assets/bedge-grunge.png");
 
   // Load article template and create per-depth variants
-  const articleTemplate = await Bun.file("./templates/article.html").text();
+  const articleTemplate = await Bun.file("./src/templates/article.html").text();
   const topicTemplate = applyAssetPaths(articleTemplate, "..");
   const indexTemplate = applyAssetPaths(articleTemplate, ".");
 

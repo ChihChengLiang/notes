@@ -29,7 +29,7 @@ export async function getTopicDate(topic: string): Promise<string | null> {
 }
 
 export async function renderSlides(markdown: string, mermaidScriptSrc: string): Promise<string> {
-  const themeCSS = await Bun.file("./templates/marp-theme.css").text();
+  const themeCSS = await Bun.file("./src/templates/marp-theme.css").text();
   const marp = new Marp({ html: true });
   marp.themeSet.add(themeCSS);
 

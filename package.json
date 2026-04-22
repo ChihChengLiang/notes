@@ -3,9 +3,9 @@
   "module": "n",
   "type": "module",
   "scripts": {
-    "start": "bun run server.ts",
-    "dev": "bun run server.ts",
-    "build": "bun run build.ts",
+    "start": "bun run src/server.ts",
+    "dev": "bun run src/server.ts",
+    "build": "bun run src/build.ts",
     "present": "marp --preview -o dist/slides-preview.html",
     "new-note": "bash new-note.sh"
   },
