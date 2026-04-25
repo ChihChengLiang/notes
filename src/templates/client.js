@@ -9,6 +9,23 @@ eventSource.onerror = () => {
   console.log('SSE connection lost, attempting to reconnect...');
 };
 
+// Copy button for code blocks
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('pre.hljs').forEach(pre => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'copy';
+    btn.addEventListener('click', () => {
+      const code = pre.querySelector('code');
+      navigator.clipboard.writeText(code ? code.textContent : pre.textContent).then(() => {
+        btn.textContent = 'copied!';
+        setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+      });
+    });
+    pre.appendChild(btn);
+  });
+});
+
 // Citation tooltip handler
 document.addEventListener('DOMContentLoaded', () => {
   // Find all citation elements

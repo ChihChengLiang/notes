@@ -72,6 +72,31 @@ pre.hljs code {
   line-height: 1.5;
 }
 
+.copy-btn {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  padding: 0.2em 0.6em;
+  font-size: 0.75em;
+  font-family: 'JetBrains Mono', monospace;
+  background-color: var(--custom-3);
+  color: var(--custom-9);
+  border: 1px solid var(--custom-6);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+pre.hljs:hover .copy-btn {
+  opacity: 1;
+}
+
+.copy-btn:hover {
+  background-color: var(--custom-4);
+  color: var(--custom-11);
+}
+
 pre.hljs span {
     position: absolute;
     top: -1em;
