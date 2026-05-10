@@ -1,6 +1,6 @@
 import { watch } from "fs";
 import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter } from "./markdown-processor";
-import { getTopics, getTopicTitle, getTopicDate, renderSlides, STATIC_FILES } from "./site";
+import { renderIndexHtml, renderSlides, STATIC_FILES } from "./site";
 
 // Track connected clients for SSE
 const clients = new Set<ReadableStreamDefaultController>();
@@ -78,21 +78,8 @@ const server = Bun.serve({
 
     // Index: list all topics
     if (url.pathname === "/" || url.pathname === "") {
-      const topics = getTopics();
-      const items = await Promise.all(
-        topics.map(async (topic) => {
-          const [title, date] = await Promise.all([getTopicTitle(topic), getTopicDate(topic)]);
-          const hasSlides = await Bun.file(`./notes/${topic}/slides.md`).exists();
-          const slidesLink = hasSlides
-            ? ` — <a href="/${topic}/slides">slides</a>`
-            : "";
-          const dateHtml = date ? ` <time class="note-date" datetime="${date}">${date}</time>` : "";
-          return `<li><a href="/${topic}">${title}</a>${slidesLink}${dateHtml}</li>`;
-        })
-      );
       const template = await Bun.file("./src/templates/article.html").text();
-      const body = `<h1>Research Topics</h1><ul>${items.join("\n")}</ul>`;
-      const html = template.replace("{{content}}", () => body);
+      const html = await renderIndexHtml(template, "server");
       return new Response(html, { headers: { "Content-Type": "text/html" } });
     }
 

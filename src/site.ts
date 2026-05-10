@@ -68,6 +68,26 @@ ${html}
 </html>`;
 }
 
+export async function renderIndexHtml(
+  template: string,
+  linkStyle: "server" | "static"
+): Promise<string> {
+  const topics = getTopics();
+  const items = await Promise.all(
+    topics.map(async (topic) => {
+      const [title, date] = await Promise.all([getTopicTitle(topic), getTopicDate(topic)]);
+      const hasSlides = await Bun.file(`./notes/${topic}/slides.md`).exists();
+      const topicHref = linkStyle === "static" ? `./${topic}/` : `/${topic}`;
+      const slidesHref = linkStyle === "static" ? `./${topic}/slides.html` : `/${topic}/slides`;
+      const slidesLink = hasSlides ? ` — <a href="${slidesHref}">slides</a>` : "";
+      const dateHtml = date ? ` <time class="note-date" datetime="${date}">${date}</time>` : "";
+      return `<li><a href="${topicHref}">${title}</a>${slidesLink}${dateHtml}</li>`;
+    })
+  );
+  const body = `<h1>Research Topics</h1><ul>${items.toReversed().join("\n")}</ul>`;
+  return template.replace("{{content}}", () => body);
+}
+
 export function applyAssetPaths(template: string, prefix: string): string {
   return template
     .replace(/href="\/theme\.css"/g, `href="${prefix}/theme.css"`)

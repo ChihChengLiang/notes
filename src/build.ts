@@ -1,7 +1,7 @@
 import { mkdir, rm } from "fs/promises";
 import { existsSync } from "fs";
 import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter } from "./markdown-processor";
-import { getTopics, getTopicTitle, getTopicDate, renderSlides, applyAssetPaths, STATIC_FILES } from "./site";
+import { getTopics, renderIndexHtml, renderSlides, applyAssetPaths, STATIC_FILES } from "./site";
 
 async function build() {
   console.log("Building static site...");
@@ -32,22 +32,7 @@ async function build() {
   const topics = getTopics();
 
   // Build index page
-  const indexItems = await Promise.all(
-    topics.map(async (topic) => {
-      const [title, date] = await Promise.all([getTopicTitle(topic), getTopicDate(topic)]);
-      const hasSlides = existsSync(`./notes/${topic}/slides.md`);
-      const slidesLink = hasSlides
-        ? ` — <a href="./${topic}/slides.html">slides</a>`
-        : "";
-      const dateHtml = date ? ` <time class="note-date" datetime="${date}">${date}</time>` : "";
-      return `<li><a href="./${topic}/">${title}</a>${slidesLink}${dateHtml}</li>`;
-    })
-  );
-
-  const indexHtml = indexTemplate.replace(
-    "{{content}}",
-    () => `<h1>Research Topics</h1><ul>${indexItems.join("\n")}</ul>`
-  );
+  const indexHtml = await renderIndexHtml(indexTemplate, "static");
   await Bun.write(`${distDir}/index.html`, indexHtml);
   console.log("✓ Generated index.html");
 
