@@ -65,9 +65,9 @@ https://github.com/Verified-zkEVM/VCV-io
 
 ## Case studies
 
-## Lean-zip: Formal Verification of a Compression Library in Lean 4
+### Lean-zip: Formal Verification of a Compression Library in Lean 4
 
-### Background
+#### Background
 
 - **Repo**: [`kim-em/lean-zip`](https://github.com/kim-em/lean-zip) — a Lean 4 library for zlib, gzip, DEFLATE, and ZIP archive formats
 - **Author**: Kim Morrison, core developer at the Lean Focused Research Organization (FRO)
@@ -76,7 +76,7 @@ https://github.com/Verified-zkEVM/VCV-io
 - **Goal**: Not just a working library — a fully *proved-correct* one, with zero unfinished proof obligations ("sorries") at completion
 - **Toolchain**: Lean 4 (v4.29.1), with specs in `Zip/Spec/` (42 files, 20,606 lines) and native code in `Zip/Native/`
 
-## Highlights
+#### Highlights
 
 - **Proving costs 6–20× more than writing.** Writing the DEFLATE decompressor took 4 sessions; proving it correct took 25. The compressor and full roundtrip proofs consumed ~80 sessions. The implementation is the easy part.
 
