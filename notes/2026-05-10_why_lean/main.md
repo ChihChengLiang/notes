@@ -5,27 +5,15 @@ date: 2026-05-10
 
 # Why Lean?
 
-## The Threat: AI find exploit fast
 
-- AIs like Mythos can find bugs really fast.
-
-TODO: Attack /Defence asymmetry tilting.
-
-## The Opportunity: Formal method used to be costly
-
-AI now makes it cheap
-
-## The Need
-
-- People might want to work with 20 agents, but still want some guarantees.
-- Interactive theorem proving helps.
-
-- If we can trust Lean's type checking and Mathlib,  95%~99% of the proofs need no human review. Naively this converts to 20x~100x review efficiency. source: https://arxiv.org/abs/2604.16347 
-
-
-
-
-https://blog.icme.io/vericoding-the-end-of-trust-me-bro-the-ai-wrote-it/
+- The **Threat**: AI find exploit fast
+  - AIs like Mythos can find bugs really fast.
+  - TODO: Attack /Defence asymmetry tilting.
+- The **Opportunity**: Formal method used to be costly
+  - AI now makes it cheap
+- The **Need**: Automate coding beyond human reasoning
+  - People might want to work with 20 agents, but still want some guarantees -- Interactive Theorem Proving helps. People call it [vericoding](https://blog.icme.io/vericoding-the-end-of-trust-me-bro-the-ai-wrote-it/) [code](https://github.com/Beneficial-AI-Foundation/vericoding-benchmark) [paper](https://arxiv.org/abs/2509.22908)
+  - If we can trust Lean's type checking and Mathlib,  95%~99% of the proofs need no human review. Naively this converts to 20x~100x review efficiency. [source](https://arxiv.org/abs/2604.16347)
 
 
 ##  UX Issues in Lean, Rocq, and Isabelle
