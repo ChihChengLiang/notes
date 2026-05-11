@@ -120,6 +120,11 @@ Claude Code investigation shows:
 
 - **Scale**: 20,606 lines of spec across 42 files, zero sorrys, ~653 merged PRs — the project demonstrates that this level of verification is achievable incrementally over ~660 sessions, not just in academic one-off proofs.
 
+- **Bugs could still be found**: [105 million fuzzing executions](https://kirancodes.me/posts/log-who-watches-the-watchers.html) found:
+  - No memory vulnerabilities.
+  - A bug in Lean 4's runtime.
+  - A denial-of-service in a unverified archive parser.
+
 ### Clean: Formal Verification of ZK Circuits
 
 #### Background
