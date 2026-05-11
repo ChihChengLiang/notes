@@ -100,8 +100,26 @@ const server = Bun.serve({
       });
     }
 
+    // Static assets inside note directories (images, etc.)
+    if (sub && /\.(png|jpe?g|gif|svg|webp)$/i.test(sub)) {
+      const assetPath = `./notes/${topic}/${sub}`;
+      const file = Bun.file(assetPath);
+      if (!(await file.exists())) {
+        return new Response("Not found", { status: 404 });
+      }
+      const ext = sub.split(".").pop()!.toLowerCase();
+      const mimeTypes: Record<string, string> = {
+        png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg",
+        gif: "image/gif", svg: "image/svg+xml", webp: "image/webp",
+      };
+      return new Response(file, { headers: { "Content-Type": mimeTypes[ext] ?? "application/octet-stream" } });
+    }
+
     // Topic draft route: /:topic or /:topic/
-    if (sub === undefined || sub === "") {
+    if (sub === undefined) {
+      return Response.redirect(`${url.origin}/${topic}/`, 301);
+    }
+    if (sub === "") {
       const mainPath = `./notes/${topic}/main.md`;
       const bibPath = `./notes/${topic}/citation.biblatex`;
       const mainFile = Bun.file(mainPath);
