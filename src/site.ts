@@ -1,5 +1,6 @@
 import { readdirSync } from "fs";
 import { Marp } from "@marp-team/marp-core";
+import leanHljs from "./lean.ts";
 
 export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js"] as const;
 
@@ -31,6 +32,7 @@ export async function getTopicDate(topic: string): Promise<string | null> {
 export async function renderSlides(markdown: string, mermaidScriptSrc: string): Promise<string> {
   const themeCSS = await Bun.file("./src/templates/marp-theme.css").text();
   const marp = new Marp({ html: true });
+  marp.highlightjs.registerLanguage("lean", leanHljs);
   marp.themeSet.add(themeCSS);
 
   // Render mermaid fences as <pre class="mermaid"> for client-side mermaid v10+

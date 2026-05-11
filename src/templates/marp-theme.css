@@ -208,3 +208,27 @@ tbody tr:last-child td {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
+
+
+/* Syntax highlighting — uses site palette instead of a CDN theme */
+.hljs-keyword,
+.hljs-section { color: var(--custom-12); font-weight: 600; }
+
+.hljs-title { color: var(--custom-12); }
+
+.hljs-built_in { color: var(--custom-11); }
+
+.hljs-string,
+.hljs-literal { color: var(--custom-9); }
+
+.hljs-number { color: var(--custom-10); }
+
+.hljs-comment,
+.hljs-doctag { color: var(--custom-7); font-style: italic; }
+
+.hljs-meta { color: var(--custom-9); }
+
+.hljs-symbol { color: var(--custom-11); }
+
+/* sorry/admit stand out as a warning */
+.hljs-sorry { color: #a63220; font-weight: 600; }
