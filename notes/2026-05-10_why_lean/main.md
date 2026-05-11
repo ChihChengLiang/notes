@@ -19,6 +19,7 @@ date: 2026-05-10
 
 - [Lean Natural Number Game](https://adam.math.hhu.de/#/g/leanprover-community/NNG4) is a good place to start. It's a fun game to play. Lean is like a chess game. You have a game board with a goal, and then you slowly apply theorems in your toolbox, to move the shape of statements to the final goal.
 - [Arrow's Impossibility Theorem](https://github.com/ChihChengLiang/arrow/blob/main/Arrow/Arrow.lean) is my attempt to verify a real world math paper. I chose a paper with just one page proof. But it takes me painful 2~3 weeks to carry the proof to the final form.
+  - There was a struggle to convert between `Fin N` and `Fin (N+1)`, which is the **Intensional equality** issue mentioned below.
 
 ![](report_diagram.png)
 
