@@ -64,6 +64,18 @@ The same proof is much longer in Rocq.
 - Classical excluded middle requires an explicit `Require Import Classical`, breaking proof flow when doing everyday mathematics; in the √2 case, this is just one line, but the cultural expectation of constructivity historically discouraged it.
 - Sparse standard library means even basic facts — such as the irrationality of √2 — are `Admitted` or must be proved from scratch, not because Rocq is incapable, but due to lack of community library investment compared to Mathlib.
 
+High level things aside, Lean 4's devEx is much better than Rocq. Lean 4 is very easy to install with VSCode extensions. And here are some issues I encountered when setting up Rocq.
+
+- **Goals panel shows "Not in proof mode"** — unlike Lean 4's always-live InfoView, the vsrocq plugin requires the cursor to be inside a Proof./Qed. block, and in manual mode (proof.mode: 0) you must advance the proof tip with Alt+↓. Setting vsrocq.proof.mode: 1 gives continuous checking closer to Lean's behavior.
+
+- **VSCode extension can't find the language server** — vsrocq.path must point to the vsrocqtop binary explicitly; the extension does not search the OPAM environment automatically since VSCode launches outside of it.
+
+- **Two conflicting Rocq installations (Homebrew + OPAM)** — make picked up the wrong binary, causing mismatched library paths. Rocq does not have a single canonical package manager like Lean's elan/lake.
+
+- **Standard library is a separate OPAM package (rocq-stdlib)** — not bundled with the core install. From Stdlib Require Export String fails silently until rocq-stdlib is installed explicitly. In Lean 4, Std is managed automatically via lake.
+
+- **Makefile.coq / Makefile.coq.conf build system** — Software Foundations uses a generated Makefile (rocq makefile) rather than a declarative build manifest like lakefile.lean. The generated files must be kept in sync with the active Rocq binary.
+
 ## Cryptography
 
 We're seeing a trend that people move on beyond pens, papers, Latex, and human review, then craft machine verifiable math proofs.
