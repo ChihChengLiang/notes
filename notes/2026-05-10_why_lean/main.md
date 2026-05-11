@@ -15,6 +15,13 @@ date: 2026-05-10
   - People might want to work with 20 agents, but still want some guarantees -- Interactive Theorem Proving helps. People call it [vericoding](https://blog.icme.io/vericoding-the-end-of-trust-me-bro-the-ai-wrote-it/) [code](https://github.com/Beneficial-AI-Foundation/vericoding-benchmark) [paper](https://arxiv.org/abs/2509.22908)
   - If we can trust Lean's type checking and Mathlib,  95%~99% of the proofs need no human review. Naively this converts to 20x~100x review efficiency. [source](https://arxiv.org/abs/2604.16347)
 
+## My experience
+
+- [Lean Natural Number Game](https://adam.math.hhu.de/#/g/leanprover-community/NNG4) is a good place to start. It's a fun game to play. Lean is like a chess game. You have a game board with a goal, and then you slowly apply theorems in your toolbox, to move the shape of statements to the final goal.
+- [Arrow's Impossibility Theorem](https://github.com/ChihChengLiang/arrow/blob/main/Arrow/Arrow.lean) is my attempt to verify a real world math paper. I chose a paper with just one page proof. But it takes me painful 2~3 weeks to carry the proof to the final form.
+
+![](report_diagram.png)
+
 
 ##  UX Issues in Lean, Rocq, and Isabelle
 
