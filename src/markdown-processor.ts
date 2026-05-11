@@ -5,6 +5,9 @@ import markdownItBiblatex from "@arothuis/markdown-it-biblatex";
 import { BibLatexParser } from "biblatex-csl-converter";
 import hljs from "highlight.js";
 import anchor from "markdown-it-anchor";
+import leanHljs from "./lean.ts";
+
+hljs.registerLanguage("lean", leanHljs);
 
 // Simple HTML escape function
 function escapeHtml(text: string): string {
@@ -33,9 +36,7 @@ export function createMarkdownProcessor(bibPath: string | null, options?: { alwa
         const langSpan = `<span>${lang}</span>`
         if (hljs.getLanguage(lang)) {
           try {
-            return `<pre class="hljs">${langSpan}<code>
-              ${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}
-              </code></pre>`;
+            return `<pre class="hljs">${langSpan}<code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
           } catch (__) {}
         }
         return `<pre class="hljs">${langSpan}<code>${escapeHtml(str)}</code></pre>`;
