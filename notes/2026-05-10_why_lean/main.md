@@ -43,7 +43,7 @@ import Mathlib
 theorem irrational_pow_irrational_rational :
     ∃ (a b : ℝ), Irrational a ∧ Irrational b ∧ ¬ Irrational (a ^ b) := by
   by_cases h : Irrational (√2 ^ √2)
-  · -- Case: sqrt(2)^sqrt(2) is irrational → use it as base
+  · -- Case: √2 ^ √2 is irrational → use it as base
     refine ⟨√2 ^ √2, √2, h, irrational_sqrt_two, ?_⟩
     show ¬Irrational ((√2 ^ √2) ^ √2)
     rw[
@@ -53,7 +53,7 @@ theorem irrational_pow_irrational_rational :
       Real.sq_sqrt (Nat.ofNat_nonneg 2)
     ]
     exact not_irrational_ofNat 2
-  · -- Case: sqrt(2)^sqrt(2) is rational → we're already done
+  · -- Case: √2 ^ √2 is rational → we're already done
     exact ⟨√2, √2, irrational_sqrt_two, irrational_sqrt_two, h⟩
 ```
 
