@@ -4,6 +4,7 @@ import markdownItBiblatex from "@arothuis/markdown-it-biblatex";
 // @ts-ignore
 import { BibLatexParser } from "biblatex-csl-converter";
 import hljs from "highlight.js";
+import anchor from "markdown-it-anchor";
 
 // Simple HTML escape function
 function escapeHtml(text: string): string {
@@ -44,6 +45,11 @@ export function createMarkdownProcessor(bibPath: string | null, options?: { alwa
     }
   });
 
+  md.use(anchor, {
+    slugify: (s: string) =>
+      s.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, ""),
+  });
+
   // Configure the biblatex plugin only when a bib file is provided
   if (bibPath !== null) {
     md.use(markdownItBiblatex, {
@@ -69,6 +75,48 @@ export function createMarkdownProcessor(bibPath: string | null, options?: { alwa
   };
 
   return md;
+}
+
+export function injectToc(html: string): string {
+  type Heading = { level: number; id: string; inner: string };
+  const headings: Heading[] = [];
+  const re = /<(h[2-6])[^>]*\sid="([^"]+)"[^>]*>(.*?)<\/h[2-6]>/g;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    headings.push({ level: parseInt(m[1][1]), id: m[2], inner: m[3] });
+  }
+  if (headings.length < 2) return html;
+
+  function buildList(items: Heading[], from: number, minLevel: number): [string, number] {
+    let out = "<ol>\n";
+    let i = from;
+    while (i < items.length) {
+      const h = items[i];
+      if (h.level < minLevel) break;
+      if (h.level === minLevel) {
+        out += `<li><a href="#${h.id}">${h.inner}</a>`;
+        i++;
+        if (i < items.length && items[i].level > minLevel) {
+          const [sub, next] = buildList(items, i, items[i].level);
+          out += "\n" + sub;
+          i = next;
+        }
+        out += "</li>\n";
+      } else {
+        i++;
+      }
+    }
+    return [out + "</ol>\n", i];
+  }
+
+  const minLevel = Math.min(...headings.map((h) => h.level));
+  const [list] = buildList(headings, 0, minLevel);
+  const toc = `<nav class="toc">\n${list}</nav>\n`;
+
+  if (html.includes('class="note-meta"')) {
+    return html.replace(/(<div class="note-meta">[\s\S]*?<\/div>)/, `$1\n${toc}`);
+  }
+  return html.replace("</h1>", `</h1>\n${toc}`);
 }
 
 export async function loadBibliography(bibPath: string) {

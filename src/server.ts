@@ -1,5 +1,5 @@
 import { watch } from "fs";
-import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter } from "./markdown-processor";
+import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter, injectToc } from "./markdown-processor";
 import { renderIndexHtml, renderSlides, STATIC_FILES } from "./site";
 
 // Track connected clients for SSE
@@ -129,6 +129,7 @@ const server = Bun.serve({
           `$1<div class="note-meta"><time datetime="${date}">${date}</time></div>`
         );
       }
+      htmlContent = injectToc(htmlContent);
       const template = await Bun.file("./src/templates/article.html").text();
       const fullHtml = template.replace("{{content}}", () => htmlContent);
       return new Response(fullHtml, { headers: { "Content-Type": "text/html" } });

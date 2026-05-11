@@ -305,6 +305,40 @@ time.note-date {
   color: var(--custom-9);
 }
 
+/* Table of contents */
+nav.toc {
+  position: relative;
+  background-color: var(--custom-2);
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 2rem;
+  font-size: 0.9em;
+}
+
+nav.toc::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-6);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
+}
+
+nav.toc ol {
+  margin: 0.25rem 0;
+  padding-left: 1.5rem;
+}
+
+nav.toc > ol {
+  padding-left: 0;
+  list-style: none;
+}
+
+nav.toc li {
+  margin: 0.2rem 0;
+}
+
 /* Mermaid diagram styling */
 .mermaid {
   padding: 1.5rem;

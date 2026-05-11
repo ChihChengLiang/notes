@@ -1,6 +1,6 @@
 import { mkdir, rm } from "fs/promises";
 import { existsSync } from "fs";
-import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter } from "./markdown-processor";
+import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter, injectToc } from "./markdown-processor";
 import { getTopics, renderIndexHtml, renderSlides, applyAssetPaths, STATIC_FILES } from "./site";
 
 async function build() {
@@ -65,6 +65,7 @@ async function build() {
           `$1<div class="note-meta"><time datetime="${date}">${date}</time></div>`
         );
       }
+      htmlContent = injectToc(htmlContent);
       const fullHtml = topicTemplate.replace("{{content}}", () => htmlContent);
       await Bun.write(`${topicDir}/index.html`, fullHtml);
       console.log(`✓ Generated ${topic}/index.html`);
