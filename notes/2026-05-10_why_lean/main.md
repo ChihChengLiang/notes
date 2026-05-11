@@ -28,14 +28,18 @@ AI now makes it cheap
 https://blog.icme.io/vericoding-the-end-of-trust-me-bro-the-ai-wrote-it/
 
 
-## UX issues
+##  UX Issues in Lean, Rocq, and Isabelle
 
-Rocq /Isbelle
+### Lean 4 / Mathlib
 
-### Design choices of Lean4 
+- **Universe polymorphism** forces users to occasionally annotate or reconcile universe levels, which is conceptually heavy for newcomers
+- **Intensional equality** means `T(N+1)` and `T(1+N)` are distinct types, requiring manual coercions or rewrites in places that feel obviously trivial
+- Error messages can be cryptic when type unification fails — the system often reports the symptom deep in elaboration rather than the actual source of the mismatch
+- Classical logic (`Classical.em`) is assumed silently by Mathlib, meaning non-constructive proofs like the **√2 irrationality case** work out of the box with no ceremony — a deliberate, pragmatic choice that smooths everyday proof writing
 
+In the following code snippet, we show a non-constructive proof. We show that a irrational power of a irrational could be a rational number. However, we never tell you whether √2 ^ √2 is rational or not in this proof. "by_cases" here uses the `p ∨ ¬p` [Law of exclusion of middle](https://github.com/leanprover/lean4/blob/48ad8401cd5624c944890893a38057ae4920e8ef/src/Init/Classical.lean#L35C1-L36C34).
 
-Law of exclusion of middle
+You can run the code [here](https://live.lean-lang.org/)
 
 ```lean
 import Mathlib
@@ -57,8 +61,18 @@ theorem irrational_pow_irrational_rational :
     exact ⟨√2, √2, irrational_sqrt_two, irrational_sqrt_two, h⟩
 ```
 
+### Rocq/Coq
+
+The same proof is much longer in Rocq.
+
+- Classical excluded middle requires an explicit `Require Import Classical`, breaking proof flow when doing everyday mathematics; in the √2 case, this is just one line, but the cultural expectation of constructivity historically discouraged it.
+- Sparse standard library means even basic facts — such as the irrationality of √2 — are `Admitted` or must be proved from scratch, not because Rocq is incapable, but due to lack of community library investment compared to Mathlib.
+
 ## Cryptography
 
+We're seeing a trend that people move on beyond pens, papers, Latex, and human review, then craft machine verifiable math proofs.
+
+I'm not sure if this is already helpful in software implementation side. AI says yes, but I'm now incompetent to verify the claim thus I'm skeptical. 
 
 ### VCV-io: Library for Cryptography Security Proofs
 
