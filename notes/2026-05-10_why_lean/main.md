@@ -59,7 +59,17 @@ theorem irrational_pow_irrational_rational :
 
 ## Cryptography
 
-https://github.com/Verified-zkEVM/VCV-io
+
+### VCV-io: Library for Cryptography Security Proofs
+
+- **Repo**: [`VCV-io`](https://github.com/Verified-zkEVM/VCV-io) — Lean 4 framework for formally verified cryptographic proofs, built on Mathlib
+- **Organization**: Academic / open collaboration; primary authors Devon Tuma and Quang Dao, with contributions from Alexander Hicks, Pietro Monticone, Gabe Robison, Bolton Bailey, and others
+- **Language**: Lean 4, with Mathlib as the mathematical foundation; C FFI for differential testing against native ML-DSA/ML-KEM/Falcon backends
+- **Timeline**: March 2024 – present (~26 months); development accelerated sharply in early 2026 (113 commits in April 2026 alone)
+- **Goal**: Machine-checked security proofs for cryptographic schemes — IND-CPA, EUF-CMA, perfect secrecy, UC emulation, forking lemmas, Fiat-Shamir transforms — quantified over *all* adversaries, not just sampled inputs
+- **Scale**: 491 Lean files, ~155,000 lines of Lean; 308 commits; 10+ contributors
+- **License**: Apache 2.0
+
 
 ## What software workflow should be covered?
 
