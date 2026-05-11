@@ -148,9 +148,41 @@ def main (input : Expression (F p)) := do
   let out <== -input * inv + 1
   input * out === 0
   return out
+
+def circuit : FormalCircuit (F p) field field where
+  main
+  localLength _ := 2
+
+  Spec input output :=
+    output = (if input = 0 then 1 else 0)
+
+  soundness := by
+    circuit_proof_start
+    simp only [id_eq, h_holds]
+    split_ifs with h_ifs
+    . simp only [h_ifs, zero_mul, neg_zero, zero_add]
+    . rw [neg_add_eq_zero]
+      have h1 := h_holds.left
+      have h2 := h_holds.right
+      rw [h1] at h2
+      simp only [id_eq, mul_eq_zero] at h2
+      cases h2
+      case neg.inl hl => contradiction
+      case neg.inr hr =>
+        rw [neg_add_eq_zero] at hr
+        exact hr
+
+  completeness := by
+    circuit_proof_start
+    cases h_env with
+    | intro left right =>
+      simp only [left, id_eq, ite_not, mul_ite, mul_zero] at right
+      simp only [id_eq, right, left, ite_not, mul_ite, mul_zero, mul_eq_zero, true_and]
+      split_ifs <;> aesop
+
 ```
 
-> [Comparators.lean#L28–L35](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Circomlib/Comparators.lean#L28-L35)
+> [Comparators.lean#L28–L67](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Circomlib/Comparators.lean#L28-L67)
 
 - **Proof is part of the type.** A `FormalCircuit` bundles the circuit with machine-checked soundness and completeness proofs. You cannot instantiate one without supplying both — the type system rejects incomplete definitions at compile time.
 
