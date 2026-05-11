@@ -119,3 +119,112 @@ Claude Code investigation shows:
 - **Proofs compose; tests don't.** The capstone gzip theorem (gzip_decompressSingle_compress) assembles from ~15 sub-theorems across bitstream, Huffman, LZ77, block-framing, and checksum layers. Each layer is independently verified and then reused. In a test suite, the same logic would be re-implemented in the test harness — which is itself unverified.
 
 - **Scale**: 20,606 lines of spec across 42 files, zero sorrys, ~653 merged PRs — the project demonstrates that this level of verification is achievable incrementally over ~660 sessions, not just in academic one-off proofs.
+
+### Clean: Formal Verification of ZK Circuits
+
+#### Background
+
+- **Repo**: [`Verified-zkEVM/clean`](https://github.com/Verified-zkEVM/clean) — Lean 4 library for writing and formally verifying ZK circuits
+- **Organization**: [zkSecurity](https://zksecurity.xyz/), under the Verified-zkEVM grant program
+- **Language**: Lean 4, with a Rust backend (Plonky3)
+- **Timeline**: July 2024 – present (~22 months of active development, steep ramp-up in 2025)
+- **Goal**: Machine-checked proofs for ZK circuit correctness — soundness, completeness, and field wrap-around safety — over *all* possible field elements and adversarial witnesses, not just tested inputs
+- **Scale**: 26,404 lines of Lean across 153 files; ~800 commits/month peak in mid-2025, settled at ~200/month
+
+#### Highlights
+
+- **Familiar syntax, proof obligation attached.** You write circuits with `do`-notation — the same structure a Circom developer would recognise. The original Circom source is embedded as a comment alongside the Lean translation, making the correspondence explicit. The difference: you must also supply a machine-checked proof that the constraints do what the comment says.
+
+```lean
+-- Circom original (embedded as a comment):
+-- inv <-- in!=0 ? 1/in : 0;
+-- out <== -in*inv +1;
+-- in*out === 0;
+
+def main (input : Expression (F p)) := do
+  let inv ← witness fun env =>
+    let x := input.eval env
+    if x ≠ 0 then x⁻¹ else 0
+  let out <== -input * inv + 1
+  input * out === 0
+  return out
+```
+
+> [Comparators.lean#L28–L35](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Circomlib/Comparators.lean#L28-L35)
+
+- **Proof is part of the type.** A `FormalCircuit` bundles the circuit with machine-checked soundness and completeness proofs. You cannot instantiate one without supplying both — the type system rejects incomplete definitions at compile time.
+
+```lean
+structure FormalCircuit (F : Type) [Field F] (Input Output : TypeMap) where
+  main        : Var Input F → Circuit F (Var Output F)
+  Assumptions : Input F → Prop
+  Spec        : Input F → Output F → Prop
+  soundness   : Soundness F ...
+  completeness : Completeness F ...
+```
+
+> [Basic.lean#L298–L303](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Circuit/Basic.lean#L298-L303)
+
+- **Universal quantification over adversaries.** The soundness definition quantifies over `∀ env : Environment F` — every possible witness assignment, including adversarial ones. This is a mathematical statement that no cheating prover can satisfy the constraints without satisfying the spec. The Circom `IsZero` bug (missing `in*out === 0`) would make this proof fail to compile, not just fail a test.
+
+```lean
+def Soundness ... :=
+  ∀ offset : ℕ, ∀ env : Environment F,
+  ∀ input_var : Var Input F, ∀ input : Input F, eval env input_var = input →
+  Assumptions input →
+  ConstraintsHold.Soundness env (circuit.main input_var |>.operations offset) →
+  let output := eval env (circuit.output input_var offset)
+  Spec input output ∧ ...
+```
+
+> [Basic.lean#L259–L271](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Circuit/Basic.lean#L259-L271)
+
+- **Even the simplest Boolean gadget comes with a proof.** `assertBool` — the `x * (x - 1) = 0` constraint every Circom circuit uses — is formally proven equivalent to `x = 0 ∨ x = 1` via a Mathlib lemma. The `NoZeroDivisors` constraint is load-bearing: it is what lets Lean conclude `x = 0 ∨ x - 1 = 0` from a zero product. The type system enforces this assumption is in scope.
+
+```lean
+def assertBool : FormalAssertion (F p) field where
+  main (x : Expression (F p)) := assertZero (x * (x - 1))
+  Spec (x : F p) := IsBool x
+  soundness   := by circuit_proof_all [IsBool.iff_mul_sub_one, sub_eq_add_neg]
+  completeness := by circuit_proof_all [IsBool.iff_mul_sub_one, sub_eq_add_neg]
+```
+
+> [Boolean.lean#L201–L208](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Gadgets/Boolean.lean#L201-L208)
+
+- **Field wrap-around bugs caught at compile time.** `ByteDecomposition` requires `p_large_enough : Fact (p > 2^16 + 2^8)` as a type-level assumption. Without it, `ZMod.val_mul_of_lt` doesn't apply and the proof fails to compile. You cannot accidentally deploy `ByteDecomposition` with a too-small prime — the compiler enforces it. This is the class of bug that looks correct for small test values but wraps silently near `p`.
+
+```lean
+have : (2^n * x).val = 2^n * x.val := by
+  rw [ZMod.val_mul_of_lt (by linarith), h_mul_x]
+```
+
+> [ByteDecomposition.lean#L77](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Gadgets/ByteDecomposition/ByteDecomposition.lean#L77)
+
+- **Verified composition: proven once, trusted everywhere.** Once a subcircuit is formally verified, it is a trusted black box. `IsEqual` calls `IsZero` as a subcircuit; its soundness proof invokes `IsZero`'s proven spec without re-examining internals. In Circom, reusing a component still requires re-auditing it in every new context. Here, the proof already covers all cases.
+
+```lean
+def main (input : Expression (F p) × Expression (F p)) := do
+  let diff := input.1 - input.2
+  let out ← IsZero.circuit diff    -- treated as a verified black box
+  return out
+
+soundness := by
+  circuit_proof_start [IsZero.circuit]
+  rw [← h_input]
+  ...
+```
+
+> [Comparators.lean#L83–L109](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Circomlib/Comparators.lean#L83-L109)
+
+- **The trusted gap at the backend.** The formal proofs cover the abstract constraint system inside Lean. Getting those constraints into an actual prover requires JSON serialization (witness generators are silently dropped: `| .witness m _ => ...` — [Json.lean#L49–L54](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Circuit/Json.lean#L49-L54)) and a Rust re-interpretation layer — both unverified. The proofs guarantee the polynomial constraint system is correct; they do not guarantee the bitstring submitted to the verifier is the same system.
+
+| Layer | Verified? |
+|---|---|
+| Lean kernel (type checker) | Yes |
+| `FormalCircuit.soundness / completeness` | Yes |
+| `toJson` serialization | **No** |
+| Rust backend AST interpretation | **No** |
+| Plonky3 proof system soundness | **No** |
+
+- **Proof automation is still growing.** The `circuit_proof_start` tactic handles routine setup, but complex gadgets like `LessThan` still require substantial manual case analysis navigating variable offset arithmetic (`env.get (i₀ + n + 1)`). Proof automation improvements are listed as ongoing work in the roadmap.
+
