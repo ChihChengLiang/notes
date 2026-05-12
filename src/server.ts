@@ -1,6 +1,6 @@
 import { watch } from "fs";
 import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter, injectToc } from "./markdown-processor";
-import { renderIndexHtml, renderSlides, STATIC_FILES } from "./site";
+import { renderIndexHtml, renderSlides, STATIC_FILES, extractTitle, extractDescription, applyPageMeta } from "./site";
 
 // Track connected clients for SSE
 const clients = new Set<ReadableStreamDefaultController>();
@@ -80,7 +80,8 @@ const server = Bun.serve({
     if (url.pathname === "/" || url.pathname === "") {
       const template = await Bun.file("./src/templates/article.html").text();
       const html = await renderIndexHtml(template, "server");
-      return new Response(html, { headers: { "Content-Type": "text/html" } });
+      const finalHtml = applyPageMeta(html, "CC's Research Note", "Research notes and essays by CC.");
+      return new Response(finalHtml, { headers: { "Content-Type": "text/html" } });
     }
 
     const parts = url.pathname.replace(/^\//, "").split("/");
@@ -149,7 +150,9 @@ const server = Bun.serve({
       }
       htmlContent = injectToc(htmlContent);
       const template = await Bun.file("./src/templates/article.html").text();
-      const fullHtml = template.replace("{{content}}", () => htmlContent);
+      const title = extractTitle(markdownContent);
+      const description = extractDescription(markdownContent);
+      const fullHtml = applyPageMeta(template.replace("{{content}}", () => htmlContent), title, description);
       return new Response(fullHtml, { headers: { "Content-Type": "text/html" } });
     }
 

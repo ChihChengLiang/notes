@@ -1,7 +1,7 @@
 import { mkdir, rm } from "fs/promises";
 import { existsSync } from "fs";
 import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter, injectToc } from "./markdown-processor";
-import { getTopics, renderIndexHtml, renderSlides, applyAssetPaths, STATIC_FILES } from "./site";
+import { getTopics, renderIndexHtml, renderSlides, applyAssetPaths, STATIC_FILES, extractTitle, extractDescription, applyPageMeta } from "./site";
 
 async function build() {
   console.log("Building static site...");
@@ -32,7 +32,11 @@ async function build() {
   const topics = getTopics();
 
   // Build index page
-  const indexHtml = await renderIndexHtml(indexTemplate, "static");
+  const indexHtml = applyPageMeta(
+    await renderIndexHtml(indexTemplate, "static"),
+    "CC's Research Note",
+    "Research notes and essays by CC."
+  );
   await Bun.write(`${distDir}/index.html`, indexHtml);
   console.log("✓ Generated index.html");
 
@@ -66,7 +70,9 @@ async function build() {
         );
       }
       htmlContent = injectToc(htmlContent);
-      const fullHtml = topicTemplate.replace("{{content}}", () => htmlContent);
+      const title = extractTitle(markdownContent);
+      const description = extractDescription(markdownContent);
+      const fullHtml = applyPageMeta(topicTemplate.replace("{{content}}", () => htmlContent), title, description);
       await Bun.write(`${topicDir}/index.html`, fullHtml);
       console.log(`✓ Generated ${topic}/index.html`);
     }

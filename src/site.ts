@@ -90,6 +90,44 @@ export async function renderIndexHtml(
   return template.replace("{{content}}", () => body);
 }
 
+function escapeAttr(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+export function extractTitle(markdown: string): string {
+  const match = markdown.match(/^#\s+(.+)$/m);
+  return match?.[1]?.trim() ?? "";
+}
+
+export function extractDescription(markdown: string): string {
+  const withoutFrontmatter = markdown.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, "");
+  const paragraphs = withoutFrontmatter.split(/\n\n+/);
+  for (const para of paragraphs) {
+    const trimmed = para.trim();
+    if (!trimmed || /^#/.test(trimmed) || /^```/.test(trimmed) || /^<!--/.test(trimmed)) continue;
+    const plain = trimmed
+      .replace(/!\[[^\]]*\]\([^)]+\)/g, "")
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/\*([^*]+)\*/g, "$1")
+      .replace(/`([^`]+)`/g, "$1")
+      .replace(/\n/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (plain.length > 10) return plain.length > 160 ? plain.slice(0, 157) + "..." : plain;
+  }
+  return "";
+}
+
+export function applyPageMeta(template: string, title: string, description: string): string {
+  const siteName = "CC's Research Note";
+  const pageTitle = title && title !== siteName ? `${title} — ${siteName}` : siteName;
+  return template
+    .replace("{{page_title}}", escapeAttr(pageTitle))
+    .replaceAll("{{og_title}}", escapeAttr(title || siteName))
+    .replaceAll("{{og_description}}", escapeAttr(description));
+}
+
 export function applyAssetPaths(template: string, prefix: string): string {
   return template
     .replace(/href="\/theme\.css"/g, `href="${prefix}/theme.css"`)
