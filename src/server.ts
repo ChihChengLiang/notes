@@ -1,6 +1,5 @@
 import { watch } from "fs";
-import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter, injectToc } from "./markdown-processor";
-import { renderIndexHtml, renderSlides, STATIC_FILES, extractTitle, extractDescription, applyPageMeta } from "./site";
+import { renderIndexHtml, renderSlides, renderTopicHtml, STATIC_FILES } from "./site";
 
 // Track connected clients for SSE
 const clients = new Set<ReadableStreamDefaultController>();
@@ -80,8 +79,7 @@ const server = Bun.serve({
     if (url.pathname === "/" || url.pathname === "") {
       const template = await Bun.file("./src/templates/article.html").text();
       const html = await renderIndexHtml(template, "server");
-      const finalHtml = applyPageMeta(html, "CC's Research Note", "Research notes and essays by CC.");
-      return new Response(finalHtml, { headers: { "Content-Type": "text/html" } });
+      return new Response(html, { headers: { "Content-Type": "text/html" } });
     }
 
     const parts = url.pathname.replace(/^\//, "").split("/");
@@ -121,39 +119,11 @@ const server = Bun.serve({
       return Response.redirect(`${url.origin}/${topic}/`, 301);
     }
     if (sub === "") {
-      const mainPath = `./notes/${topic}/main.md`;
-      const bibPath = `./notes/${topic}/citation.biblatex`;
-      const mainFile = Bun.file(mainPath);
-      if (!(await mainFile.exists())) {
-        return new Response("Not found", { status: 404 });
-      }
-
-      const hasBib = await Bun.file(bibPath).exists();
-
-      // Create a fresh processor per request (watch mode — always reload)
-      const md = createMarkdownProcessor(hasBib ? bibPath : null, { alwaysReloadFiles: true });
-      let bibCache: any = null;
-
-      if (hasBib) {
-        setupCitationRenderer(md, () => bibCache);
-        bibCache = await loadBibliography(bibPath);
-      }
-
-      const raw = await mainFile.text();
-      const { markdown: markdownContent, date } = parseFrontmatter(raw);
-      let htmlContent = md.render(markdownContent);
-      if (date) {
-        htmlContent = htmlContent.replace(
-          /(<\/h1>)/,
-          `$1<div class="note-meta"><time datetime="${date}">${date}</time></div>`
-        );
-      }
-      htmlContent = injectToc(htmlContent);
       const template = await Bun.file("./src/templates/article.html").text();
-      const title = extractTitle(markdownContent);
-      const description = extractDescription(markdownContent);
-      const fullHtml = applyPageMeta(template.replace("{{content}}", () => htmlContent), title, description);
-      return new Response(fullHtml, { headers: { "Content-Type": "text/html" } });
+      // alwaysReloadFiles: re-read bib on every request so edits are picked up without restart
+      const html = await renderTopicHtml(`./notes/${topic}`, template, { alwaysReloadFiles: true });
+      if (!html) return new Response("Not found", { status: 404 });
+      return new Response(html, { headers: { "Content-Type": "text/html" } });
     }
 
     return new Response("Not found", { status: 404 });

@@ -1,6 +1,7 @@
 import { readdirSync } from "fs";
 import { Marp } from "@marp-team/marp-core";
 import leanHljs from "./lean.ts";
+import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter, injectToc } from "./markdown-processor";
 
 export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js"] as const;
 
@@ -83,11 +84,13 @@ export async function renderIndexHtml(
       const slidesHref = linkStyle === "static" ? `./${topic}/slides.html` : `/${topic}/slides`;
       const slidesLink = hasSlides ? ` — <a href="${slidesHref}">slides</a>` : "";
       const dateHtml = date ? ` <time class="note-date" datetime="${date}">${date}</time>` : "";
-      return `<li><a href="${topicHref}">${title}</a>${slidesLink}${dateHtml}</li>`;
+      return { date, html: `<li><a href="${topicHref}">${title}</a>${slidesLink}${dateHtml}</li>` };
     })
   );
-  const body = `<h1>Research Topics</h1><ul>${items.toReversed().join("\n")}</ul>`;
-  return template.replace("{{content}}", () => body);
+  items.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+  const body = `<h1>Research Topics</h1><ul>${items.map((i) => i.html).join("\n")}</ul>`;
+  const html = template.replace("{{content}}", () => body);
+  return applyPageMeta(html, "CC's Research Note", "Research notes and essays by CC.");
 }
 
 function escapeAttr(s: string): string {
@@ -126,6 +129,38 @@ export function applyPageMeta(template: string, title: string, description: stri
     .replace("{{page_title}}", escapeAttr(pageTitle))
     .replaceAll("{{og_title}}", escapeAttr(title || siteName))
     .replaceAll("{{og_description}}", escapeAttr(description));
+}
+
+export async function renderTopicHtml(
+  topicDir: string,
+  template: string,
+  options?: { alwaysReloadFiles?: boolean }
+): Promise<string | null> {
+  const mainFile = Bun.file(`${topicDir}/main.md`);
+  if (!(await mainFile.exists())) return null;
+
+  const bibPath = `${topicDir}/citation.biblatex`;
+  const hasBib = await Bun.file(bibPath).exists();
+
+  const md = createMarkdownProcessor(hasBib ? bibPath : null, options);
+  let bibCache: any = null;
+  if (hasBib) {
+    setupCitationRenderer(md, () => bibCache);
+    bibCache = await loadBibliography(bibPath);
+  }
+
+  const { markdown, date } = parseFrontmatter(await mainFile.text());
+  let html = md.render(markdown);
+  if (date) {
+    html = html.replace(/(<\/h1>)/, `$1<div class="note-meta"><time datetime="${date}">${date}</time></div>`);
+  }
+  html = injectToc(html);
+
+  return applyPageMeta(
+    template.replace("{{content}}", () => html),
+    extractTitle(markdown),
+    extractDescription(markdown)
+  );
 }
 
 export function applyAssetPaths(template: string, prefix: string): string {
