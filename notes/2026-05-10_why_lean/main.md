@@ -92,8 +92,28 @@ I'm not sure if this is already helpful in software implementation side. AI says
 - **Scale**: 491 Lean files, ~155,000 lines of Lean; 308 commits; 10+ contributors
 - **License**: Apache 2.0
 
+## Where Software Engineering is Going?
 
-## What software workflow should be covered?
+These are reflections after reading the case studies in the next section.
+
+Traditional programming languages are optimized for humans — English-speaking humans especially. But now that agents provide cheap and capable coding skills, the organization is changing. From the point of view of Rich Sutton's "The Bitter Lesson," we should do things that favor agent productivity.
+
+The way we channel our intents to implementation is changing. Originally we tried to speak English in a way logical enough that raw machines could understand and turn it into low-level data/compute operations.
+
+Now, since implementations will grow beyond human reasoning, we speak the language of math to solidify our intents. Smart machines write opcodes directly to skip "compilation," and that favors math.
+
+It also seems the software input/output bug is solved — or must be solved — due to external threats. People now move a level up. We model the attackers and their mental state. This level of modeling used to belong to the academic world and paper writing. But the trend looks like it can cover implementation.
+
+### Where Will Vulnerabilities Go?
+
+The arms race dynamic of formal verification doesn't eliminate vulnerabilities — it relocates them. Each layer you formally verify pushes the attack surface to the boundary above or below it. The `clean` verification table is the canonical illustration: the constraint system is proven correct, but the serialization to the prover is unverified. The adversary simply targets the seam. This is close to a conservation law: verification hardens one layer, and the boundary becomes the most attractive target.
+
+Concretely, the seams that remain:
+
+- **Spec-to-intent gap.** Formal verification proves your implementation matches your spec — not that your spec matches your intent. A subtly wrong spec is invisible to the type checker. The Circom `IsZero` missing-constraint bug would have failed to compile in `clean`, but only because the spec was written to catch it. This gap lives in human cognition, not in any tool.
+- **Trusted computing base.** Lean's kernel, Mathlib, the RISC-V semantics model — these are the axioms everything rests on. The lean-zip fuzzing campaign illustrates the irony: 105 million executions found no memory vulnerabilities in the verified library, but found a bug in Lean 4's own runtime.
+- **Composition boundaries.** Individual components get verified; emergent behaviors from composition are harder. Each EVM opcode gets a proof, but reentrancy patterns and cross-contract state arise from opcode sequences. Verifying ADD doesn't verify a flash loan attack.
+- **Social and supply chain.** If an agent writes both the spec and the proof, who audits the agent? A subtly manipulated model could write a spec with a deliberate hole — a software supply chain attack, one level up, disguised as a rigorous proof.
 
 ## Case studies
 
