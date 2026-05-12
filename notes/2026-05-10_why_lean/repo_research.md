@@ -16,6 +16,7 @@ Example Background section:
 - **Goal**: Machine-checked proofs for ZK circuit correctness — soundness, completeness, and field wrap-around safety — over *all* possible field elements and adversarial witnesses, not just tested inputs
 - **Scale**: 26,404 lines of Lean across 153 files; ~800 commits/month peak in mid-2025, settled at ~200/month
 - **License**: Apache 2.0 (Circomlib port: LGPL)
+- **Investigated Version**: `b8db01c08fae9bff881e706abc3ef6022f4c3fc1`
 
 Scale might require a cloc analysis.
 
@@ -28,6 +29,18 @@ Do bullet points.
 Example highlight:
 
 - **Familiar syntax, proof obligation attached.** You write circuits with `do`-notation — the same structure a Circom developer would recognise. The original Circom source is embedded as a comment alongside the Lean translation, making the correspondence explicit. The difference: you must also supply a machine-checked proof that the constraints do what the comment says.
+
+- **Even the simplest Boolean gadget comes with a proof.** `assertBool` — the `x * (x - 1) = 0` constraint every Circom circuit uses — is formally proven equivalent to `x = 0 ∨ x = 1` via a Mathlib lemma. The `NoZeroDivisors` constraint is load-bearing: it is what lets Lean conclude `x = 0 ∨ x - 1 = 0` from a zero product. The type system enforces this assumption is in scope.
+
+```lean
+def assertBool : FormalAssertion (F p) field where
+  main (x : Expression (F p)) := assertZero (x * (x - 1))
+  Spec (x : F p) := IsBool x
+  soundness   := by circuit_proof_all [IsBool.iff_mul_sub_one, sub_eq_add_neg]
+  completeness := by circuit_proof_all [IsBool.iff_mul_sub_one, sub_eq_add_neg]
+```
+
+> [Boolean.lean#L201–L208](https://github.com/Verified-zkEVM/clean/blob/07d546bb929144d2da3bb88e53a20144238ec4ba/Clean/Gadgets/Boolean.lean#L201-L208)
 
 ### Don't be shy from adding Code exerpts.
 

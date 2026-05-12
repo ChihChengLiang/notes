@@ -297,3 +297,55 @@ soundness := by
 
 - **Proof automation is still growing.** The `circuit_proof_start` tactic handles routine setup, but complex gadgets like `LessThan` still require substantial manual case analysis navigating variable offset arithmetic (`env.get (i₀ + n + 1)`). Proof automation improvements are listed as ongoing work in the roadmap.
 
+### evm-asm: Formally Verified EVM as RISC-V Assembly
+
+#### Background
+
+- **Repo**: [`Verified-zkEVM/evm-asm`](https://github.com/Verified-zkEVM/evm-asm) — Lean 4 verified macro assembler implementing the Ethereum EVM as RV64IM RISC-V assembly
+- **Organization**: [zkSecurity](https://zksecurity.xyz/), Verified-zkEVM grant program. Principal author: Yoichi Hirai (~96% of commits)
+- **Language**: Lean 4; target runtime is RV64IM RISC-V (the SP1 zkVM substrate)
+- **Timeline**: February 2026 – present; ~4,550 commits in May 2026 alone, consistent with "200–600 commits per day" driven by AI agents
+- **Goal**: Machine-checked proofs that a RISC-V assembly program correctly implements the Ethereum state transition function, for use as a formally verified zkEVM guest
+- **Scale**: 9,904 Lean files, ~1.8M lines; 52+ EVM opcodes proved; 66 conformance vectors passing as theorems
+
+#### Highlights
+
+- **Why verify at the assembly level?** Every language, compiler, and optimizer eventually produces machine instructions. Verifying there sidesteps all higher-level problems: C/C++ undefined behavior, Rust's lack of a stable spec, and the 10–20% overhead of formally verified compilers like CompCert. RISC-V has no undefined behavior — every instruction has a total, formal semantics. In a zkVM context this bites even harder: if the guest program has a bug, the resulting SNARK proof is still valid. It just proves the wrong thing. Formal verification of the guest is the only defense.
+
+- **A three-level proof pyramid for every opcode.** Each of the 52+ opcodes is verified bottom-up. The 256-bit ADD illustrates the structure: Level 1 proves each 5-instruction limb group manipulates the right register and memory cell. Level 2 composes four limb proofs into a full 30-instruction carry-chain spec. Level 3 rewrites the raw limb postcondition into `evmWordIs (sp + 32) (a + b)` — abstract EVM semantics visible to callers.
+
+```lean
+theorem evm_add_stack_spec_within (sp base : Word) (a b : EvmWord) ... :
+    cpsTripleWithin 30 base (base + 120) (evm_add_code base)
+      ((.x12 ↦ᵣ sp) ** ... ** evmWordIs sp a ** evmWordIs (sp + 32) b)
+      ((.x12 ↦ᵣ (sp + 32)) ** ... ** evmWordIs sp a ** evmWordIs (sp + 32) (a + b))
+```
+
+> [Add/Spec.lean#L74–L128](https://github.com/Verified-zkEVM/evm-asm/blob/b8db01c08fae9bff881e706abc3ef6022f4c3fc1/EvmAsm/Evm64/Add/Spec.lean#L74-L128)
+
+- **The frame rule is baked into the triple definition.** In textbook separation logic the frame rule is a separate inference step. Here `cpsTripleWithin` quantifies over an arbitrary frame `R` internally — every spec says only what the code touches, and unchanged heap, registers, and code are automatically preserved. Each instruction is stated and proved once; callers never re-prove frame conditions.
+
+```lean
+def cpsTripleWithin (nSteps : Nat) (entry exit_ : Word) (cr : CodeReq)
+    (P Q : Assertion) : Prop :=
+  ∀ (R : Assertion), R.pcFree → ∀ s, cr.SatisfiedBy s →
+    (P ** R).holdsFor s → s.pc = entry →
+    ∃ k, k ≤ nSteps ∧ ∃ s', stepN k s = some s' ∧
+      s'.pc = exit_ ∧ (Q ** R).holdsFor s'
+```
+
+> [Rv64/CPSSpec.lean#L45–L48](https://github.com/Verified-zkEVM/evm-asm/blob/b8db01c08fae9bff881e706abc3ef6022f4c3fc1/EvmAsm/Rv64/CPSSpec.lean#L45-L48)
+
+- **Proof as a compiler — the AI co-routine.** AI agents write both the assembly subroutine and its Lean proof in the same session. If the proof fails to type-check, the agent knows the code or the spec is wrong — before any test is run, before any deployment. The proof failure is the bug report. This co-routine property is what makes 200–600 commits per day plausible: the type checker replaces the entire test-and-fix loop.
+
+- **What this means for Ethereum clients.**
+
+| Dimension | geth / reth / besu | evm-asm |
+|---|---|---|
+| Correctness evidence | Passes ethereum/tests vectors | Machine-checked proof for all inputs |
+| Spec | EIPs + Yellow Paper (informal) | Lean types + `cpsTripleWithin` + pure EL spec |
+| Coverage | Test-driven (finite vectors) | Universal (∀ register values, ∀ memory layouts) |
+| Trust base | Rust compiler + std | Lean kernel + Sail RISC-V model |
+
+- **Caveats.** The DIV/MOD semantic bridge is still in progress — Knuth's Theorem B (trial quotient overestimates by ≤ 1) is the remaining blocker. 27 files use `native_decide` against AGENTS.md policy, mostly in RLP round-trip tests over finite concrete values. And the PLAN.md is significantly behind the code: phases listed as future work (interpreter, gas, world state, transactions) already exist in `Evm64/` and `EL/`.
+
