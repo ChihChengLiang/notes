@@ -58,7 +58,7 @@
   background-color: var(--custom-1);
   background-image: url("../assets/bedge-grunge.png");
   color: var(--custom-12);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: "Noto Serif JP", Georgia, "Times New Roman", serif;
 }
 
 /* Page numbers */
@@ -97,6 +97,7 @@ code {
   color: var(--custom-12);
   border-radius: 3px;
   padding: 0.1em 0.3em;
+  font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 pre {
@@ -188,29 +189,29 @@ tbody tr:last-child td {
 }
 
 /* ── Title slide (_class: title-slide) ───────────────────────────────────── */
-.title-slide {
+section.title-slide {
   background-color: var(--custom-12);
   color: var(--custom-1);
   justify-content: center;
   text-align: center;
 }
 
-.title-slide h1 {
+section.title-slide h1 {
   color: var(--custom-1);
   border-bottom: none;
   font-style: italic;
 }
 
-.title-slide p,
-.title-slide strong {
+section.title-slide p,
+section.title-slide strong {
   color: var(--custom-7);
 }
 
-.title-slide a {
+section.title-slide a {
   color: var(--custom-8);
 }
 
-.title-slide::after {
+section.title-slide::after {
   display: none;
 }
 
