@@ -3,18 +3,18 @@
 
 /* ── Color palette (mirrors templates/theme.css) ─────────────────────────── */
 :root {
-  --custom-1: #fdfcf5;
-  --custom-2: #faf8ec;
-  --custom-3: #f2ece0;
-  --custom-4: #e8e2d4;
-  --custom-5: #dfd8c8;
-  --custom-6: #d4ccba;
-  --custom-7: #c8bfa8;
-  --custom-8: #b0a68e;
-  --custom-9: #8a7e64;
-  --custom-10: #7d7157;
-  --custom-11: #625849;
-  --custom-12: #28200d;
+  --custom-1: oklch(99.1% 0.011 78);
+  --custom-2: oklch(98.1% 0.018 78);
+  --custom-3: oklch(95.3% 0.031 78);
+  --custom-4: oklch(92.5% 0.040 78);
+  --custom-5: oklch(89.8% 0.044 78);
+  --custom-6: oklch(87.0% 0.046 78);
+  --custom-7: oklch(83.7% 0.052 78);
+  --custom-8: oklch(77.5% 0.053 78);
+  --custom-9: oklch(62.2% 0.054 78);
+  --custom-10: oklch(57.7% 0.054 78);
+  --custom-11: oklch(47.5% 0.052 78);
+  --custom-12: oklch(23.2% 0.043 78);
   --custom-contrast: #fff;
   --custom-surface: #faf4e8cc;
   --accent: oklch(48% 0.13 28);

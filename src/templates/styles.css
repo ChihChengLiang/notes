@@ -1,13 +1,29 @@
+html {
+  background-color: var(--custom-1);
+}
+
 body {
   font-family: "Noto Serif JP", Georgia, "Times New Roman", serif;
   line-height: 1.6;
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
+  background-color: transparent;
+  isolation: isolate;
+  color: var(--custom-12);
+}
+
+/* Grunge texture layer — fixed behind all content, opacity-controlled */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
   background-color: var(--custom-1);
   background-image: url("./assets/bedge-grunge.png");
-  background-blend-mode: var(--paper-blend, normal);
-  color: var(--custom-12);
+  background-blend-mode: var(--paper-blend, multiply);
+  opacity: var(--paper-opacity, 0.5);
+  pointer-events: none;
+  z-index: -1;
 }
 
 h1 {
@@ -421,10 +437,13 @@ nav.toc li {
 
 /* Ruled paper on article pages */
 body:not(:has(.index-nb)) {
-  background-image:
-    repeating-linear-gradient(to bottom, transparent 0, transparent 31px, var(--rule-color) 31px, var(--rule-color) 32px),
-    url("./assets/bedge-grunge.png");
-  background-blend-mode: normal, var(--paper-blend, normal);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    var(--rule-color) 31px,
+    var(--rule-color) 32px
+  );
 }
 
 .article-content {
