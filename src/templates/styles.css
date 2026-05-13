@@ -31,7 +31,20 @@ a {
 
 img {
   width: 100%;
+  display: block;
 }
+
+/* Standalone images (paragraph containing only an image) get the paper-lift effect */
+p:has(> img:only-child) {
+  margin: 1.8rem 0;
+  transform: rotate(calc(var(--img-sign, -0.6) * var(--paper-tilt) * 0.7deg));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow:
+    calc(var(--img-sign, -0.6) * -1 * 6px) 5px 0 -1.5px var(--paper-tone),
+    0 calc(2px + var(--paper-lift) * 2.5px) calc(8px + var(--paper-lift) * 10px) rgba(0,0,0,calc(0.03 + var(--paper-lift) * 0.06));
+}
+p:has(> img:only-child):nth-of-type(odd)  { --img-sign:  0.8; }
+p:has(> img:only-child):nth-of-type(even) { --img-sign: -0.7; }
 
 a:hover {
   text-decoration: underline;
@@ -263,8 +276,17 @@ blockquote p {
   display: inline-block;
   width: 100%;
   padding: 4px;
-  margin: 1rem 0;
+  margin: 1.8rem 0;
+  transform: rotate(calc(var(--cb-sign, 0.5) * var(--paper-tilt) * 0.6deg));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow:
+    calc(var(--cb-sign, 0.5) * -1 * 6px) 5px 0 -1.5px var(--paper-tone),
+    0 calc(2px + var(--paper-lift) * 2.5px) calc(8px + var(--paper-lift) * 10px) rgba(0,0,0,calc(0.03 + var(--paper-lift) * 0.06));
 }
+.table-wrap:nth-of-type(3n+1) { --cb-sign: -0.8; }
+.table-wrap:nth-of-type(3n+2) { --cb-sign:  0.6; }
+.table-wrap:nth-of-type(3n+3) { --cb-sign: -0.5; }
+.table-wrap:nth-of-type(4n+2) { --cb-sign:  1.0; }
 
 .table-wrap::before {
   content: '';
@@ -284,6 +306,7 @@ table {
   border: none;
   border-radius: 8px;
   overflow: hidden;
+  background-color: var(--custom-2);
 }
 
 thead tr {
@@ -334,6 +357,12 @@ nav.toc {
   padding: 0.75rem 1.25rem;
   margin-bottom: 2rem;
   font-size: 0.9em;
+  transform: rotate(calc(var(--cb-sign, 0.5) * var(--paper-tilt) * 0.6deg));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow:
+    calc(var(--cb-sign, 0.5) * -1 * 6px) 5px 0 -1.5px var(--paper-tone),
+    0 calc(2px + var(--paper-lift) * 2.5px) calc(8px + var(--paper-lift) * 10px) rgba(0,0,0,calc(0.03 + var(--paper-lift) * 0.06));
+
 }
 
 nav.toc::before {
