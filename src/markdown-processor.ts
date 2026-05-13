@@ -65,6 +65,9 @@ export function createMarkdownProcessor(bibPath: string | null, options?: { alwa
   md.renderer.rules.table_close = (tokens, idx, options, env, slf) =>
     `${slf.renderToken(tokens, idx, options)}</div>`;
 
+  // Render --- as ornament divider instead of a plain <hr>
+  md.renderer.rules.hr = () => '<div class="divider-orn" aria-hidden="true">✦</div>\n';
+
   // Render mermaid fences as <pre class="mermaid"> for client-side rendering
   const defaultFence = md.renderer.rules.fence?.bind(md.renderer.rules);
   md.renderer.rules.fence = (tokens, idx, options, env, slf) => {

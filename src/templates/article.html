@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/theme.css">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script>document.documentElement.className = localStorage.getItem('cc-theme') || 'light';</script>
   <script src="/client.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script type="module" src="/mermaid-init.js"></script>
@@ -25,6 +26,27 @@
     </filter>
   </defs>
 </svg>
+<div class="theme-bar">
+  <div class="theme-seg" role="group" aria-label="Theme">
+    <button class="theme-btn" data-theme="light">light</button>
+    <button class="theme-btn" data-theme="dark">dark</button>
+  </div>
+</div>
   {{content}}
+<script>
+(function() {
+  var current = document.documentElement.className || 'light';
+  var btns = document.querySelectorAll('.theme-btn');
+  function setTheme(t) {
+    document.documentElement.className = t;
+    localStorage.setItem('cc-theme', t);
+    btns.forEach(function(b) { b.setAttribute('aria-pressed', String(b.dataset.theme === t)); });
+  }
+  btns.forEach(function(b) {
+    b.setAttribute('aria-pressed', String(b.dataset.theme === current));
+    b.addEventListener('click', function() { setTheme(b.dataset.theme); });
+  });
+})();
+</script>
 </body>
 </html>

@@ -17,6 +17,8 @@
   --custom-12: #28200d;
   --custom-contrast: #fff;
   --custom-surface: #faf4e8cc;
+  --accent: oklch(48% 0.13 28);
+  --accent-soft: oklch(48% 0.13 28 / 0.12);
 
   --custom-a1: #55005503;
   --custom-a2: #6e006e07;
@@ -72,8 +74,16 @@ h1, h2, h3 {
 }
 
 h1 {
-  border-bottom: 2px solid var(--custom-6);
-  padding-bottom: 0.2em;
+  border-bottom: none;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-style: italic;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
 }
 
 /* ── Links ────────────────────────────────────────────────────────────────── */
@@ -187,7 +197,8 @@ tbody tr:last-child td {
 
 .title-slide h1 {
   color: var(--custom-1);
-  border-bottom-color: var(--custom-9);
+  border-bottom: none;
+  font-style: italic;
 }
 
 .title-slide p,
@@ -232,3 +243,22 @@ tbody tr:last-child td {
 
 /* sorry/admit stand out as a warning */
 .hljs-sorry { color: #a63220; font-weight: 600; }
+
+/* Ornament divider */
+.divider-orn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--custom-8);
+  letter-spacing: 0.5em;
+  margin: 0.8rem 0;
+  font-size: 0.75em;
+}
+.divider-orn::before,
+.divider-orn::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--custom-5);
+  margin: 0 0.8rem;
+}

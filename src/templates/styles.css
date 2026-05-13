@@ -6,7 +6,7 @@ body {
   padding: 2rem;
   background-color: var(--custom-1);
   background-image: url("./assets/bedge-grunge.png");
-  background-blend-mode: inherit;
+  background-blend-mode: var(--paper-blend, normal);
   color: var(--custom-12);
 }
 
@@ -25,7 +25,7 @@ h3 {
 }
 
 a {
-  color: var(--custom-11);
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -34,8 +34,8 @@ img {
 }
 
 a:hover {
-  color: var(--custom-9);
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 code {
@@ -47,6 +47,13 @@ code {
   font-size: 0.9em;
 }
 
+/* ── Paper-lift variables ── */
+:root {
+  --paper-lift: 1.4;
+  --paper-tilt: 0.8;
+  --paper-tone: var(--custom-4);
+}
+
 /* Code blocks with syntax highlighting */
 pre.hljs {
   position: relative;
@@ -55,7 +62,17 @@ pre.hljs {
   overflow-x: visible;
   margin: 2rem 0;
   border-radius: 8px;
+  transform: rotate(calc(var(--cb-sign, 1) * var(--paper-tilt) * 1deg));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow:
+    calc(var(--cb-sign, 1) * -1 * 7px) 5px 0 -1px var(--paper-tone),
+    0 calc(2px + var(--paper-lift) * 3px) calc(8px + var(--paper-lift) * 14px) rgba(0,0,0,calc(0.04 + var(--paper-lift) * 0.07)),
+    0 calc(1px + var(--paper-lift) * 1px) calc(2px + var(--paper-lift) * 3px)  rgba(0,0,0,calc(0.04 + var(--paper-lift) * 0.05));
 }
+pre.hljs:nth-of-type(3n+1) { --cb-sign: -1; }
+pre.hljs:nth-of-type(3n+2) { --cb-sign:  0.55; }
+pre.hljs:nth-of-type(3n+3) { --cb-sign: -0.4; }
+pre.hljs:nth-of-type(4n+2) { --cb-sign:  1.1; }
 
 pre.hljs::before {
   content: '';
@@ -369,4 +386,262 @@ nav.toc li {
 /* Mermaid diagram styling */
 .mermaid {
   padding: 1.5rem;
+}
+
+/* ── Article: B lab notebook ── */
+
+/* Ruled paper on article pages */
+body:not(:has(.index-nb)) {
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0, transparent 31px, var(--rule-color) 31px, var(--rule-color) 32px),
+    url("./assets/bedge-grunge.png");
+  background-blend-mode: normal, var(--paper-blend, normal);
+}
+
+.article-content {
+  padding-top: 1.5rem;
+}
+
+.nb-back-link {
+  display: block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--custom-9);
+  margin-bottom: 0.75rem;
+  text-decoration: none;
+}
+.nb-back-link:hover {
+  color: var(--custom-11);
+}
+
+.article-content h1 {
+  text-align: center;
+  border-bottom: none;
+  padding-bottom: 0;
+  font-size: 2.8rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+  font-style: italic;
+  margin-bottom: 0.3rem;
+}
+
+.article-content .note-meta {
+  text-align: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--custom-9);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.nb-article-orn {
+  text-align: center;
+  color: var(--custom-9);
+  font-size: 0.9rem;
+  letter-spacing: 0.5em;
+  margin: 1.1rem 0 1.8rem;
+}
+
+.article-content h2 {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.06em;
+  font-size: 1.25rem;
+  margin-top: 2.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.article-content h3 {
+  font-size: 1.05rem;
+  margin-top: 1.6rem;
+  color: var(--custom-11);
+}
+
+/* Ornament divider (from --- in markdown) */
+.divider-orn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--custom-8);
+  letter-spacing: 0.6em;
+  margin: 1.8rem 0;
+  font-size: 0.9rem;
+}
+.divider-orn::before,
+.divider-orn::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--custom-5);
+  margin: 0 1rem;
+}
+
+/* ── Theme toggle ── */
+.theme-bar {
+  position: fixed;
+  top: 12px;
+  right: 14px;
+  z-index: 1000;
+}
+.theme-seg {
+  display: flex;
+  background: var(--custom-3);
+  border: 1px solid var(--custom-5);
+  border-radius: 999px;
+  padding: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.theme-btn {
+  border: 0;
+  background: transparent;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--custom-10);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+.theme-btn[aria-pressed="true"] {
+  background: var(--custom-12);
+  color: var(--custom-1);
+}
+
+/* ── Index: B lab notebook ── */
+body:has(.index-nb) {
+  padding: 0;
+}
+
+.index-nb {
+  padding: 2.5rem 3rem;
+  min-height: 100vh;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    var(--rule-color) 31px,
+    var(--rule-color) 32px
+  );
+}
+
+.nb-masthead {
+  position: relative;
+  padding: 1.2rem 1.6rem 1rem;
+  margin-bottom: 2.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.nb-masthead::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-6);
+  border-radius: 10px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
+}
+
+.nb-masthead h1 {
+  font-size: 2.4rem;
+  margin: 0.3rem 0 0;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  border-bottom: none;
+  padding-bottom: 0;
+  color: var(--custom-12);
+}
+
+.nb-folio {
+  font-family: "JetBrains Mono", monospace;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  color: var(--custom-10);
+  margin-bottom: 0.25rem;
+}
+
+.nb-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--custom-9);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.nb-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nb-item {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1.2rem;
+  padding: 0.8rem 0;
+}
+
+.nb-date {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--custom-11);
+  padding-top: 0.3rem;
+}
+
+.nb-title {
+  font-size: 1.28rem;
+  font-weight: 600;
+  color: var(--custom-12);
+  font-family: "Noto Serif JP", serif;
+  display: block;
+  line-height: 1.25;
+  overflow: hidden;
+}
+.nb-title:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.nb-links {
+  margin-top: 0.35rem;
+}
+
+.nb-slides-link {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  text-decoration: none;
+}
+.nb-slides-link:hover {
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.nb-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--custom-8);
+  letter-spacing: 0.6em;
+  margin: 0.2rem 0;
+  list-style: none;
+  padding: 0;
+  font-size: 0.9rem;
+}
+.nb-divider::before,
+.nb-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--custom-5);
+  margin: 0 1rem;
 }

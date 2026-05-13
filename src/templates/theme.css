@@ -11,6 +11,10 @@
   --custom-10: #7d7157;
   --custom-11: #625849;
   --custom-12: #28200d;
+  --accent: oklch(48% 0.13 28);
+  --accent-soft: oklch(48% 0.13 28 / 0.12);
+  --paper-blend: normal;
+  --rule-color: rgba(120, 100, 80, 0.08);
 
   --custom-a1: #55005503;
   --custom-a2: #6e006e07;
@@ -66,4 +70,23 @@
       --custom-track: oklch(62.2% 0.054 78);
     }
   }
+}
+
+.dark {
+  --custom-1: oklch(18% 0.012 78);
+  --custom-2: oklch(20% 0.014 78);
+  --custom-3: oklch(23% 0.016 78);
+  --custom-4: oklch(26% 0.018 78);
+  --custom-5: oklch(30% 0.020 78);
+  --custom-6: oklch(35% 0.022 78);
+  --custom-7: oklch(42% 0.026 78);
+  --custom-8: oklch(52% 0.034 78);
+  --custom-9: oklch(65% 0.040 78);
+  --custom-10: oklch(72% 0.044 78);
+  --custom-11: oklch(82% 0.046 78);
+  --custom-12: oklch(94% 0.030 78);
+  --accent: oklch(72% 0.13 28);
+  --accent-soft: oklch(72% 0.13 28 / 0.18);
+  --paper-blend: overlay;
+  --rule-color: rgba(180, 160, 130, 0.06);
 }

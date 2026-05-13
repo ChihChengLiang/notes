@@ -82,15 +82,56 @@ export async function renderIndexHtml(
       const hasSlides = await Bun.file(`./notes/${topic}/slides.md`).exists();
       const topicHref = linkStyle === "static" ? `./${topic}/` : `/${topic}`;
       const slidesHref = linkStyle === "static" ? `./${topic}/slides.html` : `/${topic}/slides`;
-      const slidesLink = hasSlides ? ` — <a href="${slidesHref}">slides</a>` : "";
-      const dateHtml = date ? ` <time class="note-date" datetime="${date}">${date}</time>` : "";
-      return { date, html: `<li><a href="${topicHref}">${title}</a>${slidesLink}${dateHtml}</li>` };
+      return { date, title, hasSlides, topicHref, slidesHref };
     })
   );
   items.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
-  const body = `<h1>Research Topics</h1><ul>${items.map((i) => i.html).join("\n")}</ul>`;
+
+  const count = items.length;
+  const sinceYear = items.length > 0 ? (items[items.length - 1].date?.slice(0, 4) ?? "2024") : "2024";
+
+  const listHtml = items.map((item, i) => {
+    const slidesLink = item.hasSlides
+      ? `<div class="nb-links"><a href="${item.slidesHref}" class="nb-slides-link">◧ slides</a></div>`
+      : "";
+
+    const titleContent = escapeHtml(item.title);
+
+    const itemHtml = `<li class="nb-item">
+      <time class="nb-date" datetime="${item.date ?? ""}">${item.date ?? ""}</time>
+      <div class="nb-body">
+        <a class="nb-title" href="${item.topicHref}">${titleContent}</a>
+        ${slidesLink}
+      </div>
+    </li>`;
+
+    if (i < items.length - 1) {
+      return itemHtml + `\n    <li class="nb-divider" aria-hidden="true" role="presentation">❦</li>`;
+    }
+    return itemHtml;
+  });
+
+  const body = `<div class="index-nb">
+  <div class="nb-masthead">
+    <div>
+      <div class="nb-folio">research notebook · ${sinceYear}–</div>
+      <h1>CC's Research Notebook</h1>
+    </div>
+    <div class="nb-count">
+      <div>${count} entries</div>
+    </div>
+  </div>
+  <ul class="nb-list">
+    ${listHtml.join("\n    ")}
+  </ul>
+</div>`;
+
   const html = template.replace("{{content}}", () => body);
   return applyPageMeta(html, "CC's Research Note", "Research notes and essays by CC.");
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 function escapeAttr(s: string): string {
@@ -152,9 +193,15 @@ export async function renderTopicHtml(
   const { markdown, date } = parseFrontmatter(await mainFile.text());
   let html = md.render(markdown);
   if (date) {
-    html = html.replace(/(<\/h1>)/, `$1<div class="note-meta"><time datetime="${date}">${date}</time></div>`);
+    html = html.replace(
+      /(<\/h1>)/,
+      `$1<div class="note-meta"><time datetime="${date}">${date}</time></div>` +
+      `<div class="nb-article-orn" aria-hidden="true">❦ &nbsp; ❦ &nbsp; ❦</div>`
+    );
   }
+  html = `<a class="nb-back-link" href="/">← notebook</a>\n` + html;
   html = injectToc(html);
+  html = `<div class="article-content">${html}</div>`;
 
   return applyPageMeta(
     template.replace("{{content}}", () => html),
