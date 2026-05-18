@@ -13,7 +13,7 @@ date: 2026-05-10
   - AI now makes it cheap
 - The **Need**: Automate coding beyond human reasoning
   - People might want to work with 20 agents, but still want some guarantees -- Interactive Theorem Proving helps. People call it [vericoding](https://blog.icme.io/vericoding-the-end-of-trust-me-bro-the-ai-wrote-it/) [code](https://github.com/Beneficial-AI-Foundation/vericoding-benchmark) [paper](https://arxiv.org/abs/2509.22908)
-  - [Lean Atlas](https://arxiv.org/abs/2604.16347) paper says If we can trust Lean's type checking and Mathlib, 95%~99% of the proofs need no human review. Naively this converts to 20x~100x review efficiency. [code](https://github.com/NyxFoundation/lean-atlas) [demo](https://lean-atlas.nyx.foundation/demo)
+  - The [Lean Atlas](https://arxiv.org/abs/2604.16347) paper argues that if we can trust Lean's type checking and Mathlib, 95%~99% of the proofs need no human review (depending on whether the codebase is definition-heavy or proof-heavy). Naively this translates to a 20x~100x improvement in review efficiency. [code](https://github.com/NyxFoundation/lean-atlas) [demo](https://lean-atlas.nyx.foundation/demo)
 
 ## My experience
 
