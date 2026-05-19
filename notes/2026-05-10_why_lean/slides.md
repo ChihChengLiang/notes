@@ -6,69 +6,77 @@ paginate: true
 
 <!-- _class: title-slide -->
 
-# Why Lean?
+# My Lean 4 Experience and the Future of Software
 
 **Formal proofs in the age of AI coding**
 
-2026-05-10 CC
+CC · 2026-05-10
 
 ---
 
-## Agenda
+<!-- _class: title-slide -->
+<div class="columns">
 
-1. **The threat** — AI finds bugs fast, AI writes code fast
-2. **What is Lean 4?** — correctness proven, not tested
-3. **My experience** — Arrow's Impossibility Theorem
-4. **Case studies** — lean-zip and clean
-5. **What comes next** — vericoding and the new division of labor
+<div>
 
----
+![](asset/I_robot.jpg)
 
-<!-- _class: centered -->
+</div>
+<div>
 
-## The old workflow is breaking
+> The Brain designed and built a hyperspace ship from scratch. Two engineers were sent to inspect it. By the time they realized the ship had already launched, it was too late — the door was locked behind them. There were no manual controls. No pilot seat. The only food on board was beans and milk.
+— Isaac Asimov, "Escape!", I, Robot (1950)
 
----
-
-## AI finds bugs cheaply
-
-- Tools like Mythos scan codebases in minutes, not weeks
-- Attack / defense asymmetry is tilting toward attackers
-- A codebase a team spent months writing can be audited for vulnerabilities in hours
-
-> The cost of finding bugs is collapsing. The cost of shipping bugs is not.
+</div>
+</div>
 
 ---
 
-## AI writes code fast
+## How we got here
 
-- Agents produce pull requests faster than humans can review them
-- 20 agents running in parallel is not a fantasy anymore
-- **But who guarantees what they wrote is correct?**
+Something is changing about how software gets written — and how it gets broken.
 
-"Trust me bro, the AI wrote it" is not a security model.
+This talk is three things:
 
----
-
-## Something has to change
-
-The old answer: write tests, ship, pray.
-
-Tests only check the cases you thought of.
-
-**What if you could prove correctness for every possible input?**
+1. A personal story about picking up Lean 4
+2. Real projects doing formal verification today
+3. What it might mean for Ethereum and software in general
 
 ---
 
-## What is Lean 4?
+<!-- _class: chapter -->
 
-A programming language where correctness is *proven*, not tested.
+# Part 1: Why The Hype?
 
-- Types are propositions
-- Programs are proofs
-- The compiler checks both at once
+---
 
-If it compiles, it's correct — by construction.
+## Why Formal Verification Today?
+
+* **The Threat**: AI like Mythos can find bugs quick.
+* **The Opportunity**: Formal method used to be costly to write -- AI now makes it cheap
+* The **Need**: We'd like to automate coding beyond human reasoning. 
+
+<!-- 
+- Formal Verifications have been here since forever 
+- Think about next year.
+- Anyone runs 20 agents for coding here?
+-->
+
+---
+
+<!-- _class: chapter -->
+
+# Part 2: What is Lean 4?
+
+---
+
+## Lean 4 is not the Lean Ethereum project
+
+Lean 4 is a **proof assistant and programming language**.
+
+* You can write math proofs with it
+* Coding like usual programing languages is okay too!
+* If it compiles, the theorem is true — by construction.
 
 ---
 
@@ -76,28 +84,73 @@ If it compiles, it's correct — by construction.
 
 Lean is like playing chess against math.
 
-- You have a **goal** (the theorem to prove)
-- You have a **toolbox** (lemmas from Mathlib)
-- Each tactic moves the goal closer to `trivial`
+- You have a **goal** — the statement you're trying to prove
+- You have a **toolbox** — lemmas from Mathlib
+- Each **tactic** moves the goal closer to being closed
 
-```lean
-theorem add_comm (a b : Nat) : a + b = b + a := by
-  induction a with
-  | zero => simp
-  | succ n ih => simp [Nat.succ_add, ih]
-```
+The board shows you exactly what's left to prove.
 
 Try it: [Lean Natural Number Game](https://adam.math.hhu.de/#/g/leanprover-community/NNG4)
 
 ---
 
-## My experience: Arrow's Impossibility Theorem
+## A tactic in action
+
+Say we know:
+
+```
+h : y = x + 37
+```
+
+And our goal is:
+
+```
+2 * y = 2 * (x + 37)
+```
+
+How would you prove this by hand?
+
+---
+
+## A tactic in action
+
+One line closes it:
+
+```lean
+rw [h]
+```
+
+`rw` means *rewrite*. It finds every `y` in the goal and replaces it with `x + 37`, because `h` says they're equal.
+
+Both sides become identical. Goal closed.
+
+---
+
+## What just happened
+
+We didn't run anything. We didn't write a test.
+
+We **convinced Lean's type checker** that this statement is logically true.
+
+Once it compiles — it's not "probably correct."
+
+It's **proven**.
+
+---
+
+<!-- _class: chapter -->
+
+# Part 3: My Experience
+
+---
+
+## Arrow's Impossibility Theorem
 
 I wanted to verify a real math paper.
 
+- Arrow's Impossibility Theorem: no voting system can satisfy all three fairness criteria simultaneously
 - One-page proof — how hard could it be?
-- [Arrow's Impossibility Theorem](https://github.com/ChihChengLiang/arrow/blob/main/Arrow/Arrow.lean): no voting system satisfies all three fairness criteria simultaneously
-- Took **2–3 painful weeks**
+- [My attempt](https://github.com/ChihChengLiang/arrow/blob/main/Arrow/Arrow.lean): 2–3 painful weeks
 
 ---
 
@@ -105,29 +158,63 @@ I wanted to verify a real math paper.
 
 `Fin N` and `Fin (N+1)` are **different types** in Lean.
 
-Mathematically: trivially the same. In Lean: requires explicit coercions.
+Mathematically: trivially the same.
+In Lean: requires explicit coercions everywhere.
 
 This is **intensional equality** — and it will frustrate you.
 
-The error messages point to symptoms deep in elaboration, not the actual mismatch.
+Error messages point to symptoms deep in elaboration, not the actual mismatch.
+
+---
+
+## What it felt like
+
+The struggle was real. A one-page math proof took weeks because:
+
+- Every "obvious" step needs to be spelled out
+- The type system finds corners of the argument you didn't think about
+- You can't hand-wave
 
 But when it finally compiled?
 
-That feeling is unlike any green test suite.
+**That feeling is unlike any green test suite.**
 
 ---
 
-## Case study 1: lean-zip
+## What Lean forces on you
+
+| Math proof | Lean proof |
+|---|---|
+| "Clearly..." | Must be explicit |
+| "By symmetry..." | Requires a lemma |
+| "Similarly..." | Must be repeated in full |
+| Implicit assumptions | Must be named preconditions |
+
+The pain is the point. Lean finds the gaps in your reasoning.
 
 ---
 
-## lean-zip: Formally verified compression
+<!-- _class: chapter -->
+
+# Part 4: Case Studies
+
+---
+
+<!-- _class: chapter -->
+
+## Case Study 1: lean-zip
+
+*Formally verified compression library*
+
+---
+
+## lean-zip: Background
 
 - **Repo**: [`kim-em/lean-zip`](https://github.com/kim-em/lean-zip) — zlib, gzip, DEFLATE, ZIP in Lean 4
 - **Author**: Kim Morrison, Lean FRO core developer
 - **AI contributor**: Claude Code — ~660 sessions, ~653 merged PRs
 - **Timeline**: Feb 19 – Apr 22, 2026 (~2 months)
-- **Goal**: Not just working — *proved correct*, zero unfinished obligations
+- **Goal**: Not just working — *proved correct*, zero unfinished proof obligations
 
 ---
 
@@ -155,8 +242,6 @@ For **every** input under 1 GiB: compress-then-decompress returns the original d
 
 No test suite can make this claim.
 
-The 1 GiB bound is a zip-bomb guard — formal proofs force implicit assumptions to become named preconditions.
-
 ---
 
 ## What proofs catch that tests don't
@@ -164,17 +249,47 @@ The 1 GiB bound is a zip-bomb guard — formal proofs force implicit assumptions
 - **Kraft inequality** — Huffman code space never overflows, for *any* frequency distribution
 - **Prefix-freedom** — no codeword is a prefix of another, for *every* valid table
 - **Bit cursor correctness** — off-by-one bugs at every intermediate position, not just outputs
-- **CRC32/Adler-32 compositionality** — `checksum(xs ++ ys) = f(checksum(xs), ys)` for all inputs
+- **Checksum compositionality** — `checksum(xs ++ ys) = f(checksum(xs), ys)` for all inputs
 
-Proofs compose. Tests don't.
-
----
-
-## Case study 2: clean
+**Proofs compose. Tests don't.**
 
 ---
 
-## clean: Formally verified ZK circuits
+## Security fell out as a byproduct
+
+Specifying what a "valid" ZIP entry *is* automatically enumerates everything it isn't.
+
+- NUL-byte injection
+- ZIP64 field smuggling
+- Malformed EOCD consistency
+
+Malformed-fixture tests grew from 12 to 47 entries as proof work surfaced edge cases.
+
+These are exactly the bugs testing rarely finds.
+
+---
+
+## The division of labor
+
+AI (Claude Code) wrote both code and proof tactics.
+
+The human expert determined *what* to prove and diagnosed deep failures.
+
+~1:1 session-to-PR ratio — each session yielded a mergeable contribution.
+
+This may be the template for AI-assisted formal verification.
+
+---
+
+<!-- _class: chapter -->
+
+## Case Study 2: clean
+
+*Formally verified ZK circuits*
+
+---
+
+## clean: Background
 
 - **Repo**: [`Verified-zkEVM/clean`](https://github.com/Verified-zkEVM/clean) — Lean 4 for writing and proving ZK circuits
 - **Org**: [zkSecurity](https://zksecurity.xyz/), Verified-zkEVM grant
@@ -193,7 +308,6 @@ Proofs compose. Tests don't.
 
 def main (input : Expression (F p)) := do
   let inv ← witness fun env =>
-    let x := input.eval env
     if x ≠ 0 then x⁻¹ else 0
   let out <== -input * inv + 1
   input * out === 0
@@ -208,10 +322,9 @@ You write circuits the same way. But now you must *prove* they do what the comme
 
 ```lean
 structure FormalCircuit (F : Type) [Field F] (Input Output : TypeMap) where
-  main        : Var Input F → Circuit F (Var Output F)
-  Assumptions : Input F → Prop
-  Spec        : Input F → Output F → Prop
-  soundness   : Soundness F ...
+  main         : Var Input F → Circuit F (Var Output F)
+  Spec         : Input F → Output F → Prop
+  soundness    : Soundness F ...
   completeness : Completeness F ...
 ```
 
@@ -221,51 +334,139 @@ The type system rejects incomplete definitions at compile time.
 
 ---
 
-## The bugs this catches
+## Field wrap-around bugs caught at compile time
 
-**Field wrap-around**, compile time:
+`ByteDecomposition` requires this as a **type-level assumption**:
 
 ```lean
-have : (2^n * x).val = 2^n * x.val := by
-  rw [ZMod.val_mul_of_lt (by linarith), h_mul_x]
+p_large_enough : Fact (p > 2^16 + 2^8)
 ```
 
-`ByteDecomposition` requires `p_large_enough : Fact (p > 2^16 + 2^8)` as a type-level assumption. Without it, the proof won't compile. You cannot deploy with a too-small prime by accident.
+Without it, the proof won't compile. You cannot deploy with a too-small prime by accident.
 
-The **missing constraint bug** (like the Circom `IsZero` issue) fails to compile — not fails a test.
+This is the class of bug that looks correct for small test values but wraps silently near `p`.
 
 ---
 
-## What this means for the future
+## What's still unverified
+
+| Layer | Verified? |
+|---|---|
+| Lean kernel (type checker) | ✅ |
+| `FormalCircuit` soundness / completeness | ✅ |
+| `toJson` serialization | ❌ |
+| Rust backend AST interpretation | ❌ |
+| Plonky3 proof system soundness | ❌ |
+
+Formal verification doesn't eliminate vulnerabilities — it **relocates** them.
+
+---
+
+<!-- _class: chapter -->
+
+## Case Study 3: evm-asm
+
+*Formally verified EVM as RISC-V assembly*
+
+---
+
+## evm-asm: Background
+
+- **Repo**: [`Verified-zkEVM/evm-asm`](https://github.com/Verified-zkEVM/evm-asm) — EVM as RV64IM RISC-V assembly, with Lean 4 proofs
+- **Org**: zkSecurity, Verified-zkEVM grant
+- **Scale**: 9,904 Lean files, ~1.8M lines; 52+ EVM opcodes proved
+- **Velocity**: 200–600 commits per day, AI-agent driven
+
+---
+
+## Why verify at the assembly level?
+
+Every compiler eventually produces machine instructions.
+
+Verifying there sidesteps: C/C++ undefined behavior, Rust's lack of a stable spec, compiler bugs.
+
+RISC-V has **no undefined behavior** — every instruction has total, formal semantics.
+
+In a zkVM: if the guest program has a bug, the SNARK proof is still valid.
+**It just proves the wrong thing.**
+
+---
+
+## A three-level proof pyramid per opcode
+
+Each of 52+ opcodes verified bottom-up. For 256-bit ADD:
+
+1. **Level 1** — each 5-instruction limb group manipulates the right register
+2. **Level 2** — four limb proofs compose into a full 30-instruction carry-chain spec
+3. **Level 3** — rewrites into abstract EVM semantics: `evmWordIs (sp + 32) (a + b)`
+
+For **all** register values and **all** memory layouts.
+
+---
+
+## Proof as a co-routine with AI
+
+AI agents write both the assembly and its Lean proof in the same session.
+
+If the proof fails to type-check, the agent knows the code or spec is wrong — **before any test is run**.
+
+The proof failure is the bug report.
+
+This is what makes 200–600 commits per day plausible.
+
+---
+
+## What this means for Ethereum clients
+
+| | geth / reth / besu | evm-asm |
+|---|---|---|
+| Correctness evidence | Passes test vectors | Machine-checked proof for all inputs |
+| Coverage | Test-driven (finite) | Universal (∀ inputs) |
+| Trust base | Rust compiler + std | Lean kernel + RISC-V model |
+
+---
+
+<!-- _class: chapter -->
+
+# Part 5: What Comes Next?
 
 ---
 
 ## The numbers
 
-- 95–99% of proofs need no human review — Lean's kernel handles it
-- That converts to **20–100× review efficiency** naively
+The [Lean Atlas paper](https://arxiv.org/abs/2604.16347) argues:
 
-Source: [arxiv 2604.16347](https://arxiv.org/abs/2604.16347)
+- 95–99% of proofs need no human review — Lean's kernel handles it
+- That converts naively to **20–100× review efficiency**
 
 ---
 
 ## The new division of labor
 
-| Role | Who does it |
+| Task | Who |
 |---|---|
 | Write code | AI |
 | Write proofs | AI |
 | Specify *what* to prove | Human |
-| Smell out bad math | Human |
+| Smell out a bad spec | Human |
 | Verify proof validity | Lean's type checker |
 
 This is **vericoding** — not theoretical anymore.
 
-[vericoding benchmark](https://github.com/Beneficial-AI-Foundation/vericoding-benchmark) · [paper](https://arxiv.org/abs/2509.22908)
+[benchmark](https://github.com/Beneficial-AI-Foundation/vericoding-benchmark) · [paper](https://arxiv.org/abs/2509.22908)
 
 ---
 
-<!-- _class: centered -->
+## Vulnerabilities don't disappear — they relocate
+
+Each layer you verify pushes the attack surface to the boundary above or below.
+
+- **Spec-to-intent gap** — the type checker proves code matches spec, not spec matches intent
+- **Trusted computing base** — lean-zip fuzzing found no bugs in the verified library, but found one in Lean 4's own runtime
+- **Composition boundaries** — verifying ADD doesn't verify a flash loan attack
+- **Supply chain** — if AI writes both spec and proof, who audits the AI?
+
+---
 
 ## Honest caveat
 
@@ -273,13 +474,13 @@ The direction looks right.
 
 But people say it's easier than it is.
 
-The `Fin N` / `Fin (N+1)` hell is real. The error messages will confuse you. The 2–3 week detours are real.
+The `Fin N` / `Fin (N+1)` hell is real.
+The error messages will confuse you.
+The 2–3 week detours are real.
 
 **The question is whether AI changes that calculus — and lean-zip suggests it does.**
 
 ---
-
-<!-- _class: centered -->
 
 ## Summary
 
@@ -290,3 +491,17 @@ Lean proves correctness for *every* input, not just the ones you tested.
 AI is now good enough to write the proofs too.
 
 **The bottleneck shifts to: what do we want to prove?**
+
+---
+
+## Links
+
+- [Lean Natural Number Game](https://adam.math.hhu.de/#/g/leanprover-community/NNG4) — best place to start
+- [My Arrow's proof](https://github.com/ChihChengLiang/arrow/blob/main/Arrow/Arrow.lean)
+- [lean-zip](https://github.com/kim-em/lean-zip)
+- [clean](https://github.com/Verified-zkEVM/clean)
+- [evm-asm](https://github.com/Verified-zkEVM/evm-asm)
+- [VCV-io](https://github.com/Verified-zkEVM/VCV-io)
+- [Lean Atlas paper](https://arxiv.org/abs/2604.16347)
+- [Vericoding paper](https://arxiv.org/abs/2509.22908)
+- [Try Lean online](https://live.lean-lang.org/)
