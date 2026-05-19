@@ -6,7 +6,7 @@
     "start": "bun run src/server.ts",
     "dev": "bun run src/server.ts",
     "build": "bun run src/build.ts",
-    "present": "marp --preview -o dist/slides-preview.html",
+    "present": "bash present.sh",
     "new-note": "bash new-note.sh"
   },
   "devDependencies": {
