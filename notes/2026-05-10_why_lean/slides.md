@@ -30,6 +30,8 @@ CC · 2026-05-10
 </div>
 </div>
 
+<!-- What is Taiwan doing in 1950? We are living in this world today now. -->
+
 ---
 
 ## How we got here
@@ -260,7 +262,7 @@ This converts to 30 lines of code and 16 branches of sub-goals.
 
 ## Case Study 1: lean-zip
 
-*Formally verified compression library*
+*How do you craft secure compression library?*
 
 ---
 
@@ -273,7 +275,7 @@ This converts to 30 lines of code and 16 branches of sub-goals.
 - **Goal**: Secure compression library
 
 <!-- 
-This library is where if you want to check if Lean is practical or not
+This library is where if you want to check if Lean is practical or not for software development
 
 A **zip bomb**, also known as a decompression bomb or "zip of death," is a malicious archive file designed to overwhelm a system's resources when decompressed, potentially causing crashes or system failures.
 -->
@@ -313,7 +315,7 @@ Vitalik has a point on being cautious to the words: "proven" and "correct". Trea
 
 ## Case Study 2: clean
 
-*Formally verified ZK circuits*
+*How do you craft secure ZK circuits?*
 
 ---
 
@@ -326,7 +328,9 @@ Vitalik has a point on being cautious to the words: "proven" and "correct". Trea
 
 ---
 
-## Familiar syntax, proof obligation attached
+## Example: IsZero circuit
+
+if input = 0 then 1 else 0
 
 ```lean
 -- Circom original:
@@ -342,23 +346,57 @@ def main (input : Expression (F p)) := do
   return out
 ```
 
-You write circuits the same way. But now you must *prove* they do what the comment says.
+<!--
+Input and outputs are finite field elements. Interger mod p
+-->
 
 ---
 
-## Proof is part of the type
+## In Clean, You have to write proof for your circuit
 
 ```lean
-structure FormalCircuit (F : Type) [Field F] (Input Output : TypeMap) where
-  main         : Var Input F → Circuit F (Var Output F)
-  Spec         : Input F → Output F → Prop
-  soundness    : Soundness F ...
-  completeness : Completeness F ...
+def circuit : FormalCircuit (F p) field field where
+  main
+
+  Spec input output :=
+    output = (if input = 0 then 1 else 0)
+
+  soundness := ...
+
+  completeness := ...
 ```
 
-You cannot instantiate a `FormalCircuit` without supplying both proofs.
+---
 
-The type system rejects incomplete definitions at compile time.
+```lean
+  soundness := by
+    circuit_proof_start
+    simp only [id_eq, h_holds]
+    split_ifs with h_ifs
+    . simp only [h_ifs, zero_mul, neg_zero, zero_add]
+    . rw [neg_add_eq_zero]
+      have h1 := h_holds.left
+      have h2 := h_holds.right
+      rw [h1] at h2
+      simp only [id_eq, mul_eq_zero] at h2
+      cases h2
+      case neg.inl hl => contradiction
+      case neg.inr hr =>
+        rw [neg_add_eq_zero] at hr
+        exact hr
+```
+
+---
+
+```lean
+  completeness := by
+    circuit_proof_start
+    cases h_env with
+    | intro left right =>
+      simp only [left, id_eq, ite_not, mul_ite, mul_zero] at right
+      simp only [id_eq, right, left, ite_not, mul_ite, mul_zero, mul_eq_zero, true_and]
+      split_ifs <;> aesop
+```
 
 ---
 
@@ -376,81 +414,125 @@ This is the class of bug that looks correct for small test values but wraps sile
 
 ---
 
-## What's still unverified
-
-| Layer | Verified? |
-|---|---|
-| Lean kernel (type checker) | ✅ |
-| `FormalCircuit` soundness / completeness | ✅ |
-| `toJson` serialization | ❌ |
-| Rust backend AST interpretation | ❌ |
-| Plonky3 proof system soundness | ❌ |
-
-Formal verification doesn't eliminate vulnerabilities — it **relocates** them.
-
----
-
 <!-- _class: chapter -->
 
 ## Case Study 3: evm-asm
 
-*Formally verified EVM as RISC-V assembly*
+*How do you craft secure and fast EVM?*
 
 ---
 
 ## evm-asm: Background
 
-- **Repo**: [`Verified-zkEVM/evm-asm`](https://github.com/Verified-zkEVM/evm-asm) — EVM as RV64IM RISC-V assembly, with Lean 4 proofs
+- **Repo**: [`Verified-zkEVM/evm-asm`](https://github.com/Verified-zkEVM/evm-asm) — EVM implemented directly in RV64IM RISC-V, with Lean 4 proofs
 - **Org**: zkSecurity, Verified-zkEVM grant
 - **Scale**: 9,904 Lean files, ~1.8M lines; 52+ EVM opcodes proved
 - **Velocity**: 200–600 commits per day, AI-agent driven
 
 ---
 
-## Why verify at the assembly level?
+## EVM Opcodes on
 
-Every compiler eventually produces machine instructions.
+[evm.codes](https://www.evm.codes/)
 
-Verifying there sidesteps: C/C++ undefined behavior, Rust's lack of a stable spec, compiler bugs.
-
-RISC-V has **no undefined behavior** — every instruction has total, formal semantics.
-
-In a zkVM: if the guest program has a bug, the SNARK proof is still valid.
-**It just proves the wrong thing.**
+![](asset/evm_code.png)
 
 ---
 
-## A three-level proof pyramid per opcode
+## A Handwavy Primer on EVM
 
-Each of 52+ opcodes verified bottom-up. For 256-bit ADD:
-
-1. **Level 1** — each 5-instruction limb group manipulates the right register
-2. **Level 2** — four limb proofs compose into a full 30-instruction carry-chain spec
-3. **Level 3** — rewrites into abstract EVM semantics: `evmWordIs (sp + 32) (a + b)`
-
-For **all** register values and **all** memory layouts.
-
----
-
-## Proof as a co-routine with AI
-
-AI agents write both the assembly and its Lean proof in the same session.
-
-If the proof fails to type-check, the agent knows the code or spec is wrong — **before any test is run**.
-
-The proof failure is the bug report.
-
-This is what makes 200–600 commits per day plausible.
+* Dapp developer: Solidity -> Assembly -> EVM bycode
+* Depoly time: EVM bycode is deployed on Ethereum blockchain
+* Transaction time: A user Alice sends a ERC20 token to Bob, say USDC. 
+  * What actually happend: A user sends native transaction to interact with the contract bytecode.
+  * User's transaction is included in a block, went through consensus process.
+  * People who run a Ethereum client verify the block and its EVM execution.
 
 ---
 
-## What this means for Ethereum clients
+## How EVM is implemented today?
 
-| | geth / reth / besu | evm-asm |
-|---|---|---|
-| Correctness evidence | Passes test vectors | Machine-checked proof for all inputs |
-| Coverage | Test-driven (finite) | Universal (∀ inputs) |
-| Trust base | Rust compiler + std | Lean kernel + RISC-V model |
+It is implemented as part of the client.
+
+Golang (High level language) -> compiled down to your PC/laptop CPU opcodes.
+
+```go
+// go-ethereum/core/vm/instructions.go
+func opAdd(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
+	x, y := scope.Stack.pop(), scope.Stack.peek()
+	y.Add(&x, y)
+	return nil, nil
+}
+```
+
+---
+
+## How EVM might be implemented tomorrow?
+
+For client to verify more computations per second (Scalability), we might want to verify it with zk proofs
+
+Go-Ethereum compiled to RiscV
+
+EVM execution traces compiled as RiscV traces.
+
+ZK developers implements a RiscV VM circuit. Zk proofs can be generated for client to verify.
+
+Verifying EVM === verifying RiscV traces.
+
+---
+
+## EVM-ASM: EVM implemented in RiscV Opcode directly
+
+- Fastest possible way on machine
+- Protected by math proofs
+
+```lean
+def evm_add : Program :=
+  -- Limb 0 (5 instructions)
+  LD .x7 .x12 0 ;; LD .x6 .x12 32 ;;
+  ADD .x7 .x7 .x6 ;; SLTU .x5 .x7 .x6 ;; SD .x12 .x7 32 ;;
+  -- Limb 1 (8 instructions)
+  LD .x7 .x12 8 ;; LD .x6 .x12 40 ;;
+  ADD .x7 .x7 .x6 ;; SLTU .x11 .x7 .x6 ;;
+  ADD .x7 .x7 .x5 ;; SLTU .x6 .x7 .x5 ;;
+  OR' .x5 .x11 .x6 ;; SD .x12 .x7 40 ;;
+  -- Limb 2 (8 instructions)
+  LD .x7 .x12 16 ;; LD .x6 .x12 48 ;;
+  ADD .x7 .x7 .x6 ;; SLTU .x11 .x7 .x6 ;;
+  ADD .x7 .x7 .x5 ;; SLTU .x6 .x7 .x5 ;;
+  OR' .x5 .x11 .x6 ;; SD .x12 .x7 48 ;;
+  -- Limb 3 (8 instructions)
+  LD .x7 .x12 24 ;; LD .x6 .x12 56 ;;
+  ADD .x7 .x7 .x6 ;; SLTU .x11 .x7 .x6 ;;
+  ADD .x7 .x7 .x5 ;; SLTU .x6 .x7 .x5 ;;
+  OR' .x5 .x11 .x6 ;; SD .x12 .x7 56 ;;
+  -- sp adjustment
+  ADDI .x12 .x12 32
+```
+
+---
+
+
+## What is it doing here?
+
+- High level langauge: Golang, Rust, Python. The langauge for human, for devs and their colleages
+- Low level langauge: Assemblys, Opcodes. The langauge for machine
+- Compiler: The translator between human and machine language
+
+
+---
+
+## Why we did computer engineering like that before?
+
+* Speak languages closer to the machine, you get more speed optimization for run time, with the scarifice of human developer time. 
+* you also get bugs easily if not careful
+
+---
+
+## Why we might not want to engineer computer like that now?
+
+* AI code very fast
+* Math check makes it secure
 
 ---
 
@@ -479,13 +561,9 @@ The [Lean Atlas paper](https://arxiv.org/abs/2604.16347) argues:
 | Smell out a bad spec | Human |
 | Verify proof validity | Lean's type checker |
 
-This is **vericoding** — not theoretical anymore.
-
-[benchmark](https://github.com/Beneficial-AI-Foundation/vericoding-benchmark) · [paper](https://arxiv.org/abs/2509.22908)
-
 ---
 
-## Vulnerabilities don't disappear — they relocate
+## Vulnerabilities relocate
 
 Each layer you verify pushes the attack surface to the boundary above or below.
 
@@ -504,21 +582,24 @@ But people say it's easier than it is.
 
 The `Fin N` / `Fin (N+1)` hell is real.
 The error messages will confuse you.
-The 2–3 week detours are real.
+It is indeed more painful than Rust
 
-**The question is whether AI changes that calculus — and lean-zip suggests it does.**
+But what about 1 years later from now?
 
 ---
 
-## Summary
+## Vitalik's take
 
-AI writes code faster than humans can audit it.
+https://vitalik.eth.limo/general/2026/05/18/fv.html
 
-Lean proves correctness for *every* input, not just the ones you tested.
+Treat formal verification as a bag of toolbox that helps you check your intents.
 
-AI is now good enough to write the proofs too.
 
-**The bottleneck shifts to: what do we want to prove?**
+<!--
+Closing: Before Asimov, robot writers protrait them like Frankenstien
+But Asimov pictured robots following rules. When human invent tools we would add protections to prevent we gets hurt.
+Math proving is kind of that proof you need to craft software at scale with agents.
+-->
 
 ---
 
@@ -531,5 +612,4 @@ AI is now good enough to write the proofs too.
 - [evm-asm](https://github.com/Verified-zkEVM/evm-asm)
 - [VCV-io](https://github.com/Verified-zkEVM/VCV-io)
 - [Lean Atlas paper](https://arxiv.org/abs/2604.16347)
-- [Vericoding paper](https://arxiv.org/abs/2509.22908)
 - [Try Lean online](https://live.lean-lang.org/)
