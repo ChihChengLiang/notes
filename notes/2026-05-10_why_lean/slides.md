@@ -54,8 +54,8 @@ This talk is three things:
 
 ## Why Formal Verification Today?
 
-* **The Threat**: AI like Mythos can find bugs quick.
-* **The Opportunity**: Formal method used to be costly to write -- AI now makes it cheap
+* **The Threat**: AI like Mythos can find bugs quickly.
+* **The Opportunity**: Formal methods used to be costly to write -- AI now makes them cheap
 * The **Need**: We'd like to automate coding beyond human reasoning. 
 
 <!-- 
@@ -77,7 +77,7 @@ This talk is three things:
 Lean 4 is a **proof assistant and programming language**.
 
 * You can write math proofs with it
-* Coding like usual programing languages is okay too!
+* Coding like usual programming languages is okay too!
 * If it compiles, the theorem is true — by construction.
 
 ---
@@ -258,7 +258,7 @@ This converts to 30 lines of code and 16 branches of sub-goals.
 
 ---
 
-## Imagine We are implement an addition function
+## Imagine We Implement an Addition Function
 
 ```python
 # python
@@ -348,7 +348,7 @@ theorem add_correct (a b : Nat) : add a b = a + b := by
   unfold add  -- unfold the definition of add
   rfl         -- left-hand side equals to right-hand side
 ```
-This means the function is correct **for all natural numbers**! How many test cases can you cover that?
+This means the function is correct **for all natural numbers**! How many test cases could cover that?
 
 
 ---
@@ -357,7 +357,7 @@ This means the function is correct **for all natural numbers**! How many test ca
 
 # Part 4: Case Studies
 
-<!-- We're going to see some cool projects here. They all demenstrate ideas on how we do things differently -->
+<!-- We're going to see some cool projects here. They all demonstrate ideas on how we do things differently -->
 
 ---
 
@@ -399,7 +399,7 @@ No test suite can make this claim.
 
 ---
 
-## Bugs could still be found**: 
+## Bugs could still be found:
 
 A [105 million fuzzing executions](https://kirancodes.me/posts/log-who-watches-the-watchers.html) found:
 
@@ -450,7 +450,7 @@ def main (input : Expression (F p)) := do
 ```
 
 <!--
-Input and outputs are finite field elements. Interger mod p
+Inputs and outputs are finite field elements. Integer mod p
 -->
 
 ---
@@ -622,15 +622,15 @@ def evm_add : Program :=
 
 ## What is it doing here?
 
-- High level langauge: Golang, Rust, Python. The langauge for human, for devs and their colleages
-- Low level langauge: Assemblys, Opcodes. The langauge for machine
+- High-level language: Golang, Rust, Python. The language for humans, for devs and their colleagues
+- Low-level language: Assembly, Opcodes. The language for machines
 - Compiler: The translator between human and machine language
 
 ---
 
 ## Why we did computer engineering like that before?
 
-* Speak languages closer to the machine, you get more speed optimization for run time, with the scarifice of human developer time. 
+* Speak languages closer to the machine, you get more speed optimization for run time, with the sacrifice of human developer time.
 * you also get bugs easily if not careful
 
 ---
@@ -690,7 +690,7 @@ The `Fin N` / `Fin (N+1)` hell is real.
 The error messages will confuse you.
 It is indeed more painful than Rust
 
-But what about 1 years later from now?
+But what about a year from now?
 
 ---
 
@@ -702,8 +702,8 @@ But what about 1 years later from now?
 
 <!--
 Add formal verification in your toolbox that helps you check your intents.
-Closing: Before Asimov, robot writers protrait them like Frankenstien
-But Asimov pictured robots following rules. When human invent tools we would add protections to prevent we gets hurt.
+Closing: Before Asimov, robot writers portrayed them like Frankenstein.
+But Asimov pictured robots following rules. When humans invent tools, we add protections to prevent us from getting hurt.
 Math proving is kind of that proof you need to craft software at scale with agents.
 -->
 
