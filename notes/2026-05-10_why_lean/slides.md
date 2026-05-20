@@ -96,22 +96,25 @@ Try it: [Lean Natural Number Game](https://adam.math.hhu.de/#/g/leanprover-commu
 
 ## A tactic in action
 
-Say we know:
+* Say we know: $y = x + 37$
+* We would like to show $2 * y = 2 * (x + 37)$
+* How would you prove this by hand?
+
+---
+
+In Lean 4, a **hypothesis** is something we assume to be *true*
 
 ```
 h : y = x + 37
 ```
 
-And our goal is:
+And our **goal** is:
 
 ```
 2 * y = 2 * (x + 37)
 ```
 
-How would you prove this by hand?
-
 ---
-
 ## A tactic in action
 
 One line closes it:
@@ -126,15 +129,18 @@ Both sides become identical. Goal closed.
 
 ---
 
-## What just happened
+## Let's prove something real
 
-We didn't run anything. We didn't write a test.
+```lean
+theorem my_add_sq:
+  ∀ (a b : ℕ ), (a + b)^2 = a^2 + 2 * a * b + b^2 := by
+```
 
-We **convinced Lean's type checker** that this statement is logically true.
+$$
+(a + b)^2 = a^2 + 2ab + b^2
+$$
 
-Once it compiles — it's not "probably correct."
-
-It's **proven**.
+https://live.lean-lang.org
 
 ---
 
