@@ -51,8 +51,7 @@ async function build() {
 
     // Render slides
     if (existsSync(slidesPath)) {
-      const markdown = await Bun.file(slidesPath).text();
-      const slidesHtml = await renderSlides(markdown, "../mermaid-init.js");
+      const slidesHtml = await renderSlides(slidesPath);
       await Bun.write(`${topicDir}/slides.html`, slidesHtml);
       console.log(`✓ Generated ${topic}/slides.html`);
     }

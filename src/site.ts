@@ -1,6 +1,7 @@
 import { readdirSync } from "fs";
-import { Marp } from "@marp-team/marp-core";
-import leanHljs from "./lean.ts";
+import { tmpdir } from "os";
+import { join } from "path";
+import { unlink } from "fs/promises";
 import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter, injectToc } from "./markdown-processor";
 
 export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js"] as const;
@@ -30,46 +31,22 @@ export async function getTopicDate(topic: string): Promise<string | null> {
   }
 }
 
-export async function renderSlides(markdown: string, mermaidScriptSrc: string): Promise<string> {
-  const themeCSS = await Bun.file("./src/templates/marp-theme.css").text();
-  const marp = new Marp({ html: true });
-  marp.highlightjs.registerLanguage("lean", leanHljs);
-  marp.themeSet.add(themeCSS);
-
-  // Render mermaid fences as <pre class="mermaid"> for client-side mermaid v10+
-  // (markdown-it-mermaid calls mermaid.parse() which requires browser APIs and fails in Bun)
-  const md = marp.markdown;
-  const defaultFence = md.renderer.rules.fence!.bind(md.renderer.rules);
-  md.renderer.rules.fence = (tokens: any[], idx: number, options: any, env: any, slf: any) => {
-    const token = tokens[idx];
-    if (token.info.trim() === "mermaid") {
-      return `<pre class="mermaid">${token.content}</pre>`;
+export async function renderSlides(slidesPath: string): Promise<string> {
+  const tmp = join(tmpdir(), `marp-${Date.now()}.html`);
+  try {
+    const proc = Bun.spawn(
+      ["bunx", "marp", "--allow-local-files", "--output", tmp, slidesPath],
+      { cwd: process.cwd(), stderr: "pipe" }
+    );
+    const exitCode = await proc.exited;
+    if (exitCode !== 0) {
+      const err = await new Response(proc.stderr).text();
+      throw new Error(`marp failed: ${err}`);
     }
-    return defaultFence(tokens, idx, options, env, slf);
-  };
-
-  const { html, css } = marp.render(markdown);
-  return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <style>${css}</style>
-  <script type="module" src="${mermaidScriptSrc}"></script>
-</head>
-<body>
-<svg width="0" height="0" style="position:absolute;overflow:hidden">
-  <defs>
-    <filter id="hand-drawn" x="-5%" y="-5%" width="110%" height="110%">
-      <feTurbulence type="turbulence" baseFrequency="0.025" numOctaves="3" seed="8" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-</svg>
-${html}
-</body>
-</html>`;
+    return await Bun.file(tmp).text();
+  } finally {
+    await unlink(tmp).catch(() => {});
+  }
 }
 
 export async function renderIndexHtml(

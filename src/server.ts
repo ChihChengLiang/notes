@@ -89,12 +89,10 @@ const server = Bun.serve({
     // Slides route: /:topic/slides
     if (sub === "slides") {
       const slidesPath = `./notes/${topic}/slides.md`;
-      const file = Bun.file(slidesPath);
-      if (!(await file.exists())) {
+      if (!(await Bun.file(slidesPath).exists())) {
         return new Response("Not found", { status: 404 });
       }
-      const markdown = await file.text();
-      return new Response(await renderSlides(markdown, "/mermaid-init.js"), {
+      return new Response(await renderSlides(slidesPath), {
         headers: { "Content-Type": "text/html" },
       });
     }

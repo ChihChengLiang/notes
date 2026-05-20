@@ -53,6 +53,8 @@ mermaid.initialize({
 mermaid.run({ querySelector: 'pre.mermaid' });
 </script>`;
 
+const SVG_FILTER = `<svg width="0" height="0" style="position:absolute;overflow:hidden"><defs><filter id="hand-drawn" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="turbulence" baseFrequency="0.025" numOctaves="3" seed="8" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>`;
+
 export default class extends Marp {
   constructor(opts) {
     super(opts);
@@ -71,7 +73,7 @@ export default class extends Marp {
 
   render(markdown, options) {
     const result = super.render(markdown, options);
-    result.html += MERMAID_SCRIPT;
+    result.html = SVG_FILTER + result.html + MERMAID_SCRIPT;
     return result;
   }
 }
