@@ -150,13 +150,75 @@ https://live.lean-lang.org
 
 ---
 
+## The Natural Number Game
+
+<div style="width: 70%; margin: auto">
+
+![](asset/nn_game_blank.png)
+
+</div>
+
+<!--
+Mario style stages
+This server is hosted at Heinrich Heine University Düsseldorf.
+-->
+
+---
+
+## The Natural Number Game
+
+<div style="width: 70%; margin: auto">
+
+![](asset/nn_game_inside.png)
+
+</div>
+
+---
+
+## The Natural Number Game
+
+<div style="width: 70%; margin: auto">
+
+![](asset/nn_game_after.png)
+
+</div>
+
+---
+
+
 ## Arrow's Impossibility Theorem
 
 I wanted to verify a real math paper.
 
-- Arrow's Impossibility Theorem: no voting system can satisfy all three fairness criteria simultaneously
-- One-page proof — how hard could it be?
-- [My attempt](https://github.com/ChihChengLiang/arrow/blob/main/Arrow/Arrow.lean): 2–3 painful weeks
+* Arrow's Impossibility Theorem: no voting system can satisfy all three fairness criteria simultaneously
+* One-page proof — how hard could it be?
+* [My attempt](https://github.com/ChihChengLiang/arrow/blob/main/Arrow/Arrow.lean): 2–3 painful weeks
+
+---
+
+<div class="columns">
+
+<div>
+
+![](asset/arrow_p1.png)
+
+</div>
+
+<div>
+
+![](asset/arrow_p2.png)
+
+</div>
+
+</div>
+
+---
+
+<div style="width: 70%; margin: auto">
+
+![](./report_diagram.png)
+
+</div>
 
 ---
 
@@ -167,9 +229,7 @@ I wanted to verify a real math paper.
 Mathematically: trivially the same.
 In Lean: requires explicit coercions everywhere.
 
-This is **intensional equality** — and it will frustrate you.
-
-Error messages point to symptoms deep in elaboration, not the actual mismatch.
+<!-- Type checking on steroid -->
 
 ---
 
@@ -181,28 +241,18 @@ The struggle was real. A one-page math proof took weeks because:
 - The type system finds corners of the argument you didn't think about
 - You can't hand-wave
 
-But when it finally compiled?
+An actual line in the paper:
+> ..., which can be easily extended to all other $n_{ts}$'s, ...
 
-**That feeling is unlike any green test suite.**
-
----
-
-## What Lean forces on you
-
-| Math proof | Lean proof |
-|---|---|
-| "Clearly..." | Must be explicit |
-| "By symmetry..." | Requires a lemma |
-| "Similarly..." | Must be repeated in full |
-| Implicit assumptions | Must be named preconditions |
-
-The pain is the point. Lean finds the gaps in your reasoning.
+This converts to 30 lines of code and 16 branches of sub-goals.
 
 ---
 
 <!-- _class: chapter -->
 
 # Part 4: Case Studies
+
+<!-- We're going to see some cool projects here. They all demenstrate ideas on how we do things differently -->
 
 ---
 
@@ -220,19 +270,13 @@ The pain is the point. Lean finds the gaps in your reasoning.
 - **Author**: Kim Morrison, Lean FRO core developer
 - **AI contributor**: Claude Code — ~660 sessions, ~653 merged PRs
 - **Timeline**: Feb 19 – Apr 22, 2026 (~2 months)
-- **Goal**: Not just working — *proved correct*, zero unfinished proof obligations
+- **Goal**: Secure compression library
 
----
+<!-- 
+This library is where if you want to check if Lean is practical or not
 
-## Proving costs 6–20× more than writing
-
-| Phase | Sessions |
-|---|---|
-| Write DEFLATE decompressor | 4 |
-| Prove it correct | 25 |
-| Compressor + full roundtrip proofs | ~80 |
-
-Implementation is the easy part.
+A **zip bomb**, also known as a decompression bomb or "zip of death," is a malicious archive file designed to overwhelm a system's resources when decompressed, potentially causing crashes or system failures.
+-->
 
 ---
 
@@ -241,7 +285,7 @@ Implementation is the easy part.
 ```lean
 theorem inflate_deflateRaw (data : ByteArray) (level : UInt8)
     (maxOutputSize : Nat) (hsize : data.size < maxOutputSize) :
-    Zip.Native.Inflate.inflate (deflateRaw data level) maxOutputSize = .ok data
+  inflate (deflateRaw data level) maxOutputSize = .ok data
 ```
 
 For **every** input under 1 GiB: compress-then-decompress returns the original data exactly.
@@ -250,40 +294,18 @@ No test suite can make this claim.
 
 ---
 
-## What proofs catch that tests don't
+## Bugs could still be found**: 
 
-- **Kraft inequality** — Huffman code space never overflows, for *any* frequency distribution
-- **Prefix-freedom** — no codeword is a prefix of another, for *every* valid table
-- **Bit cursor correctness** — off-by-one bugs at every intermediate position, not just outputs
-- **Checksum compositionality** — `checksum(xs ++ ys) = f(checksum(xs), ys)` for all inputs
+A [105 million fuzzing executions](https://kirancodes.me/posts/log-who-watches-the-watchers.html) found:
 
-**Proofs compose. Tests don't.**
+- No memory vulnerabilities.
+- A bug in Lean 4's runtime.
+- A denial-of-service in a unverified archive parser.
 
----
-
-## Security fell out as a byproduct
-
-Specifying what a "valid" ZIP entry *is* automatically enumerates everything it isn't.
-
-- NUL-byte injection
-- ZIP64 field smuggling
-- Malformed EOCD consistency
-
-Malformed-fixture tests grew from 12 to 47 entries as proof work surfaced edge cases.
-
-These are exactly the bugs testing rarely finds.
-
----
-
-## The division of labor
-
-AI (Claude Code) wrote both code and proof tactics.
-
-The human expert determined *what* to prove and diagnosed deep failures.
-
-~1:1 session-to-PR ratio — each session yielded a mergeable contribution.
-
-This may be the template for AI-assisted formal verification.
+<!-- 
+This hints where future security hotspot might be.
+Vitalik has a point on being cautious to the words: "proven" and "correct". Treat them as marketing words.
+-->
 
 ---
 
@@ -308,8 +330,8 @@ This may be the template for AI-assisted formal verification.
 
 ```lean
 -- Circom original:
--- inv <-- in!=0 ? 1/in : 0;
--- out <== -in*inv +1;
+-- inv <-- in != 0 ? 1/in : 0;
+-- out <== -in * inv + 1;
 -- in*out === 0;
 
 def main (input : Expression (F p)) := do
