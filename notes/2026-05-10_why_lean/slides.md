@@ -625,20 +625,8 @@ def evm_add : Program :=
 - High-level language: Golang, Rust, Python. The language for humans, for devs and their colleagues
 - Low-level language: Assembly, Opcodes. The language for machines
 - Compiler: The translator between human and machine language
-
----
-
-## Why we did computer engineering like that before?
-
 * Speak languages closer to the machine, you get more speed optimization for run time, with the sacrifice of human developer time.
 * you also get bugs easily if not careful
-
----
-
-## Why we might not want to engineer computer like that now?
-
-* AI code very fast
-* Math check makes it secure
 
 ---
 
