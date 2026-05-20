@@ -10,7 +10,7 @@ paginate: true
 
 **Formal proofs in the age of AI coding**
 
-CC · 2026-05-10
+CC · 2026-05-20
 
 ---
 
@@ -30,7 +30,10 @@ CC · 2026-05-10
 </div>
 </div>
 
-<!-- What is Taiwan doing in 1950? We are living in this world today now. -->
+<!--
+What is Taiwan doing in 1950? We are living in this world today now.
+Promise: Understand math + CS
+-->
 
 ---
 
@@ -135,7 +138,8 @@ Both sides become identical. Goal closed.
 
 ```lean
 theorem my_add_sq:
-  ∀ (a b : ℕ ), (a + b)^2 = a^2 + 2 * a * b + b^2 := by
+    ∀ (a b : ℕ ), (a + b)^2 = a^2 + 2 * a * b + b^2 := by
+  sorry
 ```
 
 $$
@@ -618,7 +622,6 @@ def evm_add : Program :=
 ```
 
 ---
-
 
 ## What is it doing here?
 
