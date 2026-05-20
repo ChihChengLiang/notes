@@ -422,15 +422,6 @@ This is the class of bug that looks correct for small test values but wraps sile
 
 ---
 
-## evm-asm: Background
-
-- **Repo**: [`Verified-zkEVM/evm-asm`](https://github.com/Verified-zkEVM/evm-asm) — EVM implemented directly in RV64IM RISC-V, with Lean 4 proofs
-- **Org**: zkSecurity, Verified-zkEVM grant
-- **Scale**: 9,904 Lean files, ~1.8M lines; 52+ EVM opcodes proved
-- **Velocity**: 200–600 commits per day, AI-agent driven
-
----
-
 ## EVM Opcodes on
 
 [evm.codes](https://www.evm.codes/)
@@ -439,22 +430,21 @@ This is the class of bug that looks correct for small test values but wraps sile
 
 ---
 
-## A Handwavy Primer on EVM
+## Quick recap: what is the EVM?
 
-* Dapp developer: Solidity -> Assembly -> EVM bycode
-* Depoly time: EVM bycode is deployed on Ethereum blockchain
-* Transaction time: A user Alice sends a ERC20 token to Bob, say USDC. 
-  * What actually happend: A user sends native transaction to interact with the contract bytecode.
-  * User's transaction is included in a block, went through consensus process.
-  * People who run a Ethereum client verify the block and its EVM execution.
+Every Ethereum transaction runs on the EVM — the Ethereum Virtual Machine.
+
+- You write Solidity → it compiles to EVM bytecode
+- When Alice sends USDC to Bob, EVM bytecode executes
+- Every Ethereum client (geth, reth, besu) implements the EVM
+
+**If the EVM has a bug, everything built on it inherits that bug.**
 
 ---
 
 ## How EVM is implemented today?
 
-It is implemented as part of the client.
-
-Golang (High level language) -> compiled down to your PC/laptop CPU opcodes.
+In Go, compiled down to your CPU.
 
 ```go
 // go-ethereum/core/vm/instructions.go
@@ -465,19 +455,33 @@ func opAdd(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
 }
 ```
 
+Correct by convention. Tested against finite vectors.
+No proof that this is right for *all* inputs.
+
 ---
 
 ## How EVM might be implemented tomorrow?
 
-For client to verify more computations per second (Scalability), we might want to verify it with zk proofs
+For scalability, we want to verify EVM execution with ZK proofs.
 
-Go-Ethereum compiled to RiscV
+The architecture shifts:
 
-EVM execution traces compiled as RiscV traces.
+- EVM execution → compiled to RISC-V traces
+- ZK developers implement a RISC-V VM circuit
+- A proof is generated; clients verify the proof instead of re-executing
 
-ZK developers implements a RiscV VM circuit. Zk proofs can be generated for client to verify.
+**Now there's only one implementation that matters — the zkVM guest.**
 
-Verifying EVM === verifying RiscV traces.
+The multi-client defense disappears.
+
+---
+
+## evm-asm: Background
+
+- **Repo**: [`Verified-zkEVM/evm-asm`](https://github.com/Verified-zkEVM/evm-asm) — EVM implemented directly in RV64IM RISC-V, with Lean 4 proofs
+- **Org**: zkSecurity, Verified-zkEVM grant
+- **Scale**: 9,904 Lean files, ~1.8M lines; 52+ EVM opcodes proved
+- **Velocity**: 200–600 commits per day, AI-agent driven
 
 ---
 
@@ -518,7 +522,6 @@ def evm_add : Program :=
 - High level langauge: Golang, Rust, Python. The langauge for human, for devs and their colleages
 - Low level langauge: Assemblys, Opcodes. The langauge for machine
 - Compiler: The translator between human and machine language
-
 
 ---
 
@@ -588,14 +591,14 @@ But what about 1 years later from now?
 
 ---
 
-## Vitalik's take
+## Vitalik's Take
 
-https://vitalik.eth.limo/general/2026/05/18/fv.html
+[A shallow dive into formal verification](https://vitalik.eth.limo/general/2026/05/18/fv.html).
 
-Treat formal verification as a bag of toolbox that helps you check your intents.
-
+> Formal verification, aided by AI, should be viewed not as totally new paradigm, but as a powerful accelerant of a trend and a paradigm that was already marching forward.
 
 <!--
+Add formal verification in your toolbox that helps you check your intents.
 Closing: Before Asimov, robot writers protrait them like Frankenstien
 But Asimov pictured robots following rules. When human invent tools we would add protections to prevent we gets hurt.
 Math proving is kind of that proof you need to craft software at scale with agents.
