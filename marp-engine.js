@@ -1,4 +1,5 @@
 import { Marp } from '@marp-team/marp-core';
+import leanLang from './marp-lean.js';
 
 const MERMAID_SCRIPT = `<script type="module">
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
@@ -55,6 +56,7 @@ mermaid.run({ querySelector: 'pre.mermaid' });
 export default class extends Marp {
   constructor(opts) {
     super(opts);
+    this.highlightjs.registerLanguage('lean', leanLang);
     const md = this.markdown;
     const original = md.renderer.rules.fence?.bind(md.renderer.rules);
     md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
