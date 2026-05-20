@@ -252,6 +252,109 @@ This converts to 30 lines of code and 16 branches of sub-goals.
 
 <!-- _class: chapter -->
 
+# Part 3.5: Proving Program Correctness
+
+<!-- We'll unpack what does it mean to verify a program -->
+
+---
+
+## Imagine We are implement an addition function
+
+```python
+# python
+def add(a, b):
+    return a + b
+```
+
+---
+
+## We protect it with some tests
+
+```python
+# python
+def add(a, b):
+    return a + b
+
+assert add(1, 2) == 3   # ✓
+assert add(5, 10) == 15 # ✓
+```
+---
+
+## Surprise!
+
+```python
+# python
+def add(a, b):
+    return a + b
+
+add("hello", " world")  # "hello world" 
+add("1", "2")           # "12"  not 3
+```
+
+---
+
+```python
+# add type checking to fix the issue
+def add(a: int, b: int):
+    return a + b
+
+add("1", "2") # error: Argument 1 to "add" has incompatible type "str"; expected "int" 
+```
+
+- TypeScript (2012) — Microsoft essentially admitted JavaScript at scale was untenable
+- Python type hints (PEP 484, 2014) — the duck typing world started bolting types on
+- Rust (2015) — types as a memory safety guarantee
+
+---
+
+# Same function in Lean
+
+```lean
+-- lean
+def add (a b : Nat):= a + b
+
+#eval add 1 2   --  3
+#eval add 5 10  -- 15
+```
+
+---
+
+## Type check is strictly enforced by default
+
+```lean
+-- lean
+def add (a b : Nat):= a + b
+
+#eval add "hello" "world"
+-- Application type mismatch: The argument
+--   "hello"
+-- has type
+--   String
+-- but is expected to have type
+--   Nat
+-- in the application
+--   add "hello"Lean 4
+```
+
+---
+
+## Proving correctness
+
+```lean
+-- lean
+def add (a b : Nat):= a + b
+
+theorem add_correct (a b : Nat) : add a b = a + b := by
+  unfold add  -- unfold the definition of add
+  rfl         -- left-hand side equals to right-hand side
+```
+This means the function is correct **for all natural numbers**! How many test cases can you cover that?
+
+
+---
+
+<!-- _class: chapter -->
+
 # Part 4: Case Studies
 
 <!-- We're going to see some cool projects here. They all demenstrate ideas on how we do things differently -->
@@ -334,9 +437,9 @@ if input = 0 then 1 else 0
 
 ```lean
 -- Circom original:
--- inv <-- in != 0 ? 1/in : 0;
--- out <== -in * inv + 1;
--- in*out === 0;
+-- inv      <--  in != 0 ? 1/in : 0;
+-- out      <== -in * inv + 1;
+-- in * out === 0;
 
 def main (input : Expression (F p)) := do
   let inv ← witness fun env =>
