@@ -1,17 +1,18 @@
 # Research Note
 
-This tool render markdown in webpages.
+Renders markdown notes and slides as webpages.
 
-To install dependencies:
+## Setup
 
 ```bash
 bun install
 ```
 
-To run:
+## Commands
 
-```bash
-bun run n
-```
-
-This project was created using `bun init` in bun v1.1.29. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+| Command | Description |
+|---|---|
+| `bun run dev` | Start local dev server for browsing notes |
+| `bun run build` | Build static site to `dist/` (notes + slides HTML for GitHub Pages) |
+| `bun run present` | Interactively pick a `slides.md` and open it in Marp presenter view |
+| `bun run new-note` | Scaffold a new note directory |
