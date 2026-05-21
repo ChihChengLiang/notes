@@ -19,7 +19,7 @@ select f in "${files[@]}"; do
       cp "$img" "$dest"
     done
 
-    marp --allow-local-files --preview "$tmpdir/slides.md"
+    marp --allow-local-files --config .marprc.yml --preview "$tmpdir/slides.md"
   fi
   break
 done
