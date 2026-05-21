@@ -177,7 +177,7 @@ export async function renderTopicHtml(
       `<div class="nb-article-orn" aria-hidden="true">❦ &nbsp; ❦ &nbsp; ❦</div>`
     );
   }
-  html = `<a class="nb-back-link" href="/">← notebook</a>\n` + html;
+  html = `<a class="nb-back-link" href="../">← notebook</a>\n` + html;
   html = injectToc(html);
   html = `<div class="article-content">${html}</div>`;
 
