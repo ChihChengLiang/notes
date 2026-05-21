@@ -1,6 +1,23 @@
-import { mkdir, rm } from "fs/promises";
+import { mkdir, rm, readdir, copyFile } from "fs/promises";
 import { existsSync } from "fs";
+import { join } from "path";
 import { getTopics, renderIndexHtml, renderSlides, renderTopicHtml, applyAssetPaths, STATIC_FILES } from "./site";
+
+const IMAGE_EXTS = new Set([".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp", ".avif"]);
+
+async function copyImages(srcDir: string, destDir: string): Promise<void> {
+  const entries = await readdir(srcDir, { withFileTypes: true });
+  for (const entry of entries) {
+    const src = join(srcDir, entry.name);
+    const dest = join(destDir, entry.name);
+    if (entry.isDirectory()) {
+      await mkdir(dest, { recursive: true });
+      await copyImages(src, dest);
+    } else if (IMAGE_EXTS.has(entry.name.slice(entry.name.lastIndexOf(".")))) {
+      await copyFile(src, dest);
+    }
+  }
+}
 
 async function build() {
   console.log("Building static site...");
@@ -53,6 +70,7 @@ async function build() {
     if (existsSync(slidesPath)) {
       const slidesHtml = await renderSlides(slidesPath);
       await Bun.write(`${topicDir}/slides.html`, slidesHtml);
+      await copyImages(`./notes/${topic}`, topicDir);
       console.log(`✓ Generated ${topic}/slides.html`);
     }
   }

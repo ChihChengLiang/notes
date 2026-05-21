@@ -168,6 +168,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Marp preview output
+notes/**/slides.html
+
 # IntelliJ based IDEs
 .idea
 
