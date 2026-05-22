@@ -56,3 +56,47 @@ Computation result on RHS. Reduce simp etc.
 ## Natural numbers
 
 Use zify then show lots of inqualities to make sure positiveness
+
+
+## Theorem patterns
+
+It is common people start their theorem like `foo_spec_before` below. The let binding would create a match hypothesis that's difficult to work with.
+
+It wraps your brain a little bit. But if you see `let` patterns, it is a sign to rephrase the theorem in the form like `foo_spec_after`
+
+```lean
+import Mathlib
+
+def foo (n : Nat) : Nat × Nat := (n + 1, n + 2)
+
+theorem foo_spec_before (n : Nat) :
+    let (a, b) := foo n
+    a + b = 2 * n + 3 := by
+  simp [foo]
+  ring
+
+example (n : Nat) : (foo n).1 + (foo n).2 = 2 * n + 3 := by
+  have h := foo_spec_before n
+  #check h
+  -- h : match foo n with | (a, b) => a + b = 2 * n + 3
+  simp only [foo] at h
+  exact h
+
+theorem foo_spec_after (n : Nat) {a b : Nat}
+    (h : foo n = (a, b)) :
+    a + b = 2 * n + 3 := by
+  simp [foo] at h
+  obtain ⟨ha, hb⟩ := h
+  subst ha; subst hb
+  ring
+
+example (n : Nat) : (foo n).1 + (foo n).2 = 2 * n + 3 := by
+  -- use rcases to keep hdecomp hypothesis and also the decomposed ha, hb
+  rcases hdecomp : foo n with ⟨ha, hb⟩
+  have h := foo_spec_after n hdecomp
+  #check h
+  -- h : ha + hb = 2 * n + 3
+  -- hdecomp : foo n = (ha, hb)
+  exact h
+
+```
