@@ -100,3 +100,52 @@ example (n : Nat) : (foo n).1 + (foo n).2 = 2 * n + 3 := by
   exact h
 
 ```
+
+
+## Suffices
+
+## Using `suffices` to surface proof insight
+
+Sometimes the key insight of a proof is choosing the right witness in each branch of a case split. Without `suffices`, that insight gets buried under the same closing boilerplate repeated in every branch.
+
+We want to show `(a - b)^2 + 3 > 3` for any integers `a ≠ b`. The key insight is that `(a - b)^2` is a square of a nonzero integer,
+hence positive. The witness differs per branch — `a - b` or `b - a` — but the closing argument is identical.
+
+```lean
+import Mathlib
+
+theorem sq_add_three_gt_three (a b : ℤ) (h : a ≠ b) :
+    (a - b) ^ 2 + 3 > 3 := by
+  by_cases hab : a > b
+  · have hv : a - b > 0 := by omega
+    have hsq : (a - b) ^ 2 = (a - b) * (a - b) := sq (a - b)
+    have hpos : (a - b) * (a - b) > 0 := mul_pos hv hv
+    linarith [hsq ▸ hpos]
+  · have hv : b - a > 0 := by omega
+    have hsq : (a - b) ^ 2 = (b - a) * (b - a) := by ring
+    have hpos : (b - a) * (b - a) > 0 := mul_pos hv hv
+    linarith [hsq ▸ hpos]
+```
+Every branch must independently close the goal after substituting the witness — the same shape of argument repeated twice.
+
+### With `suffices`
+
+```lean
+theorem sq_add_three_gt_three_clean (a b : ℤ) (h : a ≠ b) :
+    (a - b) ^ 2 + 3 > 3 := by
+  suffices h : ∃ v : ℤ, v > 0 ∧ (a - b) ^ 2 = v * v by
+    obtain ⟨v, hpos, hsq⟩ := h
+    rw [hsq]
+    linarith [mul_pos hpos hpos]
+  by_cases hab : a > b
+  · exact ⟨a - b, by omega, by ring⟩
+  · exact ⟨b - a, by omega, by ring⟩
+```
+
+The `suffices` body handles the closing argument once: rewrite with `hsq`, then `linarith` from `v * v > 0`. Each branch just names its witness and discharges the two properties with `omega` and `ring`.
+
+Most importantly, if a proof insight is about a witness, `suffices` highlights it.
+
+> **The pattern:** `suffices` states what a good witness *looks like*.
+> The body closes the original goal given any such witness.
+> The branches just find the witness.
