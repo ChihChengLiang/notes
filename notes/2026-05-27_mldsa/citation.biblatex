@@ -1,0 +1,11 @@
+@report{nistFIPS2042024,
+  title = {Module-{{Lattice-Based Digital Signature Standard}}},
+  author = {{National Institute of Standards and Technology}},
+  date = {2024-08-13},
+  institution = {National Institute of Standards and Technology},
+  number = {FIPS 204},
+  doi = {10.6028/NIST.FIPS.204},
+  url = {https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf},
+  urldate = {2026-05-27},
+  langid = {english},
+}
