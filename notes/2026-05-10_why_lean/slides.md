@@ -1,10 +1,9 @@
 ---
-marp: true
-theme: notes
-paginate: true
+title: My Lean 4 Experience and the Future of Software
 ---
 
-<!-- _class: title-slide -->
++++ {"class": "title-slide"}
+
 
 # My Lean 4 Experience and the Future of Software
 
@@ -12,9 +11,7 @@ paginate: true
 
 CC · 2026-05-20
 
----
-
-<!-- _class: title-slide -->
++++ {"class": "title-slide"}
 <div class="columns">
 
 <div>
@@ -30,12 +27,12 @@ CC · 2026-05-20
 </div>
 </div>
 
-<!--
+:::notes
 What is Taiwan doing in 1950? We are living in this world today now.
 Promise: Understand math + CS
--->
+:::
 
----
++++
 
 ## How we got here
 
@@ -47,13 +44,11 @@ This talk is three things:
 2. Real projects doing formal verification today
 3. What it might mean for Ethereum and software in general
 
----
-
-<!-- _class: chapter -->
++++ {"class": "chapter"}
 
 # Part 1: Why The Hype?
 
----
++++
 
 ## Why Formal Verification Today?
 
@@ -61,19 +56,17 @@ This talk is three things:
 * **The Opportunity**: Formal methods used to be costly to write -- AI now makes them cheap
 * The **Need**: We'd like to automate coding beyond human reasoning. 
 
-<!-- 
+:::notes
 - Formal Verifications have been here since forever 
 - Think about next year.
 - Anyone runs 20 agents for coding here?
--->
+:::
 
----
-
-<!-- _class: chapter -->
++++ {"class": "chapter"}
 
 # Part 2: What is Lean 4?
 
----
++++
 
 ## Lean 4 is not the Lean Ethereum project
 
@@ -83,7 +76,7 @@ Lean 4 is a **proof assistant and programming language**.
 * Coding like usual programming languages is okay too!
 * If it compiles, the theorem is true — by construction.
 
----
++++
 
 ## The chess board feeling
 
@@ -97,7 +90,7 @@ The board shows you exactly what's left to prove.
 
 Try it: [Lean Natural Number Game](https://adam.math.hhu.de/#/g/leanprover-community/NNG4)
 
----
++++
 
 ## A tactic in action
 
@@ -105,7 +98,7 @@ Try it: [Lean Natural Number Game](https://adam.math.hhu.de/#/g/leanprover-commu
 * We would like to show $2 * y = 2 * (x + 37)$
 * How would you prove this by hand?
 
----
++++
 
 In Lean 4, a **hypothesis** is something we assume to be *true*
 
@@ -119,7 +112,7 @@ And our **goal** is:
 2 * y = 2 * (x + 37)
 ```
 
----
++++
 ## A tactic in action
 
 One line closes it:
@@ -132,7 +125,7 @@ rw [h]
 
 Both sides become identical. Goal closed.
 
----
++++
 
 ## Let's prove something real
 
@@ -148,13 +141,11 @@ $$
 
 https://live.lean-lang.org
 
----
-
-<!-- _class: chapter -->
++++ {"class": "chapter"}
 
 # Part 3: My Experience
 
----
++++
 
 ## The Natural Number Game
 
@@ -164,12 +155,12 @@ https://live.lean-lang.org
 
 </div>
 
-<!--
+:::notes
 Mario style stages
 This server is hosted at Heinrich Heine University Düsseldorf.
--->
+:::
 
----
++++
 
 ## The Natural Number Game
 
@@ -179,7 +170,7 @@ This server is hosted at Heinrich Heine University Düsseldorf.
 
 </div>
 
----
++++
 
 ## The Natural Number Game
 
@@ -189,7 +180,7 @@ This server is hosted at Heinrich Heine University Düsseldorf.
 
 </div>
 
----
++++
 
 
 ## Arrow's Impossibility Theorem
@@ -200,7 +191,7 @@ I wanted to verify a real math paper.
 * One-page proof — how hard could it be?
 * [My attempt](https://github.com/ChihChengLiang/arrow/blob/main/Arrow/Arrow.lean): 2–3 painful weeks
 
----
++++
 
 <div class="columns">
 
@@ -218,7 +209,7 @@ I wanted to verify a real math paper.
 
 </div>
 
----
++++
 
 <div style="width: 70%; margin: auto">
 
@@ -226,7 +217,7 @@ I wanted to verify a real math paper.
 
 </div>
 
----
++++
 
 ## What made it hard
 
@@ -235,9 +226,11 @@ I wanted to verify a real math paper.
 Mathematically: trivially the same.
 In Lean: requires explicit coercions everywhere.
 
-<!-- Type checking on steroid -->
+:::notes
+Type checking on steroid
+:::
 
----
++++
 
 ## What it felt like
 
@@ -252,15 +245,15 @@ An actual line in the paper:
 
 This converts to 30 lines of code and 16 branches of sub-goals.
 
----
-
-<!-- _class: chapter -->
++++ {"class": "chapter"}
 
 # Part 3.5: Proving Program Correctness
 
-<!-- We'll unpack what does it mean to verify a program -->
+:::notes
+We'll unpack what does it mean to verify a program
+:::
 
----
++++
 
 ## Imagine We Implement an Addition Function
 
@@ -270,7 +263,7 @@ def add(a, b):
     return a + b
 ```
 
----
++++
 
 ## We protect it with some tests
 
@@ -282,7 +275,7 @@ def add(a, b):
 assert add(1, 2) == 3   # ✓
 assert add(5, 10) == 15 # ✓
 ```
----
++++
 
 ## Surprise!
 
@@ -295,7 +288,7 @@ add("hello", " world")  # "hello world"
 add("1", "2")           # "12"  not 3
 ```
 
----
++++
 
 ```python
 # add type checking to fix the issue
@@ -309,7 +302,7 @@ add("1", "2") # error: Argument 1 to "add" has incompatible type "str"; expected
 - Python type hints (PEP 484, 2014) — the duck typing world started bolting types on
 - Rust (2015) — types as a memory safety guarantee
 
----
++++
 
 # Same function in Lean
 
@@ -321,7 +314,7 @@ def add (a b : Nat):= a + b
 #eval add 5 10  -- 15
 ```
 
----
++++
 
 ## Type check is strictly enforced by default
 
@@ -340,7 +333,7 @@ def add (a b : Nat):= a + b
 --   add "hello"Lean 4
 ```
 
----
++++
 
 ## Proving correctness
 
@@ -355,23 +348,21 @@ theorem add_correct (a b : Nat) : add a b = a + b := by
 This means the function is correct **for all natural numbers**! How many test cases could cover that?
 
 
----
-
-<!-- _class: chapter -->
++++ {"class": "chapter"}
 
 # Part 4: Case Studies
 
-<!-- We're going to see some cool projects here. They all demonstrate ideas on how we do things differently -->
+:::notes
+We're going to see some cool projects here. They all demonstrate ideas on how we do things differently
+:::
 
----
-
-<!-- _class: chapter -->
++++ {"class": "chapter"}
 
 ## Case Study 1: lean-zip
 
 *How do you craft secure compression library?*
 
----
++++
 
 ## lean-zip: Background
 
@@ -381,13 +372,13 @@ This means the function is correct **for all natural numbers**! How many test ca
 - **Timeline**: Feb 19 – Apr 22, 2026 (~2 months)
 - **Goal**: Secure compression library
 
-<!-- 
+:::notes
 This library is where if you want to check if Lean is practical or not for software development
 
 A **zip bomb**, also known as a decompression bomb or "zip of death," is a malicious archive file designed to overwhelm a system's resources when decompressed, potentially causing crashes or system failures.
--->
+:::
 
----
++++
 
 ## The capstone theorem
 
@@ -401,7 +392,7 @@ For **every** input under 1 GiB: compress-then-decompress returns the original d
 
 No test suite can make this claim.
 
----
++++
 
 ## Bugs could still be found:
 
@@ -411,20 +402,18 @@ A [105 million fuzzing executions](https://kirancodes.me/posts/log-who-watches-t
 - A bug in Lean 4's runtime.
 - A denial-of-service in a unverified archive parser.
 
-<!-- 
+:::notes
 This hints where future security hotspot might be.
 Vitalik has a point on being cautious to the words: "proven" and "correct". Treat them as marketing words.
--->
+:::
 
----
-
-<!-- _class: chapter -->
++++ {"class": "chapter"}
 
 ## Case Study 2: clean
 
 *How do you craft secure ZK circuits?*
 
----
++++
 
 ## clean: Background
 
@@ -433,7 +422,7 @@ Vitalik has a point on being cautious to the words: "proven" and "correct". Trea
 - **Backend**: Rust / Plonky3
 - **Goal**: Machine-checked soundness and completeness for *all* field elements and adversarial witnesses
 
----
++++
 
 ## Example: IsZero circuit
 
@@ -453,11 +442,11 @@ def main (input : Expression (F p)) := do
   return out
 ```
 
-<!--
+:::notes
 Inputs and outputs are finite field elements. Integer mod p
--->
+:::
 
----
++++
 
 ## In Clean, You have to write proof for your circuit
 
@@ -473,7 +462,7 @@ def circuit : FormalCircuit (F p) field field where
   completeness := ...
 ```
 
----
++++
 
 ```lean
   soundness := by
@@ -493,7 +482,7 @@ def circuit : FormalCircuit (F p) field field where
         exact hr
 ```
 
----
++++
 
 ```lean
   completeness := by
@@ -505,7 +494,7 @@ def circuit : FormalCircuit (F p) field field where
       split_ifs <;> aesop
 ```
 
----
++++
 
 ## Field wrap-around bugs caught at compile time
 
@@ -519,15 +508,13 @@ Without it, the proof won't compile. You cannot deploy with a too-small prime by
 
 This is the class of bug that looks correct for small test values but wraps silently near `p`.
 
----
-
-<!-- _class: chapter -->
++++ {"class": "chapter"}
 
 ## Case Study 3: evm-asm
 
 *How do you craft secure and fast EVM?*
 
----
++++
 
 ## EVM Opcodes on
 
@@ -535,7 +522,7 @@ This is the class of bug that looks correct for small test values but wraps sile
 
 ![](asset/evm_code.png)
 
----
++++
 
 ## Quick recap: what is the EVM?
 
@@ -547,7 +534,7 @@ Every Ethereum transaction runs on the EVM — the Ethereum Virtual Machine.
 
 **If the EVM has a bug, everything built on it inherits that bug.**
 
----
++++
 
 ## How EVM is implemented today?
 
@@ -565,7 +552,7 @@ func opAdd(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
 Correct by convention. Tested against finite vectors.
 No proof that this is right for *all* inputs.
 
----
++++
 
 ## How EVM might be implemented tomorrow?
 
@@ -581,7 +568,7 @@ The architecture shifts:
 
 The multi-client defense disappears.
 
----
++++
 
 ## evm-asm: Background
 
@@ -590,7 +577,7 @@ The multi-client defense disappears.
 - **Scale**: 9,904 Lean files, ~1.8M lines; 52+ EVM opcodes proved
 - **Velocity**: 200–600 commits per day, AI-agent driven
 
----
++++
 
 ## EVM-ASM: EVM implemented in RiscV Opcode directly
 
@@ -621,7 +608,7 @@ def evm_add : Program :=
   ADDI .x12 .x12 32
 ```
 
----
++++
 
 ## What is it doing here?
 
@@ -631,13 +618,11 @@ def evm_add : Program :=
 * Speak languages closer to the machine, you get more speed optimization for run time, with the sacrifice of human developer time.
 * you also get bugs easily if not careful
 
----
-
-<!-- _class: chapter -->
++++ {"class": "chapter"}
 
 # Part 5: What Comes Next?
 
----
++++
 
 ## The numbers
 
@@ -646,7 +631,7 @@ The [Lean Atlas paper](https://arxiv.org/abs/2604.16347) argues:
 - 95–99% of proofs need no human review — Lean's kernel handles it
 - That converts naively to **20–100× review efficiency**
 
----
++++
 
 ## The new division of labor
 
@@ -658,7 +643,7 @@ The [Lean Atlas paper](https://arxiv.org/abs/2604.16347) argues:
 | Smell out a bad spec | Human |
 | Verify proof validity | Lean's type checker |
 
----
++++
 
 ## Vulnerabilities relocate
 
@@ -669,7 +654,7 @@ Each layer you verify pushes the attack surface to the boundary above or below.
 - **Composition boundaries** — verifying ADD doesn't verify a flash loan attack
 - **Supply chain** — if AI writes both spec and proof, who audits the AI?
 
----
++++
 
 ## Honest caveat
 
@@ -683,7 +668,7 @@ It is indeed more painful than Rust
 
 But what about a year from now?
 
----
++++
 
 ## Vitalik's Take
 
@@ -691,14 +676,14 @@ But what about a year from now?
 
 > Formal verification, aided by AI, should be viewed not as totally new paradigm, but as a powerful accelerant of a trend and a paradigm that was already marching forward.
 
-<!--
+:::notes
 Add formal verification in your toolbox that helps you check your intents.
 Closing: Before Asimov, robot writers portrayed them like Frankenstein.
 But Asimov pictured robots following rules. When humans invent tools, we add protections to prevent us from getting hurt.
 Math proving is kind of that proof you need to craft software at scale with agents.
--->
+:::
 
----
++++
 
 ## Links
 
