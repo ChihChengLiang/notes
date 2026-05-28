@@ -36,7 +36,7 @@ export async function renderSlides(slidesPath: string, root: string = "/"): Prom
   const template = await Bun.file("./src/templates/reveal.html").text();
   return template
     .replace("{{title}}", escapeAttr(title ?? "Slides"))
-    .replace("{{root}}", root)
+    .replaceAll("{{root}}", root)
     .replace("{{slides}}", () => sections.join("\n"));
 }
 

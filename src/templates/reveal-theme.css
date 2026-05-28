@@ -67,7 +67,6 @@
 
 /* === Slide class variants === */
 .reveal .slides section.title-slide {
-  background-color: var(--custom-12);
   color: var(--custom-1);
   text-align: center;
 }
@@ -83,7 +82,6 @@
 .reveal .slides section.title-slide a { color: var(--custom-8); }
 
 .reveal .slides section.chapter {
-  background-color: var(--custom-4);
   text-align: center;
 }
 .reveal .slides section.chapter h1,
