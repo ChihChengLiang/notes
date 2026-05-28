@@ -28,7 +28,7 @@ The rounding primitives make this work:
 | Key compression | `Power2Round` | Drop the $d$ least-significant bits of $\mathbf{t}$ to produce the public-key component $\mathbf{t}_1$ |
 | Signing commitment | `HighBits` / `LowBits` | Compute $\mathbf{w}_1$ from $\mathbf{w} = \mathbf{A}\mathbf{y}$; keep $\mathbf{r}_0 = \text{LowBits}(\mathbf{w})$ for the validity check |
 | Hint creation | `MakeHint` | Record whether adding $-c\mathbf{s}_2 + c\mathbf{t}_0$ to $\mathbf{w} - c\mathbf{s}_2$ changes the high bits |
-| Hint use | `UseHint` | Recover $\mathbf{w}\_1$ from $\mathbf{w}'_{\text{Approx}}$ during verification |
+| Hint use | `UseHint` | Recover $\mathbf{w}_1$ from $\mathbf{w}'_{\text{Approx}}$ during verification |
 
 ## FIPS 204 algorithms covered
 
@@ -217,7 +217,7 @@ theorem concreteRounding_hide_low_of_isApproved (p) (hp) (r s : Rq) (b : ℕ) :
     highBits p (r + s) = highBits p r
 ```
 
-If $\|\mathbf{s}\|\_\infty \leq b$ and $\|\text{LowBits}(\mathbf{r})\|_\infty + b < \gamma_2$,
+If $\|\mathbf{s}\|_\infty \leq b$ and $\|\text{LowBits}(\mathbf{r})\|_\infty + b < \gamma_2$,
 then $\text{HighBits}(\mathbf{r} + \mathbf{s}) = \text{HighBits}(\mathbf{r})$.
 Adding $\mathbf{s}$ does not push $r_0$ past any rounding boundary, so the high
 bits are unchanged.  This is the property that lets the verifier reconstruct
