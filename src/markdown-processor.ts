@@ -89,11 +89,35 @@ const codeHandler = {
   },
 };
 
+function slugify(s: string): string {
+  return s
+    .replace(/<[^>]+>/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "") || "section";
+}
+
+function addHeadingIds(html: string): string {
+  const used = new Map<string, number>();
+  return html.replace(/<(h[2-6])>([\s\S]*?)<\/h[2-6]>/g, (_match, tag, content) => {
+    const slug = slugify(content);
+    const count = used.get(slug) ?? 0;
+    used.set(slug, count + 1);
+    const id = count === 0 ? slug : `${slug}-${count}`;
+    return `<${tag} id="${id}">${content}</${tag}>`;
+  });
+}
+
 function postProcess(html: string): string {
-  return html
-    .replace(/<table>/g, '<div class="table-wrap"><table>')
-    .replace(/<\/table>/g, "</table></div>")
-    .replace(/<hr>/g, '<div class="divider-orn" aria-hidden="true">✦</div>');
+  return addHeadingIds(
+    html
+      .replace(/<table>/g, '<div class="table-wrap"><table>')
+      .replace(/<\/table>/g, "</table></div>")
+      .replace(/<hr>/g, '<div class="divider-orn" aria-hidden="true">✦</div>')
+  );
 }
 
 export async function renderMyst(
