@@ -69,6 +69,20 @@
   font-size: 0.85em;
 }
 
+/* === Syntax highlighting (hljs token colors, shared with notes) === */
+.reveal .hljs-keyword,
+.reveal .hljs-section  { color: var(--custom-12); font-weight: 600; }
+.reveal .hljs-title    { color: var(--custom-12); }
+.reveal .hljs-built_in { color: var(--custom-11); }
+.reveal .hljs-string,
+.reveal .hljs-literal  { color: var(--custom-9); }
+.reveal .hljs-number   { color: var(--custom-10); }
+.reveal .hljs-comment,
+.reveal .hljs-doctag   { color: var(--custom-7); font-style: italic; }
+.reveal .hljs-meta     { color: var(--custom-9); }
+.reveal .hljs-symbol   { color: var(--custom-11); }
+.reveal .hljs-sorry    { color: #a63220; font-weight: 600; }
+
 /* === Math === */
 .reveal .math-display { overflow-x: auto; }
 
