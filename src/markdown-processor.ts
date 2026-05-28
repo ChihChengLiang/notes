@@ -1,15 +1,14 @@
-import MarkdownIt from "markdown-it";
-// @ts-ignore
-import markdownItBiblatex from "@arothuis/markdown-it-biblatex";
+import { mystParse } from "myst-parser";
+import { mystToHtml } from "myst-to-html";
+import katex from "katex";
+import hljs from "highlight.js";
+import yaml from "js-yaml";
+import leanHljs from "./lean.ts";
 // @ts-ignore
 import { BibLatexParser } from "biblatex-csl-converter";
-import hljs from "highlight.js";
-import anchor from "markdown-it-anchor";
-import leanHljs from "./lean.ts";
 
 hljs.registerLanguage("lean", leanHljs);
 
-// Simple HTML escape function
 function escapeHtml(text: string): string {
   return text
     .replace(/&/g, "&amp;")
@@ -19,66 +18,129 @@ function escapeHtml(text: string): string {
     .replace(/'/g, "&#039;");
 }
 
-export function parseFrontmatter(content: string): { markdown: string; date: string | null } {
-  const match = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
-  if (!match) return { markdown: content, date: null };
-  const dateMatch = match[1].match(/^date:\s*(.+)$/m);
+function highlightCode(value: string, lang: string | undefined): string {
+  if (lang && hljs.getLanguage(lang)) {
+    try {
+      return `<pre class="hljs"><span>${lang}</span><code>${hljs.highlight(value, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
+    } catch (_) {}
+  }
+  return `<pre class="hljs">${lang ? `<span>${lang}</span>` : ""}<code>${escapeHtml(value)}</code></pre>`;
+}
+
+export async function loadBibliography(bibPath: string) {
+  const bibContent = await Bun.file(bibPath).text();
+  const parser = new BibLatexParser(bibContent, { processUnexpected: true, processUnknown: true });
+  return parser.parse().entries;
+}
+
+function makeCitationHandlers(bibCache: any) {
+  function renderCiteNode(node: any): string {
+    const label: string = node.label ?? node.identifier ?? "";
+    if (!bibCache) return `<cite>[${label}]</cite>`;
+
+    const bibEntry = Object.values(bibCache).find((e: any) => e.entry_key === label) as any;
+    if (!bibEntry?.fields) return `<cite>[${label}]</cite>`;
+
+    const firstAuthor = bibEntry.fields.author?.[0];
+    const authorName =
+      firstAuthor?.family?.[0]?.text ?? firstAuthor?.literal?.[0]?.text ?? "Unknown";
+    const hasMultiple = (bibEntry.fields.author?.length ?? 0) > 1;
+    const authorText = hasMultiple ? `${authorName} et al.` : authorName;
+    const year = bibEntry.fields.date ?? bibEntry.fields.year ?? "";
+    const fullTitle = (bibEntry.fields.title ?? []).map((p: any) => p.text ?? "").join(" ");
+    const title = fullTitle.length > 60 ? fullTitle.slice(0, 57) + "..." : fullTitle;
+    const doi = bibEntry.fields.doi ?? "";
+
+    return `<span class="citation" data-citation-author="${escapeHtml(authorText)}" data-citation-year="${escapeHtml(year)}" data-citation-title="${escapeHtml(title)}" data-citation-doi="${escapeHtml(doi)}">[${escapeHtml(authorText)}, ${escapeHtml(year)}]</span>`;
+  }
+
   return {
-    markdown: content.slice(match[0].length),
-    date: dateMatch?.[1]?.trim() ?? null,
+    cite(_h: any, node: any) {
+      return { type: "raw", value: renderCiteNode(node) };
+    },
+    citeGroup(_h: any, node: any) {
+      const parts = (node.children ?? [])
+        .filter((c: any) => c.type === "cite")
+        .map((c: any) => renderCiteNode(c))
+        .join("");
+      return { type: "raw", value: parts };
+    },
   };
 }
 
-export function createMarkdownProcessor(bibPath: string | null, options?: { alwaysReloadFiles?: boolean }) {
-  const md = new MarkdownIt({
-    highlight: function (str, lang) {
-      if (lang) {
-        const langSpan = `<span>${lang}</span>`
-        if (hljs.getLanguage(lang)) {
-          try {
-            return `<pre class="hljs">${langSpan}<code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
-          } catch (__) {}
-        }
-        return `<pre class="hljs">${langSpan}<code>${escapeHtml(str)}</code></pre>`;
-      }
+const mathHandlers = {
+  math(_h: any, node: any) {
+    const html = katex.renderToString(node.value ?? "", { displayMode: true, throwOnError: false });
+    return { type: "raw", value: `<div class="math-display">${html}</div>\n` };
+  },
+  inlineMath(_h: any, node: any) {
+    const html = katex.renderToString(node.value ?? "", { displayMode: false, throwOnError: false });
+    return { type: "raw", value: `<span class="math-inline">${html}</span>` };
+  },
+};
 
-      return `<pre class="hljs"><code>${escapeHtml(str)}</code></pre>`;
+const codeHandler = {
+  code(_h: any, node: any) {
+    const lang: string | undefined = node.lang;
+    if (lang === "mermaid") {
+      return { type: "raw", value: `<pre class="mermaid">${escapeHtml(node.value)}</pre>` };
     }
-  });
+    return { type: "raw", value: highlightCode(node.value, lang) };
+  },
+};
 
-  md.use(anchor, {
-    slugify: (s: string) =>
-      s.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, ""),
-  });
+function postProcess(html: string): string {
+  return html
+    .replace(/<table>/g, '<div class="table-wrap"><table>')
+    .replace(/<\/table>/g, "</table></div>")
+    .replace(/<hr>/g, '<div class="divider-orn" aria-hidden="true">✦</div>');
+}
 
-  // Configure the biblatex plugin only when a bib file is provided
-  if (bibPath !== null) {
-    md.use(markdownItBiblatex, {
-      bibPath,
-      alwaysReloadFiles: options?.alwaysReloadFiles ?? false,
-    });
+export async function renderMyst(
+  content: string,
+  bibPath: string | null
+): Promise<{ html: string; date: string | null; title: string | null }> {
+  const tree = mystParse(content, {
+    extensions: { frontmatter: true, math: true, citations: bibPath !== null },
+  }) as any;
+
+  // Extract frontmatter from first node if it's a yaml code block
+  let date: string | null = null;
+  let title: string | null = null;
+  const firstChild = tree.children[0];
+  if (firstChild?.type === "code" && firstChild?.lang === "yaml") {
+    tree.children.shift();
+    const fm = (yaml.load(firstChild.value) as Record<string, any>) ?? {};
+    date = fm.date ? String(fm.date) : null;
+    title = fm.title ? String(fm.title) : null;
   }
 
-  // Wrap tables in .table-wrap for rounded border + hand-drawn jitter effect
-  md.renderer.rules.table_open = (tokens, idx, options, env, slf) =>
-    `<div class="table-wrap">${slf.renderToken(tokens, idx, options)}`;
-  md.renderer.rules.table_close = (tokens, idx, options, env, slf) =>
-    `${slf.renderToken(tokens, idx, options)}</div>`;
-
-  // Render --- as ornament divider instead of a plain <hr>
-  md.renderer.rules.hr = () => '<div class="divider-orn" aria-hidden="true">✦</div>\n';
-
-  // Render mermaid fences as <pre class="mermaid"> for client-side rendering
-  const defaultFence = md.renderer.rules.fence?.bind(md.renderer.rules);
-  md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
-    const token = tokens[idx];
-    if (token.info.trim() === 'mermaid') {
-      return `<pre class="mermaid">${escapeHtml(token.content)}</pre>`;
+  // Extract title from first heading if not in frontmatter
+  if (!title) {
+    const firstHeading = tree.children.find((n: any) => n.type === "heading" && n.depth === 1);
+    if (firstHeading) {
+      title = firstHeading.children?.map((c: any) => c.value ?? "").join("") ?? null;
     }
-    return defaultFence ? defaultFence(tokens, idx, options, env, slf) : slf.renderToken(tokens, idx, options);
-  };
+  }
 
-  return md;
+  let bibCache: any = null;
+  if (bibPath !== null) {
+    bibCache = await loadBibliography(bibPath);
+  }
+
+  const html = mystToHtml(tree, {
+    hast: {
+      allowDangerousHtml: true,
+      handlers: {
+        ...mathHandlers,
+        ...codeHandler,
+        ...makeCitationHandlers(bibCache),
+      },
+    },
+    stringifyHtml: { allowDangerousHtml: true },
+  });
+
+  return { html: postProcess(html), date, title };
 }
 
 export function injectToc(html: string): string {
@@ -121,85 +183,4 @@ export function injectToc(html: string): string {
     return html.replace(/(<div class="note-meta">[\s\S]*?<\/div>)/, `$1\n${toc}`);
   }
   return html.replace("</h1>", `</h1>\n${toc}`);
-}
-
-export async function loadBibliography(bibPath: string) {
-  const bibContent = await Bun.file(bibPath).text();
-  const parser = new BibLatexParser(bibContent, { processUnexpected: true, processUnknown: true });
-  return parser.parse().entries;
-}
-
-export function setupCitationRenderer(md: MarkdownIt, getBibCache: () => any) {
-  // Store the original renderer
-  const originalCitationRenderer = md.renderer.rules.biblatex_reference;
-
-  // Custom renderer for citations to add tooltips
-  md.renderer.rules.biblatex_reference = function (tokens, idx, options, env, slf) {
-    // Get the original rendered HTML
-    const originalHtml = originalCitationRenderer
-      ? originalCitationRenderer(tokens, idx, options, env, slf)
-      : slf.renderToken(tokens, idx, options);
-
-    // Extract citation info for tooltip
-    const token = tokens[idx];
-    const citation = token.meta?.citation;
-
-    const bibCache = getBibCache();
-    if (!citation || !bibCache) {
-      return originalHtml;
-    }
-
-    const items = citation.citationItems || [];
-
-    if (items.length > 0) {
-      const item = items[0];
-      const label = item.label; // The original citation key
-
-      // Find the bib entry by the label
-      const bibEntry = Object.values(bibCache).find((entry: any) =>
-        entry.entry_key === label
-      ) as any;
-
-      if (bibEntry?.fields) {
-        // Extract first author's family name
-        const firstAuthor = bibEntry.fields.author?.[0];
-        const authorName = firstAuthor?.family?.[0]?.text || firstAuthor?.literal?.[0]?.text || "Unknown";
-
-        // Add "et al." if there are multiple authors
-        const hasMultipleAuthors = bibEntry.fields.author?.length > 1;
-        const authorText = hasMultipleAuthors ? `${authorName} et al.` : authorName;
-
-        // Extract year
-        const year = bibEntry.fields.date || bibEntry.fields.year || "";
-
-        // Extract title - concatenate all text parts and truncate if too long
-        const fullTitle = bibEntry.fields.title
-          ?.map((part: any) => part.text || "")
-          .join(" ") || "";
-        const maxTitleLength = 60;
-        const title = fullTitle.length > maxTitleLength
-          ? fullTitle.substring(0, maxTitleLength) + "..."
-          : fullTitle;
-
-        // Extract DOI
-        const doi = bibEntry.fields.doi || "";
-
-        // Build data attributes for the custom tooltip
-        const tooltipData = {
-          author: authorText,
-          year: year,
-          title: title,
-          doi: doi
-        };
-
-        // Add data attributes to the existing HTML
-        return originalHtml.replace(
-          /<span([^>]*)>/,
-          `<span$1 data-citation-author="${escapeHtml(tooltipData.author)}" data-citation-year="${escapeHtml(tooltipData.year)}" data-citation-title="${escapeHtml(tooltipData.title)}" data-citation-doi="${escapeHtml(tooltipData.doi)}">`
-        );
-      }
-    }
-
-    return originalHtml;
-  };
 }

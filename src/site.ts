@@ -2,7 +2,7 @@ import { readdirSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
 import { unlink } from "fs/promises";
-import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter, injectToc } from "./markdown-processor";
+import { renderMyst, injectToc } from "./markdown-processor";
 
 export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js"] as const;
 
@@ -150,26 +150,27 @@ export function applyPageMeta(template: string, title: string, description: stri
     .replaceAll("{{og_description}}", escapeAttr(description));
 }
 
+async function findBibPath(topicDir: string): Promise<string | null> {
+  for (const ext of ["citation.bib", "citation.biblatex"]) {
+    const path = `${topicDir}/${ext}`;
+    if (await Bun.file(path).exists()) return path;
+  }
+  return null;
+}
+
 export async function renderTopicHtml(
   topicDir: string,
   template: string,
-  options?: { alwaysReloadFiles?: boolean }
+  _options?: { alwaysReloadFiles?: boolean }
 ): Promise<string | null> {
   const mainFile = Bun.file(`${topicDir}/main.md`);
   if (!(await mainFile.exists())) return null;
 
-  const bibPath = `${topicDir}/citation.biblatex`;
-  const hasBib = await Bun.file(bibPath).exists();
+  const bibPath = await findBibPath(topicDir);
+  const content = await mainFile.text();
+  const { html: bodyHtml, date, title } = await renderMyst(content, bibPath);
 
-  const md = createMarkdownProcessor(hasBib ? bibPath : null, options);
-  let bibCache: any = null;
-  if (hasBib) {
-    setupCitationRenderer(md, () => bibCache);
-    bibCache = await loadBibliography(bibPath);
-  }
-
-  const { markdown, date } = parseFrontmatter(await mainFile.text());
-  let html = md.render(markdown);
+  let html = bodyHtml;
   if (date) {
     html = html.replace(
       /(<\/h1>)/,
@@ -183,8 +184,8 @@ export async function renderTopicHtml(
 
   return applyPageMeta(
     template.replace("{{content}}", () => html),
-    extractTitle(markdown),
-    extractDescription(markdown)
+    title ?? extractTitle(content),
+    extractDescription(content)
   );
 }
 

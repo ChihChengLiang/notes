@@ -11,18 +11,18 @@
   },
   "devDependencies": {
     "@marp-team/marp-cli": "^4.3.1",
-    "@types/bun": "latest",
-    "@types/markdown-it": "^14.1.2"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@arothuis/markdown-it-biblatex": "github:arothuis/markdown-it-biblatex",
     "@marp-team/marp-core": "^3.0.0",
     "highlight.js": "^11.11.1",
-    "markdown-it": "^14.1.1",
-    "markdown-it-anchor": "^9.2.0",
-    "markdown-it-mermaid": "^0.2.5"
+    "katex": "^0.17.0",
+    "myst-parser": "^1.7.2",
+    "myst-to-html": "^1.7.2",
+    "unist-util-remove": "^4.0.0",
+    "unist-util-visit": "^5.1.0"
   }
 }
