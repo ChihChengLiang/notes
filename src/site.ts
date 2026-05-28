@@ -2,7 +2,7 @@ import { readdirSync } from "fs";
 import { dirname } from "path";
 import { renderMyst, renderSlidesSections, injectToc } from "./markdown-processor";
 
-export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js", "reveal-theme.css"] as const;
+export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js", "reveal-theme.css", "reveal-base.css"] as const;
 
 export function getTopics(): string[] {
   const entries = readdirSync("./notes", { withFileTypes: true });
