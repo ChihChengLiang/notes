@@ -12,6 +12,14 @@
   <link rel="stylesheet" href="{{root}}reveal-theme.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="hand-drawn" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="turbulence" baseFrequency="0.025" numOctaves="3" seed="8" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 <div class="reveal">
   <div class="slides">
     {{slides}}
@@ -31,6 +39,15 @@
   });
   document.querySelectorAll('.slides section.chapter').forEach(function(el) {
     el.setAttribute('data-background-color', 'oklch(92.5% 0.040 78)');
+    el.setAttribute('data-background-image', root + 'assets/bedge-grunge.png');
+    el.setAttribute('data-background-size', 'cover');
+    el.setAttribute('data-background-opacity', '0.15');
+  });
+  document.querySelectorAll('.slides section:not(.title-slide):not(.chapter)').forEach(function(el) {
+    el.setAttribute('data-background-color', 'oklch(99.1% 0.011 78)');
+    el.setAttribute('data-background-image', root + 'assets/bedge-grunge.png');
+    el.setAttribute('data-background-size', 'cover');
+    el.setAttribute('data-background-opacity', '0.1');
   });
 })();
 </script>

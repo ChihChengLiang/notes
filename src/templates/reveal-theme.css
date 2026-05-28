@@ -1,6 +1,7 @@
 /* === Warm paper palette — overrides white.css base theme === */
 :root {
   --custom-1:  oklch(99.1% 0.011 78);
+  --custom-2:  oklch(98.1% 0.018 78);
   --custom-3:  oklch(95.3% 0.031 78);
   --custom-4:  oklch(92.5% 0.040 78);
   --custom-6:  oklch(87.0% 0.046 78);
@@ -33,12 +34,24 @@
 
 /* === Code blocks — override reveal.js pre/code defaults === */
 .reveal pre.hljs {
-  background: var(--custom-3);
-  border: 1px solid var(--custom-6);
-  border-radius: 4px;
+  position: relative;
+  background: var(--custom-2);
+  border: none;
+  border-radius: 8px;
   box-shadow: none;
   width: 100%;
-  font-size: 0.5em;
+  font-size: 0.6em;
+  padding: 0.8em 1em;
+}
+
+.reveal pre.hljs::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
 }
 
 .reveal pre.hljs > span {
@@ -51,8 +64,8 @@
 /* inline code */
 .reveal :not(pre) > code {
   background: var(--custom-3);
-  border-radius: 3px;
-  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
   font-size: 0.85em;
 }
 
