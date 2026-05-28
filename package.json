@@ -21,8 +21,6 @@
     "highlight.js": "^11.11.1",
     "katex": "^0.17.0",
     "myst-parser": "^1.7.2",
-    "myst-to-html": "^1.7.2",
-    "unist-util-remove": "^4.0.0",
-    "unist-util-visit": "^5.1.0"
+    "myst-to-html": "^1.7.2"
   }
 }
