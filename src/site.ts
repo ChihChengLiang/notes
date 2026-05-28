@@ -1,10 +1,8 @@
 import { readdirSync } from "fs";
-import { tmpdir } from "os";
-import { join } from "path";
-import { unlink } from "fs/promises";
-import { renderMyst, injectToc } from "./markdown-processor";
+import { dirname } from "path";
+import { renderMyst, renderSlidesSections, injectToc } from "./markdown-processor";
 
-export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js"] as const;
+export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js", "reveal-theme.css"] as const;
 
 export function getTopics(): string[] {
   const entries = readdirSync("./notes", { withFileTypes: true });
@@ -31,22 +29,15 @@ export async function getTopicDate(topic: string): Promise<string | null> {
   }
 }
 
-export async function renderSlides(slidesPath: string): Promise<string> {
-  const tmp = join(tmpdir(), `marp-${Date.now()}.html`);
-  try {
-    const proc = Bun.spawn(
-      ["bunx", "marp", "--allow-local-files", "--output", tmp, slidesPath],
-      { cwd: process.cwd(), stderr: "pipe" }
-    );
-    const exitCode = await proc.exited;
-    if (exitCode !== 0) {
-      const err = await new Response(proc.stderr).text();
-      throw new Error(`marp failed: ${err}`);
-    }
-    return await Bun.file(tmp).text();
-  } finally {
-    await unlink(tmp).catch(() => {});
-  }
+export async function renderSlides(slidesPath: string, root: string = "/"): Promise<string> {
+  const bibPath = await findBibPath(dirname(slidesPath));
+  const content = await Bun.file(slidesPath).text();
+  const { sections, title } = await renderSlidesSections(content, bibPath);
+  const template = await Bun.file("./src/templates/reveal.html").text();
+  return template
+    .replace("{{title}}", escapeAttr(title ?? "Slides"))
+    .replace("{{root}}", root)
+    .replace("{{slides}}", () => sections.join("\n"));
 }
 
 export async function renderIndexHtml(

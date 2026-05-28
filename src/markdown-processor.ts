@@ -89,6 +89,20 @@ const codeHandler = {
   },
 };
 
+function makeHtmlOptions(bibCache: any) {
+  return {
+    hast: {
+      allowDangerousHtml: true,
+      handlers: {
+        ...mathHandlers,
+        ...codeHandler,
+        ...makeCitationHandlers(bibCache),
+      } as any,
+    },
+    stringifyHtml: { allowDangerousHtml: true },
+  };
+}
+
 function slugify(s: string): string {
   return s
     .replace(/<[^>]+>/g, "")
@@ -152,19 +166,57 @@ export async function renderMyst(
     bibCache = await loadBibliography(bibPath);
   }
 
-  const html = mystToHtml(tree, {
-    hast: {
-      allowDangerousHtml: true,
-      handlers: {
-        ...mathHandlers,
-        ...codeHandler,
-        ...makeCitationHandlers(bibCache),
-      },
-    },
-    stringifyHtml: { allowDangerousHtml: true },
-  });
-
+  const html = mystToHtml(tree, makeHtmlOptions(bibCache));
   return { html: postProcess(html), date, title };
+}
+
+export async function renderSlidesSections(
+  content: string,
+  bibPath: string | null
+): Promise<{ sections: string[]; title: string | null }> {
+  const tree = mystParse(content, {
+    extensions: { frontmatter: true, math: true, blocks: true, citations: bibPath !== null },
+  }) as any;
+
+  let title: string | null = null;
+  const firstChild = tree.children[0];
+  if (firstChild?.type === "code" && firstChild?.lang === "yaml") {
+    tree.children.shift();
+    const fm = (yaml.load(firstChild.value) as Record<string, any>) ?? {};
+    title = fm.title ? String(fm.title) : null;
+  }
+
+  let bibCache: any = null;
+  if (bibPath !== null) bibCache = await loadBibliography(bibPath);
+
+  const opts = makeHtmlOptions(bibCache);
+  const sections: string[] = [];
+
+  for (const node of tree.children) {
+    if (node.type !== "block") continue;
+
+    let slideClass = "";
+    if (node.meta) {
+      try { slideClass = JSON.parse(node.meta).class ?? ""; } catch (_) {}
+    }
+
+    const noteNodes = (node.children ?? []).filter(
+      (c: any) => c.type === "code" && c.lang === "notes"
+    );
+    const contentNodes = (node.children ?? []).filter(
+      (c: any) => !(c.type === "code" && c.lang === "notes")
+    );
+
+    const contentHtml = postProcess(mystToHtml({ type: "root", children: contentNodes }, opts));
+    const notesHtml = noteNodes.length > 0
+      ? `<aside class="notes">${noteNodes.map((n: any) => escapeHtml(n.value)).join("\n")}</aside>`
+      : "";
+
+    const classAttr = slideClass ? ` class="${slideClass}"` : "";
+    sections.push(`<section${classAttr}>\n${contentHtml}\n${notesHtml}</section>`);
+  }
+
+  return { sections, title };
 }
 
 export function injectToc(html: string): string {
