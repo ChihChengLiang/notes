@@ -1,3 +1,0 @@
-theme: ./src/templates/marp-theme.css
-html: true
-engine: ./marp-engine.js
