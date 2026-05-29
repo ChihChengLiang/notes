@@ -97,14 +97,15 @@ const server = Bun.serve({
       });
     }
 
-    // Static assets inside note directories (images, etc.)
-    if (sub && /\.(png|jpe?g|gif|svg|webp)$/i.test(sub)) {
-      const assetPath = `./notes/${topic}/${sub}`;
+    // Static assets inside note directories (images, etc.) — handles subdirs like asset/foo.png
+    const subPath = parts.slice(1).join("/");
+    if (subPath && /\.(png|jpe?g|gif|svg|webp)$/i.test(subPath)) {
+      const assetPath = `./notes/${topic}/${subPath}`;
       const file = Bun.file(assetPath);
       if (!(await file.exists())) {
         return new Response("Not found", { status: 404 });
       }
-      const ext = sub.split(".").pop()!.toLowerCase();
+      const ext = subPath.split(".").pop()!.toLowerCase();
       const mimeTypes: Record<string, string> = {
         png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg",
         gif: "image/gif", svg: "image/svg+xml", webp: "image/webp",

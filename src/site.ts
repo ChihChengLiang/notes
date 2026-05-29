@@ -1,10 +1,8 @@
 import { readdirSync } from "fs";
-import { tmpdir } from "os";
-import { join } from "path";
-import { unlink } from "fs/promises";
-import { createMarkdownProcessor, loadBibliography, setupCitationRenderer, parseFrontmatter, injectToc } from "./markdown-processor";
+import { dirname } from "path";
+import { renderMyst, renderSlidesSections, injectToc } from "./markdown-processor";
 
-export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js"] as const;
+export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js", "reveal-theme.css", "reveal-base.css", "reveal-print.css"] as const;
 
 export function getTopics(): string[] {
   const entries = readdirSync("./notes", { withFileTypes: true });
@@ -31,22 +29,15 @@ export async function getTopicDate(topic: string): Promise<string | null> {
   }
 }
 
-export async function renderSlides(slidesPath: string): Promise<string> {
-  const tmp = join(tmpdir(), `marp-${Date.now()}.html`);
-  try {
-    const proc = Bun.spawn(
-      ["bunx", "marp", "--allow-local-files", "--output", tmp, slidesPath],
-      { cwd: process.cwd(), stderr: "pipe" }
-    );
-    const exitCode = await proc.exited;
-    if (exitCode !== 0) {
-      const err = await new Response(proc.stderr).text();
-      throw new Error(`marp failed: ${err}`);
-    }
-    return await Bun.file(tmp).text();
-  } finally {
-    await unlink(tmp).catch(() => {});
-  }
+export async function renderSlides(slidesPath: string, root: string = "/"): Promise<string> {
+  const bibPath = await findBibPath(dirname(slidesPath));
+  const content = await Bun.file(slidesPath).text();
+  const { sections, title } = await renderSlidesSections(content, bibPath);
+  const template = await Bun.file("./src/templates/reveal.html").text();
+  return template
+    .replace("{{title}}", escapeAttr(title ?? "Slides"))
+    .replaceAll("{{root}}", root)
+    .replace("{{slides}}", () => sections.join("\n"));
 }
 
 export async function renderIndexHtml(
@@ -150,26 +141,27 @@ export function applyPageMeta(template: string, title: string, description: stri
     .replaceAll("{{og_description}}", escapeAttr(description));
 }
 
+async function findBibPath(topicDir: string): Promise<string | null> {
+  for (const ext of ["citation.bib", "citation.biblatex"]) {
+    const path = `${topicDir}/${ext}`;
+    if (await Bun.file(path).exists()) return path;
+  }
+  return null;
+}
+
 export async function renderTopicHtml(
   topicDir: string,
   template: string,
-  options?: { alwaysReloadFiles?: boolean }
+  _options?: { alwaysReloadFiles?: boolean }
 ): Promise<string | null> {
   const mainFile = Bun.file(`${topicDir}/main.md`);
   if (!(await mainFile.exists())) return null;
 
-  const bibPath = `${topicDir}/citation.biblatex`;
-  const hasBib = await Bun.file(bibPath).exists();
+  const bibPath = await findBibPath(topicDir);
+  const content = await mainFile.text();
+  const { html: bodyHtml, date, title } = await renderMyst(content, bibPath);
 
-  const md = createMarkdownProcessor(hasBib ? bibPath : null, options);
-  let bibCache: any = null;
-  if (hasBib) {
-    setupCitationRenderer(md, () => bibCache);
-    bibCache = await loadBibliography(bibPath);
-  }
-
-  const { markdown, date } = parseFrontmatter(await mainFile.text());
-  let html = md.render(markdown);
+  let html = bodyHtml;
   if (date) {
     html = html.replace(
       /(<\/h1>)/,
@@ -183,8 +175,8 @@ export async function renderTopicHtml(
 
   return applyPageMeta(
     template.replace("{{content}}", () => html),
-    extractTitle(markdown),
-    extractDescription(markdown)
+    title ?? extractTitle(content),
+    extractDescription(content)
   );
 }
 
@@ -193,5 +185,5 @@ export function applyAssetPaths(template: string, prefix: string): string {
     .replace(/href="\/theme\.css"/g, `href="${prefix}/theme.css"`)
     .replace(/href="\/styles\.css"/g, `href="${prefix}/styles.css"`)
     .replace(/src="\/client\.js"/g, `src="${prefix}/client.js"`)
-    .replace(/src="\/mermaid-init\.js"/g, `src="${prefix}/mermaid-init.js"`);
+    .replace(/from '\/mermaid-init\.js'/g, `from '${prefix}/mermaid-init.js'`);
 }

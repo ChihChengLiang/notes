@@ -1,10 +1,8 @@
 ---
-marp: true
-theme: notes
-paginate: true
+title: Can We Formally Verify Privacy Properties?
 ---
 
-<!-- _class: title-slide -->
++++ {"class": "title-slide"}
 
 # Can We Formally Verify Privacy Properties?
 
@@ -12,7 +10,7 @@ paginate: true
 
 2026-04-09 CC @ privateeth.tokyo
 
----
++++
 
 ## Agenda
 
@@ -22,7 +20,7 @@ paginate: true
 4. **State of tooling** — what exists, what's missing
 5. **Open problems** — where to go from here
 
----
++++
 
 ## What are privacy bugs to catch?
 
@@ -30,7 +28,7 @@ paginate: true
 
 Two Tornado Cash-like mixers exploits: The app specific trusted setup was skipped.
 
----
++++
 
 ## A Plausible Developer Mistake
 
@@ -50,7 +48,7 @@ function withdraw(
 
 > Can we *automatically* detect this without manual review?
 
----
++++
 
 ## Where Formal Verification Stands Today
 
@@ -67,7 +65,7 @@ These tools reason about *computation*. (program inputs and outputs)
 
 **Privacy requires reasoning about *information flow* between parties.**
 
----
++++
 
 ## A Different Kind of Way of Reasoning
 
@@ -80,7 +78,7 @@ These tools reason about *computation*. (program inputs and outputs)
 
 **Epistemic logic** gives us a framework to formally state and verify privacy properties.
 
----
++++
 
 ## Epistemic Logic
 
@@ -97,12 +95,13 @@ These tools reason about *computation*. (program inputs and outputs)
 3. Run the interpreter, track knowledge per agent
 4. Check whether the goal holds
 
----
++++
 
 ## Example: Private Authentication
 
 <div class="columns">
 <div>
+
 Alice wants to authenticate to Bob without Charlie learning she did so.
 
 **What we're verifying:** Charlie cannot learn that Alice authenticated to Bob.
@@ -118,19 +117,20 @@ sequenceDiagram
     participant B as Bob
     participant C as Charlie
 
-    A->>B: $$\{ pubk(A), N_A \}_{pubk(B)}$$
-    A->>C: $$\{ pubk(A), N_A \}_{pubk(B)}$$
+    A->>B: {pubk(A), N_A}_{pubk(B)}
+    A->>C: {pubk(A), N_A}_{pubk(B)}
 
-    alt β holds (C = B and $$pubk(A) ∈ S_C$$)
-        B->>A: $$\{ N_A, N_C, pubk(B) \}_{pubk(A)}$$
-    else ¬β
-        C->>A: $$\{N\}_K$$
+    alt C = B
+        B->>A: {N_A, N_C, pubk(B)}_{pubk(A)}
+    else
+        C->>A: {N}_K
     end
 ```
+
 </div>
 </div>
 
----
++++
 
 ## ZKPs in Epistemic Logic
 
@@ -156,18 +156,17 @@ sequenceDiagram
     participant P as Prover (P)
     participant V as Verifier (V)
 
-    P->>V: ∗
+    P->>V: *
     V->>V: Generate fresh m
-    V->>P: enc(k₁, m), enc(k₂, m), h(m)
-    P->>P: check(enc(k₁,m), enc(k₂,m))
+    V->>P: enc(k1, m), enc(k2, m), h(m)
+    P->>P: check(enc(k1,m), enc(k2,m))
     P->>V: m
 ```
 
 </div>
 </div>
 
-
----
++++
 
 ## What Unlinkability Actually Means
 
@@ -180,7 +179,7 @@ sequenceDiagram
 
 The epistemic definition is **stronger** — and harder to achieve in practice.
 
----
++++
 
 ## State of the Tooling
 
@@ -199,7 +198,7 @@ The epistemic definition is **stronger** — and harder to achieve in practice.
 - ❌ No **Dolev-Yao attacker model** for ZK settings
 - ❌ No native support for ZKP semantics
 
----
++++
 
 ## The Dolev-Yao Gap
 
@@ -215,7 +214,7 @@ All messages are broadcast publicly on-chain. Is DY attacker a suitable threat m
 
 Current epistemic tools don't handle DY attackers well. This is still a open problem.
 
----
++++
 
 ## The Complexity Problem
 
@@ -232,7 +231,7 @@ Public blockchain broadcasts make this worse — everything is observable, so th
 
 **This is the practical blocker** even if the theory is sound.
 
----
++++
 
 ## What We'd Want to Verify: Zcash Threat Model
 
@@ -247,12 +246,12 @@ These are *epistemic* properties. They're about what an attacker *knows*.
 
 Encoding these in a verifiable formal language is the end goal.
 
-<!--
+:::notes
 Thank you YingTong for the Zcash case
 Nam: Designer wants to verify the design
--->
+:::
 
----
++++
 
 ## What Complete Tooling Would Need
 
@@ -267,7 +266,7 @@ For Tornado Cash-like formal privacy verification:
 | Public broadcast channel support | ❌ Missing |
 | Practical tooling | ❌ Research-only |
 
----
++++
 
 ## Open Problems
 
@@ -278,9 +277,7 @@ These feel tractable — not fundamental barriers:
 3. **State space pruning** — can we exploit structure in ZK protocols to reduce blowup?
 4. **Public channel handling** — most epistemic models assume private channels
 
----
-
-<!-- _class: centered -->
++++ {"class": "centered"}
 
 ## Summary
 

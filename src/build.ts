@@ -68,7 +68,7 @@ async function build() {
 
     // Render slides
     if (existsSync(slidesPath)) {
-      const slidesHtml = await renderSlides(slidesPath);
+      const slidesHtml = await renderSlides(slidesPath, "../");
       await Bun.write(`${topicDir}/slides.html`, slidesHtml);
       await copyImages(`./notes/${topic}`, topicDir);
       console.log(`✓ Generated ${topic}/slides.html`);

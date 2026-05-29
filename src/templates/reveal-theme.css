@@ -1,0 +1,156 @@
+/* === Warm paper palette — overrides white.css base theme === */
+:root {
+  --custom-1:  oklch(99.1% 0.011 78);
+  --custom-2:  oklch(98.1% 0.018 78);
+  --custom-3:  oklch(95.3% 0.031 78);
+  --custom-4:  oklch(92.5% 0.040 78);
+  --custom-6:  oklch(87.0% 0.046 78);
+  --custom-7:  oklch(83.7% 0.052 78);
+  --custom-8:  oklch(77.5% 0.053 78);
+  --custom-9:  oklch(62.2% 0.054 78);
+  --custom-10: oklch(57.7% 0.054 78);
+  --custom-11: oklch(47.5% 0.052 78);
+  --custom-12: oklch(23.2% 0.043 78);
+  --accent:    oklch(48% 0.13 28);
+
+  /* reveal.js theme tokens */
+  --r-background-color:          var(--custom-1);
+  --r-main-font:                 "Noto Serif JP", Georgia, "Times New Roman", serif;
+  --r-main-font-size:            30px;
+  --r-main-color:                var(--custom-12);
+  --r-heading-font:              "Noto Serif JP", Georgia, serif;
+  --r-heading-color:             var(--custom-12);
+  --r-heading-font-weight:       600;
+  --r-heading-text-transform:    none;
+  --r-heading1-size:             1.8em;
+  --r-heading2-size:             1.3em;
+  --r-heading3-size:             1.0em;
+  --r-link-color:                var(--accent);
+  --r-link-color-hover:          var(--accent);
+  --r-selection-background-color: var(--custom-4);
+  --r-selection-color:           var(--custom-12);
+  --r-code-font:                 "JetBrains Mono", monospace;
+}
+
+/* === Code blocks — override reveal.js pre/code defaults === */
+.reveal pre.hljs {
+  position: relative;
+  background: var(--custom-2);
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+  width: 100%;
+  font-size: 0.6em;
+  padding: 0.8em 1em;
+}
+
+.reveal pre.hljs::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
+}
+
+.reveal pre.hljs > span {
+  display: block;
+  font-size: 0.85em;
+  color: var(--custom-10);
+  margin-bottom: 0.3em;
+}
+
+/* inline code */
+.reveal :not(pre) > code {
+  background: var(--custom-3);
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-size: 0.85em;
+}
+
+/* === Syntax highlighting (hljs token colors, shared with notes) === */
+.reveal .hljs-keyword,
+.reveal .hljs-section  { color: var(--custom-12); font-weight: 600; }
+.reveal .hljs-title    { color: var(--custom-12); }
+.reveal .hljs-built_in { color: var(--custom-11); }
+.reveal .hljs-string,
+.reveal .hljs-literal  { color: var(--custom-9); }
+.reveal .hljs-number   { color: var(--custom-10); }
+.reveal .hljs-comment,
+.reveal .hljs-doctag   { color: var(--custom-7); font-style: italic; }
+.reveal .hljs-meta     { color: var(--custom-9); }
+.reveal .hljs-symbol   { color: var(--custom-11); }
+.reveal .hljs-sorry    { color: #a63220; font-weight: 600; }
+
+/* === Math === */
+.reveal .math-display { overflow-x: auto; }
+
+/* === Mermaid === */
+.reveal pre.mermaid { background: transparent; box-shadow: none; width: auto; }
+
+/* === Citations === */
+.reveal .citation { color: var(--accent); font-size: 0.85em; }
+
+/* === Slide class variants === */
+.reveal .slides section.title-slide {
+  color: var(--custom-1);
+  text-align: center;
+}
+.reveal .slides section.title-slide h1,
+.reveal .slides section.title-slide h2 {
+  color: var(--custom-1);
+  font-style: italic;
+}
+.reveal .slides section.title-slide p,
+.reveal .slides section.title-slide strong {
+  color: var(--custom-7);
+}
+.reveal .slides section.title-slide a { color: var(--custom-8); }
+
+.reveal .slides section.chapter {
+  text-align: center;
+}
+.reveal .slides section.chapter h1,
+.reveal .slides section.chapter h2 {
+  font-style: italic;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid var(--custom-9);
+  padding-bottom: 0.3em;
+}
+
+.reveal .slides section h2 {
+  font-style: italic;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+}
+
+.reveal .slides section.centered { text-align: center; }
+
+/* === Layout helpers === */
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.reveal blockquote {
+  position: relative;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background-color: var(--custom-2);
+  color: var(--custom-11);
+  border-radius: 8px;
+}
+
+.reveal blockquote::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
+}
