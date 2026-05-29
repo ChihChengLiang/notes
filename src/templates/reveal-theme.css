@@ -86,11 +86,6 @@
 /* === Math === */
 .reveal .math-display { overflow-x: auto; }
 
-/* === Slide backgrounds: multiply blends texture with color (light slides only) === */
-.reveal .slide-background:not(.title-slide) {
-  background-blend-mode: multiply;
-}
-
 /* === Mermaid === */
 .reveal pre.mermaid { background: transparent; box-shadow: none; width: auto; }
 
