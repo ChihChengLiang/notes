@@ -1,8 +1,5 @@
-// Import and initialize Mermaid with KaTeX support and custom theme
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 
-// Convert any CSS color (including oklch) to an rgb() string mermaid/khroma can parse.
-// Uses a 1×1 canvas pixel read so the browser does the color-space conversion.
 function toRgb(cssColor) {
   if (!cssColor) return cssColor;
   const canvas = document.createElement('canvas');
@@ -14,57 +11,53 @@ function toRgb(cssColor) {
   return `rgb(${r},${g},${b})`;
 }
 
-// Get computed custom colors — Marp scopes :root vars to section, so fall back to section element
-const rootStyles = getComputedStyle(document.documentElement);
-const styleSource = rootStyles.getPropertyValue('--custom-1').trim()
-  ? document.documentElement
-  : (document.querySelector('section') ?? document.documentElement);
-const styles = getComputedStyle(styleSource);
-const custom1 = toRgb(styles.getPropertyValue('--custom-1').trim());
-const custom2 = toRgb(styles.getPropertyValue('--custom-2').trim());
-const custom3 = toRgb(styles.getPropertyValue('--custom-3').trim());
-const custom6 = toRgb(styles.getPropertyValue('--custom-6').trim());
-const custom9 = toRgb(styles.getPropertyValue('--custom-9').trim());
-const custom10 = toRgb(styles.getPropertyValue('--custom-10').trim());
-const custom11 = toRgb(styles.getPropertyValue('--custom-11').trim());
-const custom12 = toRgb(styles.getPropertyValue('--custom-12').trim());
+export function initMermaid({ startOnLoad = false } = {}) {
+  const rootStyles = getComputedStyle(document.documentElement);
+  const styleSource = rootStyles.getPropertyValue('--custom-1').trim()
+    ? document.documentElement
+    : (document.querySelector('section') ?? document.documentElement);
+  const styles = getComputedStyle(styleSource);
+  const c = (v) => toRgb(styles.getPropertyValue(v).trim());
 
-mermaid.initialize({
-  startOnLoad: true,
-  theme: 'base',
-  securityLevel: 'loose',
-  themeVariables: {
-    primaryColor: custom2,
-    primaryTextColor: custom12,
-    primaryBorderColor: custom9,
-    lineColor: custom9,
-    secondaryColor: custom3,
-    tertiaryColor: custom1,
-    background: custom1,
-    mainBkg: custom2,
-    secondBkg: custom3,
-    labelBackground: custom2,
-    labelColor: custom12,
-    edgeLabelBackground: custom2,
-    clusterBkg: custom2,
-    clusterBorder: custom6,
-    defaultLinkColor: custom9,
-    titleColor: custom12,
-    actorBorder: custom9,
-    actorBkg: custom2,
-    actorTextColor: custom12,
-    actorLineColor: custom9,
-    signalColor: custom12,
-    signalTextColor: custom12,
-    labelBoxBkgColor: custom2,
-    labelBoxBorderColor: custom6,
-    labelTextColor: custom12,
-    loopTextColor: custom12,
-    noteBorderColor: custom6,
-    noteBkgColor: custom2,
-    noteTextColor: custom11,
-    activationBorderColor: custom9,
-    activationBkgColor: custom3,
-    sequenceNumberColor: custom1,
-  }
-});
+  mermaid.initialize({
+    startOnLoad,
+    theme: 'base',
+    securityLevel: 'loose',
+    themeVariables: {
+      primaryColor:           c('--custom-2'),
+      primaryTextColor:       c('--custom-12'),
+      primaryBorderColor:     c('--custom-9'),
+      lineColor:              c('--custom-9'),
+      secondaryColor:         c('--custom-3'),
+      tertiaryColor:          c('--custom-1'),
+      background:             c('--custom-1'),
+      mainBkg:                c('--custom-2'),
+      secondBkg:              c('--custom-3'),
+      labelBackground:        c('--custom-2'),
+      labelColor:             c('--custom-12'),
+      edgeLabelBackground:    c('--custom-2'),
+      clusterBkg:             c('--custom-2'),
+      clusterBorder:          c('--custom-6'),
+      defaultLinkColor:       c('--custom-9'),
+      titleColor:             c('--custom-12'),
+      actorBorder:            c('--custom-9'),
+      actorBkg:               c('--custom-2'),
+      actorTextColor:         c('--custom-12'),
+      actorLineColor:         c('--custom-9'),
+      signalColor:            c('--custom-12'),
+      signalTextColor:        c('--custom-12'),
+      labelBoxBkgColor:       c('--custom-2'),
+      labelBoxBorderColor:    c('--custom-6'),
+      labelTextColor:         c('--custom-12'),
+      loopTextColor:          c('--custom-12'),
+      noteBorderColor:        c('--custom-6'),
+      noteBkgColor:           c('--custom-2'),
+      noteTextColor:          c('--custom-11'),
+      activationBorderColor:  c('--custom-9'),
+      activationBkgColor:     c('--custom-3'),
+      sequenceNumberColor:    c('--custom-1'),
+    }
+  });
+}
+
+export { mermaid };

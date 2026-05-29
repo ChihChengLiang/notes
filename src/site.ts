@@ -185,5 +185,5 @@ export function applyAssetPaths(template: string, prefix: string): string {
     .replace(/href="\/theme\.css"/g, `href="${prefix}/theme.css"`)
     .replace(/href="\/styles\.css"/g, `href="${prefix}/styles.css"`)
     .replace(/src="\/client\.js"/g, `src="${prefix}/client.js"`)
-    .replace(/src="\/mermaid-init\.js"/g, `src="${prefix}/mermaid-init.js"`);
+    .replace(/from '\/mermaid-init\.js'/g, `from '${prefix}/mermaid-init.js'`);
 }

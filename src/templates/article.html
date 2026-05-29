@@ -13,7 +13,10 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css">
   <script>document.documentElement.className = localStorage.getItem('cc-theme') || 'light';</script>
   <script src="/client.js"></script>
-  <script type="module" src="/mermaid-init.js"></script>
+  <script type="module">
+import { initMermaid } from '/mermaid-init.js';
+initMermaid({ startOnLoad: true });
+  </script>
 </head>
 <body>
 <!-- SVG filter for hand-drawn table border jitter — filter targets ::before pseudo only, text is unaffected -->
