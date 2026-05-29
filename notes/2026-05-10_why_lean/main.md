@@ -369,3 +369,44 @@ def cpsTripleWithin (nSteps : Nat) (entry exit_ : Word) (cr : CodeReq)
 
 - **Caveats.** The DIV/MOD semantic bridge is still in progress — Knuth's Theorem B (trial quotient overestimates by ≤ 1) is the remaining blocker. 27 files use `native_decide` against AGENTS.md policy, mostly in RLP round-trip tests over finite concrete values. And the PLAN.md is significantly behind the code: phases listed as future work (interpreter, gas, world state, transactions) already exist in `Evm64/` and `EL/`.
 
+### evm-smith: What if you can bring Ethereum contracts to final form?
+
+Write EVM bytecode directly and skip HLL(High level language) like Solidity/Vyper directly.
+
+**Solvency** property: Sum of all users' balance is less or equal to contract's ETH balance.
+
+```lean
+def WethInv (σ : AccountMap .EVM) (C : AccountAddress) : Prop :=
+  storageSum σ C ≤ balanceOf σ C
+```
+
+See Leo's intro [post](https://leonardoalt.github.io/evm-smith) for more.
+
+#### Background
+
+- **Repo**: [`evm-smith`](https://github.com/leonardoalt/evm-smith) — Lean 4 framework for writing raw EVM bytecode and proving safety properties directly against the official Ethereum semantics
+- **Upstream**: [`leonardoalt/EVMYulLean`](https://github.com/leonardoalt/EVMYulLean) — a mechanical encoding of the Ethereum Yellow Paper in Lean 4; EVM-Smith is a thin layer on top
+- **Language**: Lean 4, with Solidity/Vyper comparisons (Foundry test suite)
+- **Goal**: Machine-checked proofs of EVM bytecode safety — without a compiler in the trust boundary. Bytecode is written as Lean values, and invariants are proved directly against the `EvmYul.step` semantics
+- **Scale**: 13,441 lines of Lean across 38 files; 1,652 lines of Solidity; 4 worked demos (Add3, Register, WETH, ERC-20)
+- **Timeline**: April 2026 – present (~6 weeks of active development, rapid ramp from framework skeleton to WETH solvency + ERC-20 refinement)
+- **Axioms**: 2 EVM-specific axioms (`precompile_preserves_accountMap`, `lambda_derived_address_ne_C`); 0 `sorry` declarations
+- **Investigated version**: `eac777c`
+
+#### Highlights
+
+- **The bytecode *is* the theorem source.** Instead of proving "this Solidity source is safe and then trusting the compiler," you write the bytecode directly as a Lean `Program` — a list of `(opcode, optional-immediate)` pairs — and prove properties about it using the official `EvmYul.step` semantics as ground truth. No compiler. No FFI. The proof checker is the auditor.
+
+- **Per-opcode lemmas as a proof API.** Naively unfolding `EvmYul.step` (a 60-branch dependent match) repeatedly explodes kernel term size. The solution: cache each opcode branch as a named lemma that closes by a single `rfl`. An 8-opcode correctness proof then becomes 8 cheap rewrites plus one arithmetic goal, with every intermediate stack state readable as an explicit cons pattern (`a :: b :: rest`).
+
+- **Fully symbolic proofs: the Add3 example.** The Add3 demo reads three calldata words and sums them. The correctness theorem is universally quantified over all `2^256³` input combinations simultaneously — no fuzzing, no sampling. A counter-intuitive caveat: the proof cannot reach byte-level return correctness because `MSTORE`/`RETURN` routes through an `opaque` declaration in EVMYulLean, irreducible by design.
+
+- **Cross-transaction balance monotonicity from 20 bytes of bytecode.** The Register demo proves that Register's ETH balance is monotonically non-decreasing across *any* Ethereum transaction — including arbitrary reentrancy. The key step is `bytecodePreservesBalance`: given Register's bytecode is installed, no Ξ-frame decreases the balance (the only CALL has value 0 hardcoded). This per-bytecode fact is plugged into `Υ_balanceOf_ge`, which handles the full call tree including reentrancy, CREATE, SELFDESTRUCT, and gas accounting. The hardest part was threading the invariant through Ethereum's full transaction driver, not the bytecode itself.
+
+- **WETH solvency proven end-to-end.** The WETH demo proves `storageSum σ C ≤ balanceOf σ C` is preserved across any transaction. Getting there required 11,332 lines in two proof files and a `WethTrace` predicate with 64 disjuncts enumerating every reachable `(pc, stack-shape, storage-facts, invariant-slack)` combination. Each SSTORE/CALL transition is shown to leave slack unchanged: Deposit and Withdraw both net zero change to `balanceOf − storageSum`.
+
+- **Type system as optimization validator.** The ERC-20 demo investigates replacing Solidity's `storage[keccak256(addr ++ slot_id)]` with `storage[~addr]` (bitwise NOT), saving ~8 opcodes per balance read/write. The framework requires discharging two obligations — injectivity and disjointness from metadata slots — as proof fields in a `SlotAbstraction` structure. The naïve `id` optimization is silently rejected at definition time: `id 0 = 0` is a named slot, so `disjoint` cannot be proved and the structure cannot be instantiated.
+
+- **Two axioms, zero sorries, one trust boundary.** The entire codebase rests on exactly two EVM-specific axioms: `precompile_preserves_accountMap` (provable by case inspection; deferred) and `lambda_derived_address_ne_C` (equivalent to Keccak-256 collision resistance). Any reader can run `lake build` and watch the kernel verify every proof independently.
+
+- **Caveats.** ERC-20 proofs are peephole-local: they verify opcode-sequence equivalence for the same address but do not prove that compiled Solidity/Vyper bytecode matches the hand-rolled sequences (that correspondence is verified by disassembly, not proof). The structural hypotheses in `WethAssumptions` and `RegSDExclusion` — deployment pinning, SELFDESTRUCT exclusion — are explicit preconditions the deployer must discharge against actual chain state. The proofs are conditional, not unconditional.
