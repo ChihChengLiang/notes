@@ -16,7 +16,7 @@
   /* reveal.js theme tokens */
   --r-background-color:          var(--custom-1);
   --r-main-font:                 "Noto Serif JP", Georgia, "Times New Roman", serif;
-  --r-main-font-size:            36px;
+  --r-main-font-size:            30px;
   --r-main-color:                var(--custom-12);
   --r-heading-font:              "Noto Serif JP", Georgia, serif;
   --r-heading-color:             var(--custom-12);
@@ -123,6 +123,12 @@
   letter-spacing: 0.06em;
   border-bottom: 2px solid var(--custom-9);
   padding-bottom: 0.3em;
+}
+
+.reveal .slides section h2 {
+  font-style: italic;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
 }
 
 .reveal .slides section.centered { text-align: center; }
