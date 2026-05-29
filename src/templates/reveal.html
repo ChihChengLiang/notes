@@ -41,12 +41,10 @@
   });
   document.querySelectorAll('.slides section.chapter').forEach(function(el) {
     el.setAttribute('data-background-color', 'oklch(92.5% 0.040 78)');
-    el.setAttribute('data-background-image', root + 'assets/bedge-grunge.png');
     el.setAttribute('data-background-size', 'cover');
   });
   document.querySelectorAll('.slides section:not(.title-slide):not(.chapter)').forEach(function(el) {
     el.setAttribute('data-background-color', 'oklch(99.1% 0.011 78)');
-    el.setAttribute('data-background-image', root + 'assets/bedge-grunge.png');
     el.setAttribute('data-background-size', 'cover');
   });
 })();
