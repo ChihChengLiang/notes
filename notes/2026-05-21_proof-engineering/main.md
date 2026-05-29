@@ -149,3 +149,6 @@ Most importantly, if a proof insight is about a witness, `suffices` highlights i
 > **The pattern:** `suffices` states what a good witness *looks like*.
 > The body closes the original goal given any such witness.
 > The branches just find the witness.
+
+Real world [example](https://github.com/Verified-zkEVM/VCV-io/pull/409)
+
