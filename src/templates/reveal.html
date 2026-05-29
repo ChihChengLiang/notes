@@ -27,6 +27,7 @@
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/notes/notes.js"></script>
 <script>
 // Set full-viewport backgrounds before Reveal.initialize() so reveal.js picks them up.
 // data-background-* fills the entire browser window, unlike CSS background-color on sections.
@@ -60,6 +61,7 @@ Reveal.initialize({
   slideNumber: 'c/t',
   transition: 'fade',
   backgroundTransition: 'fade',
+  plugins: [ RevealNotes ],
 });
 
 Reveal.on('ready', () => {
