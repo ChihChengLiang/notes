@@ -152,3 +152,54 @@ Most importantly, if a proof insight is about a witness, `suffices` highlights i
 
 Real world [example](https://github.com/Verified-zkEVM/VCV-io/pull/409)
 
+## Performance issues
+
+```
+error: VCVio/ProgramLogic/Relational/SimulateQ.lean:766:0: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached
+```
+
+Adding profilers on top of the file. Then run `lake build`.
+
+```lean
+set_option profiler true
+set_option profiler.threshold 100
+```
+
+:::
+info: stderr:
+.olean serialization took 475ms
+cumulative profiling times:
+        .olean serialization 475ms
+        attribute application 13ms
+        congr simp thm 35.6ms
+        dsimp 21.1ms
+        elaboration 704ms
+        fix level params 5.58ms
+        instantiate metavars 41.2ms
+        interpretation 69.6ms
+        let-to-have transformation 1.67ms
+        linting 5.65s
+        norm_num 16.8ms
+        parsing 106ms
+        process pre-definitions 59.5ms
+        ring 21.7ms
+        share common exprs 28.2ms
+        simp 2.39s
+        tactic execution 2.55s
+        type checking 229ms
+        typeclass inference 7.99s
+Build completed successfully (2638 jobs).
+:::
+
+
+```lean
+set_option trace.Meta.synthInstance true in
+```
+
+```lean
+example : 1 + 1 = 2 := by
+  -- The next line will print an info message of this format; the exact number may vary.
+  -- info: 4646
+  #count_heartbeats simp
+```
+
