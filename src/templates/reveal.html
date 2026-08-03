@@ -58,9 +58,12 @@ initMermaid({ startOnLoad: false });
 // measure themselves via SVG getBBox(), which Firefox reports as 0 for
 // elements under a display:none ancestor, so force all slides visible
 // while Mermaid renders, then hand control back to Reveal's own CSS.
-const slideSections = document.querySelectorAll('.slides > section');
+const slideSections = document.querySelectorAll('.slides > section, .slides > section > section');
 slideSections.forEach((el) => { el.style.display = 'block'; });
-await mermaid.run({ querySelector: 'pre.mermaid' });
+// suppressErrors: a bad diagram renders an inline error instead of throwing —
+// otherwise one broken diagram would reject this await and Reveal.initialize()
+// below would never run, breaking navigation for the entire deck.
+await mermaid.run({ querySelector: 'pre.mermaid', suppressErrors: true });
 slideSections.forEach((el) => { el.style.display = ''; });
 
 Reveal.initialize({
