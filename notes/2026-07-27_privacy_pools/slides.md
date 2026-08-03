@@ -143,6 +143,8 @@ flowchart LR
     style A font-size:28px
     style B font-size:28px
     style C font-size:28px
+
+    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px
 ```
 
 理想上，等待時間最好是 **一個月** 以上。
@@ -152,9 +154,11 @@ flowchart LR
 https://github.com/tornadocash/docs/blob/en/general/tips-to-remain-anonymous.md
 :::
 
----
 
-## 實際上
++++ {"class": "chapter"}
+
+# 錢包（鑰匙圈）
+
 
 ```mermaid
 flowchart LR
@@ -165,16 +169,14 @@ flowchart LR
 
     AA e1@==> A ==> B ==> C
 
-    style AA stroke-dasharray: 5 5
     style A font-size:28px
     style B font-size:28px
     style C font-size:28px
     e1@{ animate: true }
+
+    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,stroke-dasharray:5 5,animation:mermaid-pulse 1.6s ease-in-out infinite
+    class AA pulse
 ```
-
-+++ {"class": "chapter"}
-
-# 錢包（鑰匙圈）
 
 ---
 
@@ -182,9 +184,6 @@ flowchart LR
 
 - 並不是管理你的錢
 - 而是管理你的私鑰
-
-還沒有錢包的朋友，我們今天用這款 **ambire.com**
-
 
 :::notes
 各家都叫他錢包，英文叫做 Wallet
@@ -197,6 +196,7 @@ flowchart LR
 
 ## 安裝流程
 
+- 到 ambire.com ，依照自己瀏覽器安裝擴展程式
 - [ ] 建立新帳戶 Create new account
 - [ ] 建立救援密語 Create Recovery Phrases
   - 要救援帳戶及資產使用
@@ -224,6 +224,22 @@ flowchart LR
 +++ {"class": "chapter"}
 
 # 入金 Deposit
+
+```mermaid
+flowchart LR
+    A("💰 入金")
+    B("⏳ 等待")
+    C("🎯 出金")
+
+    A e1@==> B ==> C
+
+    style B font-size:28px
+    style C font-size:28px
+    e1@{ animate: true }
+
+    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:mermaid-pulse 1.6s ease-in-out infinite
+    class A pulse
+```
 
 ---
 
