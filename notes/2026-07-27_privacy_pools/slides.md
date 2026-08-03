@@ -35,29 +35,6 @@ CC · COSCUP 2026
 2. 看我操作過一次真的介面。
 3. 看一下人們踩過什麼雷。
 
----
-
-## 在開始之前：什麼是「鏈」？
-
-- 每條區塊鏈都是一本**獨立的帳本**——Ethereum、Bitcoin、Solana 互不相通
-- 「EVM 相容」的鏈（Ethereum、Base、Arbitrum…）共用同一套智能合約執行環境，錢包、工具可以直接沿用
-- 非 EVM 鏈（Bitcoin、Solana…）有自己的一套規則，錢包、地址格式都不一樣
-
-:::notes
-這是為了讓不熟悉區塊鏈的聽眾跟上後面的內容。
-重點：不是所有「鏈」都相容，EVM 只是其中一種共用環境。
-:::
-
----
-
-## 原生代幣 vs 合約代幣
-
-![](asset/chain-token-stack.svg)
-
----
-
-原生代幣（ETH／SOL）是協議內建、用來付 gas；合約代幣（ERC20／SPL）是**別人**在這條鏈上發行的代幣，兩者不是同一回事。今天工作坊存入 Privacy Pool 的，是 Ethereum 上的原生 ETH。
-
 +++ {"class": "chapter"}
 
 # Part 1: 真實的問題
@@ -124,6 +101,9 @@ flowchart LR
     Pool -.->|withdraw ?<br/> 1 ETH| New1
     Pool -.->|withdraw ?<br/> 1 ETH| New2
     Pool -.->|withdraw ?<br/> 1 ETH| New3
+
+    classDef highlight fill:#f3e3dc,stroke:#993a31,stroke-width:2px,color:#281a03
+    class Pool highlight
 ```
 
 Alice、Bob、Carol 都存入同一個池子合約，再各自提款到新地址。人們看得到誰存款、誰提款，但連不起兩者的關係。
@@ -135,6 +115,29 @@ Alice、Bob、Carol 都存入同一個池子合約，再各自提款到新地址
 +++ {"class": "chapter"}
 
 # Part : 常見以太坊問題
+
+---
+
+## 在開始之前：什麼是「鏈」？
+
+- 每條區塊鏈都是一本**獨立的帳本**——Ethereum、Bitcoin、Solana 互不相通
+- 「EVM 相容」的鏈（Ethereum、Base、Arbitrum…）共用同一套智能合約執行環境，錢包、工具可以直接沿用
+- 非 EVM 鏈（Bitcoin、Solana…）有自己的一套規則，錢包、地址格式都不一樣
+
+:::notes
+這是為了讓不熟悉區塊鏈的聽眾跟上後面的內容。
+重點：不是所有「鏈」都相容，EVM 只是其中一種共用環境。
+:::
+
+---
+
+## 原生代幣 vs 合約代幣
+
+![](asset/chain-token-stack.svg)
+
+---
+
+原生代幣（ETH／SOL）是協議內建、用來付 gas；合約代幣（ERC20／SPL）是**別人**在這條鏈上發行的代幣，兩者不是同一回事。今天工作坊存入 Privacy Pool 的，是 Ethereum 上的原生 ETH。
 
 ---
 
