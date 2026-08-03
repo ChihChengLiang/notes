@@ -192,6 +192,18 @@ export async function renderSlidesSections(
   const opts = makeHtmlOptions(bibCache);
   const sections: string[] = [];
 
+  const renderPage = (children: any[]): string => {
+    const noteNodes = children.filter((c: any) => c.type === "code" && c.lang === "notes");
+    const contentNodes = children.filter((c: any) => !(c.type === "code" && c.lang === "notes"));
+
+    const contentHtml = postProcess(mystToHtml({ type: "root", children: contentNodes }, opts));
+    const notesHtml = noteNodes.length > 0
+      ? `<aside class="notes">${noteNodes.map((n: any) => escapeHtml(n.value)).join("\n")}</aside>`
+      : "";
+
+    return `${contentHtml}\n${notesHtml}`;
+  };
+
   for (const node of tree.children) {
     if (node.type !== "block") continue;
 
@@ -200,20 +212,28 @@ export async function renderSlidesSections(
       try { slideClass = JSON.parse(node.meta).class ?? ""; } catch (_) {}
     }
 
-    const noteNodes = (node.children ?? []).filter(
-      (c: any) => c.type === "code" && c.lang === "notes"
-    );
-    const contentNodes = (node.children ?? []).filter(
-      (c: any) => !(c.type === "code" && c.lang === "notes")
-    );
-
-    const contentHtml = postProcess(mystToHtml({ type: "root", children: contentNodes }, opts));
-    const notesHtml = noteNodes.length > 0
-      ? `<aside class="notes">${noteNodes.map((n: any) => escapeHtml(n.value)).join("\n")}</aside>`
-      : "";
+    // A bare `---` (thematicBreak) inside a `+++` block splits that chapter
+    // into vertical pages, navigated up/down instead of left/right.
+    const pages: any[][] = [[]];
+    for (const child of node.children ?? []) {
+      if (child.type === "thematicBreak") pages.push([]);
+      else pages[pages.length - 1].push(child);
+    }
 
     const classAttr = slideClass ? ` class="${slideClass}"` : "";
-    sections.push(`<section${classAttr}>\n${contentHtml}\n${notesHtml}</section>`);
+
+    if (pages.length === 1) {
+      sections.push(`<section${classAttr}>\n${renderPage(pages[0])}</section>`);
+    } else {
+      // The class from `+++ {"class": ...}` describes the page right after
+      // it (the first page of the stack), not the stack wrapper — reveal.js
+      // backgrounds aren't inherited from parent to vertical child slides,
+      // so a class on the wrapper alone would never actually render.
+      const inner = pages
+        .map((page, i) => `<section${i === 0 ? classAttr : ""}>\n${renderPage(page)}</section>`)
+        .join("\n");
+      sections.push(`<section>\n${inner}\n</section>`);
+    }
   }
 
   return { sections, title };
