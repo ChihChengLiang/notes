@@ -1,0 +1,68 @@
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1000 508" role="img">
+      <title>Chains as circles, EVM as a shared zone, tokens as chips inside Ethereum</title>
+      <desc>Bitcoin and Solana are standalone circles on the left, since they do not share a runtime with anything else. In the middle, Ethereum, Base, and Arbitrum sit inside a shaded EVM-compatible zone — Ethereum, Base, and Arbitrum all use ETH as their native token. Every chain is marked with a globe icon. On the right, a zoomed-in view of the Ethereum circle shows tokens drawn as square chips, not circles, to avoid confusing them with chain circles: a single solid native ETH chip at the center, surrounded by outlined ERC20 contract chips such as USDT, USDC, and DAI, all marked with a money-bag icon.</desc>
+
+      <!-- LEFT: non-EVM chains, standalone circles -->
+      <text x="95" y="34" text-anchor="middle" style="font-size:19px;fill:oklch(57.7% 0.054 78);font-weight:700">非 EVM</text>
+      <text x="95" y="51" text-anchor="middle" style="font-size:12px;fill:oklch(57.7% 0.054 78);font-weight:500">各自獨立的執行環境</text>
+
+      <circle cx="95" cy="150" r="56" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="95" y="141" text-anchor="middle" dominant-baseline="central" style="font-size:16px;fill:oklch(23.2% 0.043 78);font-weight:600">🌐 Bitcoin</text>
+      <text x="95" y="163" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:oklch(57.7% 0.054 78);font-weight:600">💰 BTC</text>
+
+      <circle cx="95" cy="330" r="56" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="95" y="321" text-anchor="middle" dominant-baseline="central" style="font-size:16px;fill:oklch(23.2% 0.043 78);font-weight:600">🌐 Solana</text>
+      <text x="95" y="343" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:oklch(57.7% 0.054 78);font-weight:600">💰 SOL</text>
+
+      <!-- MIDDLE: EVM zone — a blobby region, not a circle -->
+      <rect x="195" y="20" width="330" height="440" rx="90" ry="90" fill="oklch(48% 0.13 28 / 0.08)" stroke="oklch(48% 0.13 28 / 0.35)" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="360" y="34" text-anchor="middle" style="font-size:19px;fill:oklch(48% 0.13 28);font-weight:700">EVM 相容</text>
+      <text x="360" y="51" text-anchor="middle" style="font-size:12px;fill:oklch(57.7% 0.054 78);font-weight:500">共用同一套智能合約執行環境</text>
+
+      <circle cx="360" cy="110" r="42" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="360" y="103" text-anchor="middle" dominant-baseline="central" style="font-size:14px;fill:oklch(23.2% 0.043 78);font-weight:600">🌐 Base</text>
+      <text x="360" y="121" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:oklch(57.7% 0.054 78);font-weight:600">💰 ETH</text>
+
+      <!-- Ethereum circle (focus chain) -->
+      <circle cx="360" cy="262" r="72" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="360" y="252" text-anchor="middle" dominant-baseline="central" style="font-size:18px;fill:oklch(23.2% 0.043 78);font-weight:700">🌐 Ethereum</text>
+      <text x="360" y="275" text-anchor="middle" dominant-baseline="central" style="font-size:13px;fill:oklch(48% 0.13 28);font-weight:600">今天用這條</text>
+
+      <circle cx="360" cy="414" r="42" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="360" y="407" text-anchor="middle" dominant-baseline="central" style="font-size:13px;fill:oklch(23.2% 0.043 78);font-weight:600">🌐 Arbitrum</text>
+      <text x="360" y="425" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:oklch(57.7% 0.054 78);font-weight:600">💰 ETH</text>
+
+      <!-- Zoom connector from Ethereum circle to the inset on the right -->
+      <path d="M432 262 L 600 262" fill="none" stroke="oklch(57.7% 0.054 78)" stroke-width="1.25" stroke-dasharray="4 3"/>
+      <text x="516" y="262" text-anchor="middle" dominant-baseline="central" style="font-size:20px">🔍</text>
+
+      <!-- RIGHT: zoomed-in view of Ethereum's interior -->
+      <text x="790" y="34" text-anchor="middle" style="font-size:19px;fill:oklch(23.2% 0.043 78);font-weight:700">放大看 Ethereum 裡面：代幣</text>
+
+      <circle cx="790" cy="262" r="190" fill="oklch(99.1% 0.011 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1.25" stroke-dasharray="5 4"/>
+
+      <!-- ERC20 contract tokens: square chips (not circles), outlined, scattered -->
+      <rect x="656" y="128" width="68" height="68" rx="14" fill="oklch(98.1% 0.018 78)" stroke="oklch(48% 0.13 28)" stroke-width="1.25" stroke-dasharray="3 2"/>
+      <text x="690" y="162" text-anchor="middle" dominant-baseline="central" style="font-size:12.5px;fill:oklch(23.2% 0.043 78);font-weight:600">💰 USDT</text>
+
+      <rect x="856" y="128" width="68" height="68" rx="14" fill="oklch(98.1% 0.018 78)" stroke="oklch(48% 0.13 28)" stroke-width="1.25" stroke-dasharray="3 2"/>
+      <text x="890" y="162" text-anchor="middle" dominant-baseline="central" style="font-size:12.5px;fill:oklch(23.2% 0.043 78);font-weight:600">💰 USDC</text>
+
+      <rect x="856" y="328" width="68" height="68" rx="14" fill="oklch(98.1% 0.018 78)" stroke="oklch(48% 0.13 28)" stroke-width="1.25" stroke-dasharray="3 2"/>
+      <text x="890" y="362" text-anchor="middle" dominant-baseline="central" style="font-size:12.5px;fill:oklch(23.2% 0.043 78);font-weight:600">💰 DAI</text>
+
+      <rect x="660" y="332" width="60" height="60" rx="12" fill="oklch(98.1% 0.018 78)" stroke="oklch(48% 0.13 28)" stroke-width="1.25" stroke-dasharray="3 2"/>
+      <text x="690" y="362" text-anchor="middle" dominant-baseline="central" style="font-size:16px;fill:oklch(57.7% 0.054 78);font-weight:600">⋯</text>
+
+      <!-- Native token: solid square chip, singular, at the center -->
+      <rect x="747" y="219" width="86" height="86" rx="17" fill="oklch(48% 0.13 28)"/>
+      <text x="790" y="253" text-anchor="middle" dominant-baseline="central" style="font-size:17px;fill:oklch(99.1% 0.011 78);font-weight:700">💰 ETH</text>
+      <text x="790" y="273" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:oklch(99.1% 0.011 78);font-weight:600">原生代幣</text>
+
+      <!-- Legend -->
+      <rect x="101" y="459" width="22" height="22" rx="5" fill="oklch(48% 0.13 28)"/>
+      <text x="132" y="470" dominant-baseline="central" style="font-size:14px;fill:oklch(23.2% 0.043 78);font-weight:500">💰 原生代幣——協議內建，一條鏈只有一個</text>
+
+      <rect x="101" y="481" width="22" height="22" rx="5" fill="oklch(98.1% 0.018 78)" stroke="oklch(48% 0.13 28)" stroke-width="1.25" stroke-dasharray="2 1.5"/>
+      <text x="132" y="492" dominant-baseline="central" style="font-size:14px;fill:oklch(23.2% 0.043 78);font-weight:500">💰 ERC20——合約發行，任何人都能新增（形狀跟鏈不同）</text>
+    </svg>

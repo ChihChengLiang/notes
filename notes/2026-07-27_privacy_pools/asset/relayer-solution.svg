@@ -1,0 +1,64 @@
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 700 400" role="img">
+      <title>How a relayer withdraws without being able to steal funds</title>
+      <desc>The withdrawer generates a zero-knowledge proof that publicly commits to the recipient address, the relayer address, and the fee. The proof is handed to a relayer, who submits the transaction and pays the gas. The pool contract verifies the proof and pays out the principal minus fee to the recipient and the fee to the relayer. Because the recipient and relayer addresses are baked into the proof itself, anyone who intercepts and resubmits the proof cannot redirect the funds to themselves — they would only pay gas on someone else's behalf.</desc>
+      <defs>
+        <marker id="arrS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- Withdrawer -->
+      <circle cx="65" cy="90" r="30" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="65" y="82" text-anchor="middle" dominant-baseline="central" style="font-size:17px">🧑</text>
+      <text x="65" y="101" text-anchor="middle" dominant-baseline="central" style="font-size:9.5px;fill:oklch(23.2% 0.043 78);font-weight:500">Withdrawer</text>
+
+      <!-- ZK Proof box -->
+      <rect x="185" y="45" width="280" height="90" rx="12" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="325" y="68" text-anchor="middle" dominant-baseline="central" style="font-size:13px;fill:oklch(23.2% 0.043 78);font-weight:700">🔒 ZK Proof</text>
+      <text x="325" y="87" text-anchor="middle" dominant-baseline="central" style="font-size:10.5px;fill:oklch(23.2% 0.043 78)">recipient: 0xNew…</text>
+      <text x="325" y="103" text-anchor="middle" dominant-baseline="central" style="font-size:10.5px;fill:oklch(23.2% 0.043 78)">relayer: 0xR1…</text>
+      <text x="325" y="119" text-anchor="middle" dominant-baseline="central" style="font-size:10.5px;fill:oklch(23.2% 0.043 78)">fee: 0.001 ETH</text>
+
+      <!-- Relayer -->
+      <circle cx="625" cy="90" r="30" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="625" y="82" text-anchor="middle" dominant-baseline="central" style="font-size:17px">🛵</text>
+      <text x="625" y="101" text-anchor="middle" dominant-baseline="central" style="font-size:9.5px;fill:oklch(23.2% 0.043 78);font-weight:500">Relayer</text>
+
+      <!-- Arrows: withdrawer -> proof -> relayer -->
+      <line x1="95" y1="90" x2="183" y2="90" stroke="oklch(57.7% 0.054 78)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrS)"/>
+      <text x="139" y="78" text-anchor="middle" style="font-size:9.5px;fill:oklch(57.7% 0.054 78)">① 產生證明</text>
+
+      <line x1="467" y1="90" x2="593" y2="90" stroke="oklch(57.7% 0.054 78)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrS)"/>
+      <text x="530" y="78" text-anchor="middle" style="font-size:9.5px;fill:oklch(57.7% 0.054 78)">② 交給 relayer</text>
+
+      <!-- Pool contract -->
+      <rect x="250" y="215" width="200" height="90" rx="12" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="350" y="243" text-anchor="middle" dominant-baseline="central" style="font-size:20px">🏦</text>
+      <text x="350" y="269" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:oklch(23.2% 0.043 78);font-weight:500">Pool contract</text>
+      <text x="350" y="287" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:oklch(57.7% 0.054 78)">驗證 proof</text>
+
+      <!-- Arrow: relayer -> pool contract (submits tx, pays gas) -->
+      <path d="M615 120 Q 540 175 452 228" fill="none" stroke="oklch(23.2% 0.043 78)" stroke-width="1.5" marker-end="url(#arrS)"/>
+      <text x="588" y="168" text-anchor="middle" style="font-size:10.5px;fill:oklch(23.2% 0.043 78);font-weight:600">③ 送出交易</text>
+      <text x="588" y="184" text-anchor="middle" style="font-size:10.5px;fill:oklch(23.2% 0.043 78);font-weight:600">＋付 gas</text>
+
+      <!-- New / recipient address -->
+      <circle cx="115" cy="345" r="32" fill="oklch(99.1% 0.011 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="115" y="337" text-anchor="middle" dominant-baseline="central" style="font-size:17px">🎯</text>
+      <text x="115" y="356" text-anchor="middle" dominant-baseline="central" style="font-size:9.5px;fill:oklch(23.2% 0.043 78);font-weight:500">New addr</text>
+
+      <!-- Relayer payout -->
+      <circle cx="585" cy="345" r="32" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="585" y="337" text-anchor="middle" dominant-baseline="central" style="font-size:17px">💰</text>
+      <text x="585" y="356" text-anchor="middle" dominant-baseline="central" style="font-size:9px;fill:oklch(23.2% 0.043 78);font-weight:500">Relayer 收款</text>
+
+      <!-- Arrows: pool contract -> outputs -->
+      <path d="M270 300 Q 200 320 143 332" fill="none" stroke="oklch(57.7% 0.054 78)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrS)"/>
+      <text x="200" y="313" text-anchor="middle" style="font-size:10px;fill:oklch(57.7% 0.054 78)">本金 − 手續費</text>
+
+      <path d="M430 300 Q 500 320 557 332" fill="none" stroke="oklch(57.7% 0.054 78)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrS)"/>
+      <text x="500" y="313" text-anchor="middle" style="font-size:10px;fill:oklch(57.7% 0.054 78)">+ 手續費</text>
+
+      <!-- Bottom caption -->
+      <text x="350" y="384" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:oklch(57.7% 0.054 78)">recipient、relayer、fee 都寫死在 proof 裡——就算被別人攔截去送出交易，錢還是照 proof 走，攔截者偷不到</text>
+    </svg>

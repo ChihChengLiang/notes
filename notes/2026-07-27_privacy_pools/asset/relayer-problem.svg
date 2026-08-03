@@ -1,0 +1,45 @@
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 680 340" role="img">
+      <title>Why self-paying withdrawal gas breaks privacy</title>
+      <desc>A fresh, clean withdrawal address has zero ETH balance and cannot pay gas by itself. To fund it, the user sends ETH from an old address with transaction history — such as an exchange account — which immediately links the new address back to their known identity.</desc>
+      <defs>
+        <marker id="arrP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- Pool contract -->
+      <rect x="20" y="130" width="150" height="90" rx="12" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="95" y="158" text-anchor="middle" dominant-baseline="central" style="font-size:20px">🏦</text>
+      <text x="95" y="184" text-anchor="middle" dominant-baseline="central" style="font-size:12px;fill:oklch(23.2% 0.043 78);font-weight:500">Pool contract</text>
+      <text x="95" y="202" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:oklch(57.7% 0.054 78)">0xabcd…</text>
+
+      <!-- New clean address -->
+      <circle cx="340" cy="88" r="32" fill="oklch(99.1% 0.011 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="340" y="80" text-anchor="middle" dominant-baseline="central" style="font-size:18px">🎯</text>
+      <text x="340" y="99" text-anchor="middle" dominant-baseline="central" style="font-size:10.5px;fill:oklch(23.2% 0.043 78);font-weight:500">新地址</text>
+      <text x="298" y="88" text-anchor="end" dominant-baseline="central" style="font-size:10px;fill:oklch(57.7% 0.054 78)">餘額：0 ETH</text>
+
+      <!-- Old / known address -->
+      <circle cx="340" cy="262" r="32" fill="oklch(98.1% 0.018 78)" stroke="oklch(62.2% 0.054 78)" stroke-width="1"/>
+      <text x="340" y="254" text-anchor="middle" dominant-baseline="central" style="font-size:18px">💼</text>
+      <text x="340" y="273" text-anchor="middle" dominant-baseline="central" style="font-size:10.5px;fill:oklch(23.2% 0.043 78);font-weight:500">舊地址／交易所</text>
+      <text x="340" y="303" text-anchor="middle" dominant-baseline="central" style="font-size:10px;fill:oklch(57.7% 0.054 78)">有交易紀錄</text>
+
+      <!-- Withdraw arrow: pool -> new address -->
+      <path d="M170 160 Q 250 120 310 100" fill="none" stroke="oklch(57.7% 0.054 78)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrP)"/>
+      <text x="228" y="122" text-anchor="middle" style="font-size:10px;fill:oklch(57.7% 0.054 78)">withdraw</text>
+
+      <!-- Fund-gas arrow: old address -> new address -->
+      <line x1="340" y1="230" x2="340" y2="122" stroke="oklch(48% 0.13 28)" stroke-width="1.75" marker-end="url(#arrP)"/>
+      <text x="404" y="168" text-anchor="middle" style="font-size:11px;fill:oklch(48% 0.13 28);font-weight:600">先轉一點 ETH</text>
+      <text x="404" y="184" text-anchor="middle" style="font-size:11px;fill:oklch(48% 0.13 28);font-weight:600">進去付 gas</text>
+
+      <!-- Consequence callout -->
+      <rect x="470" y="140" width="190" height="90" rx="10" fill="oklch(98.1% 0.018 78)" stroke="oklch(48% 0.13 28 / 0.4)" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="565" y="164" text-anchor="middle" style="font-size:14px;fill:oklch(48% 0.13 28);font-weight:700">🔗 隱私破功</text>
+      <text x="565" y="188" text-anchor="middle" style="font-size:11px;fill:oklch(23.2% 0.043 78)">新地址馬上</text>
+      <text x="565" y="204" text-anchor="middle" style="font-size:11px;fill:oklch(23.2% 0.043 78)">跟舊身分兜在一起</text>
+
+      <!-- Bottom caption -->
+      <text x="340" y="322" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:oklch(57.7% 0.054 78)">提款地址要付 gas，但乾淨地址沒有 ETH——自己轉錢進去，等於自己把身分接回去</text>
+    </svg>
