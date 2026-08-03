@@ -130,7 +130,7 @@ Alice、Bob、Carol 都存入同一個池子合約，再各自提款到新地址
 
 ---
 
-# Get in, Get out
+## Get in, Get out
 
 ```mermaid
 flowchart LR
@@ -138,13 +138,11 @@ flowchart LR
     B("⏳ 等待")
     C("🎯 出金")
 
-    A --> B --> C
+    A ==> B ==> C
 
     style A font-size:28px
     style B font-size:28px
     style C font-size:28px
-    linkStyle 0 stroke-width:3px
-    linkStyle 1 stroke-width:3px
 ```
 
 理想上，等待時間最好是 **一個月** 以上。
@@ -154,6 +152,65 @@ flowchart LR
 https://github.com/tornadocash/docs/blob/en/general/tips-to-remain-anonymous.md
 :::
 
+---
+
+## 實際上
+
+```mermaid
+flowchart LR
+    AA("安裝錢包")
+    A("💰 入金")
+    B("⏳ 等待")
+    C("🎯 出金")
+
+    AA e1@==> A ==> B ==> C
+
+    style AA stroke-dasharray: 5 5
+    style A font-size:28px
+    style B font-size:28px
+    style C font-size:28px
+    e1@{ animate: true }
+```
+
++++ {"class": "chapter"}
+
+# 錢包（鑰匙圈）
+
+---
+
+## 錢包（鑰匙圈）
+
+- 並不是管理你的錢
+- 而是管理你的私鑰
+
+還沒有錢包的朋友，我們今天用這款 **ambire.com**
+
+
+:::notes
+各家都叫他錢包，英文叫做 Wallet
+下載錢包是有點可怕的事。
+但實際上更是個鑰匙圈
+密碼鎖範例
+:::
+
+---
+
+## 安裝流程
+
+- [ ] 建立新帳戶 Create new account
+- [ ] 建立救援密語 Create Recovery Phrases
+  - 要救援帳戶及資產使用
+- [ ] 設定解鎖密碼 Set Extension Password
+  - 錢包在閒置時會自動鎖定
+
+---
+
+## 助記詞 Seed Phrases
+
+- 私鑰是種能產生巨大排列組合的資訊：可以是數字或文字。
+  - 密碼學利用「只有你知（Something you know）」別人不知道你的私鑰。也猜不到
+- 私鑰的形式
+  - 助記詞
 
 
 ---
@@ -190,23 +247,6 @@ https://github.com/tornadocash/docs/blob/en/general/tips-to-remain-anonymous.md
 ---
 
 原生代幣（ETH／SOL）是協議內建、用來付 gas；合約代幣（ERC20／SPL）是**別人**在這條鏈上發行的代幣，兩者不是同一回事。今天工作坊存入 Privacy Pool 的，是 Ethereum 上的原生 ETH。
-
----
-
-## 錢包（鑰匙圈）
-
-- 並不是管理你的錢
-- 而是管理你的私鑰
-- 私鑰是種能產生巨大排列組合的資訊：可以是數字或文字。
-  - 密碼學利用「只有你知（Something you know）」別人不知道你的私鑰。也猜不到
-- 私鑰的形式
-  - 助記詞
-
-:::notes
-各家都叫他錢包，英文叫做 Wallet
-但實際上更是個鑰匙圈
-密碼鎖範例
-:::
 
 +++ {"class": "chapter"}
 
