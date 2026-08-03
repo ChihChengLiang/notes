@@ -55,18 +55,6 @@ CC · COSCUP 2026
 
 ---
 
-## 區塊鏈的透明度
-
-任何人都可以查詢任何地址的：
-
-- 全部交易紀錄
-- 當前持有資產
-- 所有互動的合約
-
-[debank.com](https://debank.com) 還會整理出哪些人有哪些資產
-
----
-
 ## 混幣器原理：透明的交易圖
 
 ```mermaid
@@ -86,6 +74,8 @@ Alice 轉給 Bob 和 Carol，Bob 轉給 Dave。誰給誰多少錢都看得見。
 :::notes
 區塊鏈會記載一筆交易的發送方、收受方、和金額。
 任何人都能重建這張圖，追蹤資金流向。
+debank.com
+arkham intelligence
 :::
 
 ---
@@ -120,9 +110,63 @@ Alice、Bob、Carol 都存入同一個池子合約，再各自提款到新地址
 希望大家今天能記得這張圖
 :::
 
+---
+
+# 混幣器專案
+
+- 2019 Tornado Cash 龍捲風現金
+- 2025 **Privacy Pools 隱私池** （本日使用，ASP 審查，部分提款）
+
+:::notes
+混幣器是區塊鏈、零知識證明應用的前哨站
+問 Vitalik 最美的區塊鏈應用是什麼？會是 TC, Uniswap
+技術上最精簡，適合研究。所有隱私應用的基礎
+所有價值上的衝突反應。
+:::
+
 +++ {"class": "chapter"}
 
-# Part : 常見以太坊問題
+# 本日任務
+
+---
+
+# Get in, Get out
+
+```mermaid
+flowchart LR
+    A("💰 入金")
+    B("⏳ 等待")
+    C("🎯 出金")
+
+    A --> B --> C
+
+    style A font-size:28px
+    style B font-size:28px
+    style C font-size:28px
+    linkStyle 0 stroke-width:3px
+    linkStyle 1 stroke-width:3px
+```
+
+理想上，等待時間最好是 **一個月** 以上。
+
+:::notes
+隱私池的文件沒有提到具體等待時間。這個數字是親朋好友說的
+https://github.com/tornadocash/docs/blob/en/general/tips-to-remain-anonymous.md
+:::
+
+
+
+---
+
+# 進入隱私池
+
+- 模擬版
+- 真實版
+
+
++++ {"class": "chapter"}
+
+# 入金 Deposit
 
 ---
 
@@ -184,7 +228,17 @@ Alice、Bob、Carol 都存入同一個池子合約，再各自提款到新地址
 
 ## 自己付 gas 的代價
 
-![](asset/relayer-problem.svg)
+```mermaid
+flowchart LR
+    Pool["🏦 Pool contract<br/>0xabcd…"]
+    New(("🎯 新地址<br/>餘額：0 ETH"))
+    Old(("💼 舊地址／交易所<br/>有交易紀錄"))
+
+    Pool -.->|withdraw| New
+    Old -->|先轉一點 ETH 付 gas| New
+
+    linkStyle 1 stroke:#993a31,stroke-width:2px,color:#993a31
+```
 
 自己轉 ETH 進新地址付 gas，等於自己把「乾淨地址」和「有紀錄的舊地址」兜在一起。這一步比任何鏈上分析都更快出賣你。
 
@@ -200,7 +254,24 @@ Alice、Bob、Carol 都存入同一個池子合約，再各自提款到新地址
 
 ## ZKP 不只證明資格，也綁定收款人
 
-![](asset/relayer-solution.svg)
+```mermaid
+flowchart LR
+    Withdrawer(("🧑 Withdrawer"))
+    Proof["🔒 ZK Proof<br/>recipient: 0xNew…<br/>relayer: 0xR1…<br/>fee: 0.001 ETH"]
+    Relayer(("🛵 Relayer"))
+    Pool["🏦 Pool contract<br/>驗證 proof"]
+    New(("🎯 New addr"))
+    Payout(("💰 Relayer 收款"))
+
+    Withdrawer -->|① 產生證明| Proof
+    Proof -->|② 交給 relayer| Relayer
+    Relayer -->|③ 送出交易<br/>＋付 gas| Pool
+    Pool -->|本金 − 手續費| New
+    Pool -->|+ 手續費| Payout
+
+    classDef highlight fill:#f3e3dc,stroke:#993a31,stroke-width:2px,color:#281a03
+    class Proof highlight
+```
 
 提款用的 ZK proof 除了證明「我有權提這筆錢」，還把 **recipient 地址、relayer 地址、手續費金額**一起寫進證明裡公開驗證。
 
