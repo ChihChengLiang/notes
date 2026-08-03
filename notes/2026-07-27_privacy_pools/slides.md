@@ -101,6 +101,7 @@ flowchart LR
 Alice 轉給 Bob 和 Carol，Bob 轉給 Dave。誰給誰多少錢都看得見。
 
 :::notes
+區塊鏈會記載一筆交易的發送方、收受方、和金額。
 任何人都能重建這張圖，追蹤資金流向。
 :::
 
@@ -108,12 +109,29 @@ Alice 轉給 Bob 和 Carol，Bob 轉給 Dave。誰給誰多少錢都看得見。
 
 ## 混幣器原理：進入池子之後
 
-![](asset/tx-graph-pooled.svg)
+```mermaid
+flowchart LR
+    Alice(("🐱 Alice<br/>0xA1c3…"))
+    Bob(("🐶 Bob<br/>0xB0b7…"))
+    Carol(("🐰 Carol<br/>0xC4r0…"))
+    Pool["🏦 Pool contract<br/>0xabcd…"]
+    New1(("🐹 New addr 1"))
+    New2(("🐨 New addr 2"))
+    New3(("🐼 New addr 3"))
+
+    Alice -->|deposit<br/> 1 ETH| Pool
+    Bob -->|deposit<br/> 1 ETH| Pool
+    Carol -->|deposit<br/> 1 ETH| Pool
+
+    Pool -.->|withdraw ?<br/> 1 ETH| New1
+    Pool -.->|withdraw ?<br/> 1 ETH| New2
+    Pool -.->|withdraw ?<br/> 1 ETH| New3
+```
 
 Alice、Bob、Carol 都存入同一個池子合約，再各自提款到新地址。人們看得到誰存款、誰提款，但連不起兩者的關係。
 
 :::notes
-
+希望大家今天能記得這張圖
 :::
 
 +++ {"class": "chapter"}
