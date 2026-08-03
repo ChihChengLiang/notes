@@ -86,7 +86,17 @@ CC · COSCUP 2026
 
 ## 混幣器原理：透明的交易圖
 
-![](asset/tx-graph-transparent.svg)
+```mermaid
+flowchart LR
+    Alice(("🐱 Alice<br/>0xA1c3…"))
+    Bob(("🐶 Bob<br/>0xB0b7…"))
+    Carol(("🐰 Carol<br/>0xC4r0…"))
+    Dave(("🦊 Dave<br/>0xD4v3…"))
+
+    Alice -->|1.0 ETH| Bob
+    Alice -->|0.5 ETH| Carol
+    Bob -->|0.9 ETH| Dave
+```
 
 Alice 轉給 Bob 和 Carol，Bob 轉給 Dave。誰給誰多少錢都看得見。
 
