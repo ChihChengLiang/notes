@@ -87,7 +87,7 @@
 .reveal .math-display { overflow-x: auto; }
 
 /* === Mermaid === */
-.reveal pre.mermaid { background: transparent; box-shadow: none; width: auto; }
+.reveal pre.mermaid { background: transparent; box-shadow: none; width: auto; text-align: center; }
 
 /* === Citations === */
 .reveal .citation { color: var(--accent); font-size: 0.85em; }

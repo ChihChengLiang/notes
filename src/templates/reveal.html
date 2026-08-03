@@ -54,16 +54,21 @@ import { initMermaid, mermaid } from '{{root}}mermaid-init.js';
 
 initMermaid({ startOnLoad: false });
 
+// reveal.css hides every slide but .present by default. Flowchart diagrams
+// measure themselves via SVG getBBox(), which Firefox reports as 0 for
+// elements under a display:none ancestor, so force all slides visible
+// while Mermaid renders, then hand control back to Reveal's own CSS.
+const slideSections = document.querySelectorAll('.slides > section');
+slideSections.forEach((el) => { el.style.display = 'block'; });
+await mermaid.run({ querySelector: 'pre.mermaid' });
+slideSections.forEach((el) => { el.style.display = ''; });
+
 Reveal.initialize({
   hash: true,
   slideNumber: 'c/t',
   transition: 'fade',
   backgroundTransition: 'fade',
   plugins: [ RevealNotes ],
-});
-
-Reveal.on('ready', () => {
-  mermaid.run({ querySelector: 'pre.mermaid' });
 });
 </script>
 </body>
