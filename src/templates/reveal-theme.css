@@ -128,6 +128,12 @@
 
 .reveal .slides section.centered { text-align: center; }
 
+/* === Images === */
+.reveal section img {
+  max-height: 420px;
+  width: auto;
+}
+
 /* === Layout helpers === */
 .columns {
   display: grid;
