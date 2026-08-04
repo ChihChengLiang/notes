@@ -134,9 +134,9 @@ Alice、Bob、Carol 都存入同一個池子合約，再各自提款到新地址
 
 ```mermaid
 flowchart LR
-    A("💰 入金")
+    A("💰 存款")
     B("⏳ 等待")
-    C("🎯 出金")
+    C("🎯 提款")
 
     A ==> B ==> C
 
@@ -163,9 +163,9 @@ https://github.com/tornadocash/docs/blob/en/general/tips-to-remain-anonymous.md
 ```mermaid
 flowchart LR
     AA("安裝錢包")
-    A("💰 入金")
+    A("💰 存款")
     B("⏳ 等待")
-    C("🎯 出金")
+    C("🎯 提款")
 
     AA e1@==> A ==> B ==> C
 
@@ -228,13 +228,13 @@ TODO: 加入 QR Code
 
 +++ {"class": "chapter"}
 
-# 入金 Deposit
+# 存款 Deposit
 
 ```mermaid
 flowchart LR
-    A("💰 入金")
+    A("💰 存款")
     B("⏳ 等待")
-    C("🎯 出金")
+    C("🎯 提款")
 
     A e1@==> B ==> C
 
@@ -256,8 +256,8 @@ flowchart LR
   - 按 Continue with Wallet （需要錢包簽署兩次）
   - 下載救援密語
 - 按 Deposit
-  - 輸入欲入金的金額，按 Confirm （錢包簽署交易）
-- 入金會在 Pending 狀態，等 ASP 審核通過
+  - 輸入欲存款的金額，按 Confirm （錢包簽署交易）
+- 存款會在 Pending 狀態，等 ASP 審核通過
 
 
 ---
@@ -281,18 +281,18 @@ flowchart LR
 如果 ASP 任意拒絕人怎麼辦？
 
 - 誰決定誰是好人壞人？
-- 怒退（Rage quit）：隱私池讓被拒絕的人可以安全出金，但不享有隱私效果 -- 出入金的金流連結不會斷開。
+- 怒退（Rage quit）：隱私池讓被拒絕的人可以安全提款，但不享有隱私效果 -- 存提款的金流連結不會斷開。
 
 
 +++ {"class": "chapter"}
 
-# 出金 Withdraw
+# 提款 Withdraw
 
 ```mermaid
 flowchart LR
-    A("💰 入金")
+    A("💰 存款")
     B("⏳ 等待")
-    C("🎯 出金")
+    C("🎯 提款")
 
     A ==> B e2@==> C
 
@@ -306,20 +306,20 @@ flowchart LR
 
 ---
 
-## 出金步驟
+## 提款步驟
 
 - 按 Withdraw 
   - 確認鏈、幣種
-  - 選擇要出金的入金紀錄（PA-1 之類）
-  - 出金地址：**請用錢包產生全新地址**
-  - 金額可以部分出金。
+  - 選擇要提款的存款紀錄（PA-1 之類）
+  - 提款地址：**請用錢包產生全新地址**
+  - 金額可以部分提款。
   - 中繼人選項可以選預設的
   - 按 Review Withdrawl (再次檢查後，按 Confirm)
 - 等待零知識證明產出完成即可
 
 ---
 
-## 出金的幕後機制
+## 提款的幕後機制
 
 ```mermaid
 sequenceDiagram
@@ -330,7 +330,7 @@ sequenceDiagram
     User->>Relayer: 產生證明
     Relayer->>Pool: 送出交易（付 gas）
     Pool-->>Relayer: 手續費
-    Pool-->>User: 出金款項（到全新地址）
+    Pool-->>User: 提款金額（到全新地址）
 ```
 
 :::notes
