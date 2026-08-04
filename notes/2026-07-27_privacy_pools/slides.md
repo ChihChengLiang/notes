@@ -217,8 +217,13 @@ flowchart LR
 
 # 進入隱私池
 
+TODO: 加入 QR Code
+
 - 模擬版
-- 真實版
+  - [ ] 選擇連結錢包
+  - [ ] 取得測試鏈的測試幣
+- 真實版（有錢包與以太幣者）
+  - 造訪 privacypools.com
 
 
 +++ {"class": "chapter"}
@@ -240,13 +245,29 @@ flowchart LR
     classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:mermaid-pulse 1.6s ease-in-out infinite
     class A pulse
 ```
+---
+
+## 步驟
+
+- 連結網頁與帳戶：按 Connect Wallet
+  - 選 Ambire （接著解鎖錢包）
+  - 目的：能以該帳戶發
+- 產生 Seed Phrase
+  - 按 Continue with Wallet （需要錢包簽署兩次）
+  - 下載救援密語
+- 按 Deposit
+  - 輸入欲入金的金額，按 Confirm （錢包簽署交易）
+- 入金會在 Pending 狀態，等 ASP 審核通過
+
 
 ---
 
 ## 在開始之前：什麼是「鏈」？
 
-- 每條區塊鏈都是一本**獨立的帳本**——Ethereum、Bitcoin、Solana 互不相通
-- 「EVM 相容」的鏈（Ethereum、Base、Arbitrum…）共用同一套智能合約執行環境，錢包、工具可以直接沿用
+- 每條區塊鏈都是一本**獨立的帳本**——Ethereum、Bitcoin、Solana 互不相通。
+  - 可以當成不同的電腦
+- 「EVM 相容」的鏈（Ethereum、Base、Arbitrum…）共用同一套合約執行環境，錢包、工具可以直接沿用
+  - 想像不同的電腦，但一樣的作業系統
 - 非 EVM 鏈（Bitcoin、Solana…）有自己的一套規則，錢包、地址格式都不一樣
 
 :::notes
@@ -263,6 +284,50 @@ flowchart LR
 ---
 
 原生代幣（ETH／SOL）是協議內建、用來付 gas；合約代幣（ERC20／SPL）是**別人**在這條鏈上發行的代幣，兩者不是同一回事。今天工作坊存入 Privacy Pool 的，是 Ethereum 上的原生 ETH。
+
+---
+
+## ASP 關聯集提供者
+
+**關聯集（Association Set）** 在隱私池是允許清單。被允許日後才能提款。
+
+關聯集提供者會排除交易所遭竊，或是各種已知的犯罪帳戶。
+
+龍捲風現金的設計，讓北韓駭客與一般使用者混在一起。隱私池的設計讓他們分開。
+
+:::notes
+為善不欲爲人知
+:::
+
+---
+
+## ASP 作惡如何？
+
+如果 ASP 任意拒絕人怎麼辦？
+
+- 誰決定誰是好人壞人？
+- 怒退（Rage quit）：隱私池讓被拒絕的人可以安全出金，但不享有隱私效果 -- 出入金的金流連結不會斷開。
+
+
++++ {"class": "chapter"}
+
+# 出金 Withdraw
+
+```mermaid
+flowchart LR
+    A("💰 入金")
+    B("⏳ 等待")
+    C("🎯 出金")
+
+    A ==> B e2@==> C
+
+    style A font-size:28px
+    style B font-size:28px
+    e2@{ animate: true }
+
+    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:mermaid-pulse 1.6s ease-in-out infinite
+    class C pulse
+```
 
 +++ {"class": "chapter"}
 
