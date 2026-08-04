@@ -259,9 +259,6 @@ flowchart LR
   - 輸入欲入金的金額，按 Confirm （錢包簽署交易）
 - 入金會在 Pending 狀態，等 ASP 審核通過
 
----
-
-原生代幣（ETH／SOL）是協議內建、用來付 gas；合約代幣（ERC20／SPL）是**別人**在這條鏈上發行的代幣，兩者不是同一回事。今天工作坊存入 Privacy Pool 的，是 Ethereum 上的原生 ETH。
 
 ---
 
@@ -307,9 +304,42 @@ flowchart LR
     class C pulse
 ```
 
-+++ {"class": "chapter"}
+---
 
-# Part 2: 失敗案例
+## 出金步驟
+
+- 按 Withdraw 
+  - 確認鏈、幣種
+  - 選擇要出金的入金紀錄（PA-1 之類）
+  - 出金地址：**請用錢包產生全新地址**
+  - 金額可以部分出金。
+  - 中繼人選項可以選預設的
+  - 按 Review Withdrawl (再次檢查後，按 Confirm)
+- 等待零知識證明產出完成即可
+
+---
+
+## 出金的幕後機制
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Pool
+    participant ASP
+
+    User->>User: 生成 withdrawal proof
+    User->>Pool: withdraw(proof)
+    Pool->>ASP: 檢查最新 ASP root
+    Pool-->>User: 驗證通過，撥款
+```
+
+撥款前，Pool 合約會檢查你的 proof 是否使用最新的 ASP 允許清單（root）——這就是「關聯集」在技術上介入出金的地方。同一個 secret 只能生成同一個 nullifier，用過就會被合約記住，防止同一筆錢領兩次。
+
+:::notes
+User 端其實是 secret/nullifier + SDK 產生 proof 的過程，這裡簡化成一個角色。
+Entrypoint 合約在真實流程裡負責轉發查詢，這裡簡化直接畫成 Pool 詢問 ASP。
+重點是讓聽眾理解「不重複花費」和「ASP 名單」是怎麼在鏈上被強制執行的。
+:::
 
 ---
 
@@ -323,23 +353,25 @@ flowchart LR
 
 提款到一個全新地址是好事——但**送交易需要付 gas**，而新地址裡沒有任何 ETH。
 
+![](asset/gru.jpg)
+
 ---
 
 ## 自己付 gas 的代價
 
 ```mermaid
 flowchart LR
-    Pool["🏦 Pool contract<br/>0xabcd…"]
-    New(("🎯 新地址<br/>餘額：0 ETH"))
     Old(("💼 舊地址／交易所<br/>有交易紀錄"))
+    Pool["🏦 Pool contract<br/>0xabcd…<br/>（已有可提領的 ETH）"]
+    New(("🎯 新地址<br/>餘額：0 ETH"))
 
-    Pool -.->|withdraw| New
-    Old -->|先轉一點 ETH 付 gas| New
+    Old -->|外部交易：付 gas<br/>呼叫 withdraw（新地址）| Pool
+    Pool -.->|內部轉帳：撥款| New
 
-    linkStyle 1 stroke:#993a31,stroke-width:2px,color:#993a31
+    linkStyle 0 stroke:#993a31,stroke-width:2px,color:#993a31
 ```
 
-自己轉 ETH 進新地址付 gas，等於自己把「乾淨地址」和「有紀錄的舊地址」兜在一起。這一步比任何鏈上分析都更快出賣你。
+要把錢從 Pool 合約領出來，得有人送一筆**外部交易**去呼叫它，而外部交易的 gas 只能由送出者自己的帳戶支付——即使合約裡明明就有你的錢。如果送出這筆外部交易的是舊地址，等於自己把「乾淨地址」和「有紀錄的舊地址」在鏈上兜在一起。這一步比任何鏈上分析都更快出賣你。
 
 ---
 
@@ -409,57 +441,6 @@ Source: kohweijie.com
 
 +++ {"class": "chapter"}
 
-# Part 3: Privacy Pool 做了什麼改進？
-
----
-
-## Tornado Cash 的核心問題
-
-混幣池裡有好人，也有北韓駭客。
-
-交易所看到你從 Tornado Cash 提款，就拒收——**不管你是誰**。
-
-隱私與合規，二選一？
-
-:::notes
-這是 Vitalik 等人想解決的問題。
-:::
-
----
-
-## Privacy Pool 的設計哲學
-
-**關聯集（Association Set）**
-
-你可以選擇性地證明：「我的資金來源不在這份黑名單裡」
-
-但你不需要說出自己是誰。
-
-類比：告訴海關「我的錢不是來自制裁名單上的人」——但不用出示護照。
-
-:::notes
-這是核心創新。不是隱藏一切，而是選擇性揭露。
-:::
-
----
-
-## Privacy Pool 的其他設計
-
-**怒退（Ragequit）**
-
-如果協議出問題，你可以無條件取回資金。沒有人能把你鎖在裡面。
-
-**Association Set Provider（ASP）**
-
-由第三方（目前是 0xbow）維護「乾淨」地址清單。
-
-:::notes
-Ragequit 是使用者保護機制。
-ASP 是信任點，後面會討論這個問題。
-:::
-
-+++ {"class": "chapter"}
-
 # 回顧
 
 ---
@@ -470,7 +451,8 @@ ASP 是信任點，後面會討論這個問題。
   - 非托管：沒有人能凍結你的資金
   - 開源：任何人都可以審計程式碼
   - 選擇性揭露：可以在不揭露身份的情況下證明合規
-  - 怒退保障：資金安全有底線
+  - 怒退保障：被 ASP 拒絕可以安全取回資金
+  - 部分提款：不用一次提取巨大的金額（龍捲風現金沒這功能）
 - 醜的部分
   - **ASP 是中心化信任點**：ASP 決定誰是「乾淨」的。但作惡能力有限。
   - **法律地位仍不確定**：應該政府和我們一樣困惑
@@ -578,3 +560,52 @@ Tornado Cash 不只是技術問題，也是法律問題。
 ## 原生代幣 vs 合約代幣
 
 ![](asset/chain-token-stack.svg)
+
+---
+
+原生代幣（ETH／SOL）是協議內建、用來付 gas；合約代幣（ERC20／SPL）是**別人**在這條鏈上發行的代幣，兩者不是同一回事。今天工作坊存入 Privacy Pool 的，是 Ethereum 上的原生 ETH。
+
++++ {"class": "chapter"}
+
+# 草稿：待整理
+
+---
+
+## 指紋比喻：一個秘密，兩種指紋
+
+```mermaid
+flowchart LR
+    Secret(("🤚 秘密"))
+    Right["👉 右手指紋<br/>= commitment"]
+    Left["👈 左手指紋<br/>= nullifier"]
+    Set["🗂️ 存款集體的指紋<br/>所有人的右手指紋"]
+    List["✅ ASP 名單<br/>允許的指紋子集"]
+    Proof["📜 證明<br/>我的指紋在集合裡"]
+
+    Secret -->|入金時留下| Right --> Set --> Proof
+    Secret -.->|出金時亮出| Left
+    Set -.-> List -.-> Proof
+
+    classDef highlight fill:#f3e3dc,stroke:#993a31,stroke-width:2px,color:#281a03
+    class Left highlight
+```
+
+你的秘密像一雙手：入金時留下右手指紋，混進一大群人的右手指紋裡；出金時亮出左手指紋，只證明「我確實有留下一個右手指紋」，但認不出是哪一個。
+
+---
+
+## 中繼人出金流程
+
+```mermaid
+sequenceDiagram
+    participant User as 使用者
+    participant Relayer as 中繼人
+    participant Pool as 鏈上
+    participant ASP
+
+    User->>Relayer: 證明
+    Relayer->>Pool: 送出交易（付 gas）
+    Pool->>ASP: 檢查名單
+    Pool-->>Relayer: 手續費
+    Pool-->>User: 提款
+```
