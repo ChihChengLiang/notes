@@ -71,20 +71,15 @@ flowchart LR
 
 :::notes
 帳戶乍看之下只是一串亂碼
-你怎麼取得第一個幣的？交易所？朋友
+你怎麼取得第一個幣的？交易所？朋友？工作薪水？
 東市 ...
 捐款（有些國家不喜歡你）
 You are what you buy. 認同 身份
-
 :::
-
-+++ {"class": "chapter"}
-
-# 本日任務
 
 ---
 
-## Get in, Get out
+## 本日任務： Get in, Get out
 
 ```mermaid
 flowchart LR
@@ -161,23 +156,25 @@ flowchart LR
 
 ## 助記詞 Seed Phrases
 
-- 私鑰是種能產生巨大排列組合的資訊：可以是數字或文字。
-  - 密碼學利用「只有你知（Something you know）」別人不知道你的私鑰。也猜不到
-- 私鑰的形式
-  - 助記詞
+![](asset/padlock.png)
 
+私鑰是能**產生巨大排列組合的資訊**：可以是數字或文字、或助記詞。
+
+密碼學利用「只有你知（Something you know）」的原理保障資訊與資產安全。
+
+:::notes
+別人不知道你的私鑰。也猜不到
+:::
 
 ---
 
 # 進入隱私池
 
-TODO: 加入 QR Code
-
-- 模擬版
+- 模擬版 [連結](https://faucet.54.89.174.65.sslip.io/)
   - [ ] 選擇連結錢包
   - [ ] 取得測試鏈的測試幣
 - 真實版（有錢包與以太幣者）
-  - 造訪 privacypools.com
+  - 造訪 [privacypools.com](https://privacypools.com)
 
 
 +++ {"class": "chapter"}
