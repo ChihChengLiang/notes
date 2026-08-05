@@ -60,11 +60,40 @@ initMermaid({ startOnLoad: false });
 // while Mermaid renders, then hand control back to Reveal's own CSS.
 const slideSections = document.querySelectorAll('.slides > section, .slides > section > section');
 slideSections.forEach((el) => { el.style.display = 'block'; });
+
+// A `%% fragment` comment anywhere in a mermaid block opts it into per-node
+// click-to-reveal: the first node shows immediately, then each following
+// node (plus the edge leading into it) becomes a Reveal fragment, so they
+// fade in one step at a time along with the rest of the slide's fragments.
+const fragmentDiagrams = Array.from(document.querySelectorAll('pre.mermaid'))
+  .filter((el) => /%%\s*fragment\b/.test(el.textContent));
+fragmentDiagrams.forEach((el) => el.classList.add('js-fragment-reveal'));
+
 // suppressErrors: a bad diagram renders an inline error instead of throwing —
 // otherwise one broken diagram would reject this await and Reveal.initialize()
 // below would never run, breaking navigation for the entire deck.
 await mermaid.run({ querySelector: 'pre.mermaid', suppressErrors: true });
 slideSections.forEach((el) => { el.style.display = ''; });
+
+document.querySelectorAll('pre.mermaid.js-fragment-reveal').forEach((el) => {
+  const svg = el.querySelector('svg');
+  if (!svg) return;
+  const nodes = Array.from(svg.querySelectorAll('.node'));
+  const edgePaths = Array.from(svg.querySelectorAll('.edgePaths > path'));
+  const edgeLabels = Array.from(svg.querySelectorAll('.edgeLabels > .edgeLabel'));
+  nodes.slice(1).forEach((node, i) => {
+    node.classList.add('fragment');
+    node.setAttribute('data-fragment-index', String(i));
+  });
+  edgePaths.forEach((path, i) => {
+    path.classList.add('fragment');
+    path.setAttribute('data-fragment-index', String(i));
+  });
+  edgeLabels.forEach((label, i) => {
+    label.classList.add('fragment');
+    label.setAttribute('data-fragment-index', String(i));
+  });
+});
 
 Reveal.initialize({
   hash: true,

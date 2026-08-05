@@ -43,85 +43,39 @@ CC · COSCUP 2026
 用虛擬貨幣
 :::
 
-+++ {"class": "chapter"}
-
-# Part 1: 真實的問題
-
-> 使用區塊鏈，像是把銀行帳戶放在推特上曬
-
-:::notes
-混幣器要解決的問題，其實是區塊鏈自己的問題
-:::
-
 ---
 
-## 混幣器原理：透明的交易圖
+# 為什麼用隱私池？
 
 ```mermaid
+%% fragment
 flowchart LR
-    Alice(("🐱 Alice<br/>0xA1c3…"))
-    Bob(("🐶 Bob<br/>0xB0b7…"))
-    Carol(("🐰 Carol<br/>0xC4r0…"))
-    Dave(("🦊 Dave<br/>0xD4v3…"))
+    ME(("👩 你的帳戶<br/>0xabcd…"))
+    EX["🏦 交易所<br/>（KYC 看過你的護照）"]
+    DEFI("🦄 Defi")
+    NFT("🐵 NFT")
+    ENS["🌐 ENS<br/>alice.eth"]
+    DONATION("💝 捐款")
+    POOL("Privacy Pools")
+    NEW(("👩 新帳戶<br/>0x1234"))
 
-    Alice -->|1.0 ETH| Bob
-    Alice -->|0.5 ETH| Carol
-    Bob -->|0.9 ETH| Dave
+    EX --> ME
+    ME --> DEFI
+    ME --> NFT
+    ME --> ENS
+    ME --> DONATION
+    ME --> POOL
+    POOL e1@==> NEW
+    e1@{ animate: true }
 ```
 
-Alice 轉給 Bob 和 Carol，Bob 轉給 Dave。誰給誰多少錢都看得見。
-
 :::notes
-區塊鏈會記載一筆交易的發送方、收受方、和金額。
-任何人都能重建這張圖，追蹤資金流向。
-debank.com
-arkham intelligence
-:::
+帳戶乍看之下只是一串亂碼
+你怎麼取得第一個幣的？交易所？朋友
+東市 ...
+捐款（有些國家不喜歡你）
+You are what you buy. 認同 身份
 
----
-
-## 混幣器原理：進入池子之後
-
-```mermaid
-flowchart LR
-    Alice(("🐱 Alice<br/>0xA1c3…"))
-    Bob(("🐶 Bob<br/>0xB0b7…"))
-    Carol(("🐰 Carol<br/>0xC4r0…"))
-    Pool["🏦 Pool contract<br/>0xabcd…"]
-    New1(("🐹 New addr 1"))
-    New2(("🐨 New addr 2"))
-    New3(("🐼 New addr 3"))
-
-    Alice -->|deposit<br/> 1 ETH| Pool
-    Bob -->|deposit<br/> 1 ETH| Pool
-    Carol -->|deposit<br/> 1 ETH| Pool
-
-    Pool -.->|withdraw ?<br/> 1 ETH| New1
-    Pool -.->|withdraw ?<br/> 1 ETH| New2
-    Pool -.->|withdraw ?<br/> 1 ETH| New3
-
-    classDef highlight fill:#f3e3dc,stroke:#993a31,stroke-width:2px,color:#281a03
-    class Pool highlight
-```
-
-Alice、Bob、Carol 都存入同一個池子合約，再各自提款到新地址。人們看得到誰存款、誰提款，但連不起兩者的關係。
-
-:::notes
-希望大家今天能記得這張圖
-:::
-
----
-
-# 混幣器專案
-
-- 2019 Tornado Cash 龍捲風現金
-- 2025 **Privacy Pools 隱私池** （本日使用，ASP 審查，部分提款）
-
-:::notes
-混幣器是區塊鏈、零知識證明應用的前哨站
-問 Vitalik 最美的區塊鏈應用是什麼？會是 TC, Uniswap
-技術上最精簡，適合研究。所有隱私應用的基礎
-所有價值上的衝突反應。
 :::
 
 +++ {"class": "chapter"}
@@ -387,8 +341,15 @@ sequenceDiagram
 
 ## 今天我們做了什麼
 
+1. 安裝了一個新錢包（Ambire），備份助記詞
+2. 連上 Privacy Pool，存入一筆 ETH
+3. 等待（示範用，實際上要更久）
+4. 用中繼人，把錢提到一個全新地址
+
+從頭到尾走過一次「打斷幣流連結」的完整流程。
 
 :::notes
+
 :::
 
 ---
