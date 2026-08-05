@@ -10,6 +10,10 @@ title: 隱私支付實作工作坊：從龍捲風現金到隱私池
 
 CC · COSCUP 2026
 
+![](asset/slides-qr.svg)
+
+掃描取得今天的投影片
+
 :::notes
 你們每個人看起來有很多秘密
 :::
@@ -96,12 +100,24 @@ flowchart LR
     classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px
 ```
 
+本日使用： 2025 Privacy Pools 隱私池 （ASP 審查，部分提款）
+
 理想上，等待時間最好是 **一個月** 以上。
 
 :::notes
 隱私池的文件沒有提到具體等待時間。這個數字是親朋好友說的
 https://github.com/tornadocash/docs/blob/en/general/tips-to-remain-anonymous.md
 :::
+
+---
+
+# 進入隱私池
+
+- 模擬版 [連結](https://faucet.54.89.174.65.sslip.io/)
+  - [ ] 選擇連結錢包
+  - [ ] 取得測試鏈的測試幣
+- 真實版（有錢包與以太幣者）
+  - 造訪 [privacypools.com](https://privacypools.com)
 
 
 +++ {"class": "chapter"}
@@ -160,22 +176,12 @@ flowchart LR
 
 私鑰是能**產生巨大排列組合的資訊**：可以是數字或文字、或助記詞。
 
-密碼學利用「只有你知（Something you know）」的原理保障資訊與資產安全。
+密碼學利用「只有你知（Something you know）」的原理，保障資訊與資產安全。
 
 :::notes
 別人不知道你的私鑰。也猜不到
+精確地來說，是只有你的電腦知道。
 :::
-
----
-
-# 進入隱私池
-
-- 模擬版 [連結](https://faucet.54.89.174.65.sslip.io/)
-  - [ ] 選擇連結錢包
-  - [ ] 取得測試鏈的測試幣
-- 真實版（有錢包與以太幣者）
-  - 造訪 [privacypools.com](https://privacypools.com)
-
 
 +++ {"class": "chapter"}
 
