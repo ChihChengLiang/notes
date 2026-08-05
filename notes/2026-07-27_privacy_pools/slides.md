@@ -244,6 +244,65 @@ flowchart LR
 
 +++ {"class": "chapter"}
 
+# 等待 Wait
+
+```mermaid
+flowchart LR
+    A("💰 存款")
+    B("⏳ 等待")
+    C("🎯 提款")
+
+    A e1@==> B e2@==> C
+
+    style A font-size:28px
+    style C font-size:28px
+    e1@{ animate: true }
+    e2@{ animate: true }
+
+    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:mermaid-pulse 1.6s ease-in-out infinite
+    class B pulse
+```
+
+---
+
+## 思想實驗：匿名集（Anonymity set）有多大？
+
+```mermaid
+%% fragment
+flowchart LR
+    Pool["🏦 隱私池"]
+    D1(("😀 1"))
+    D2(("😀 2"))
+    D3(("😀 3"))
+    W1(("😀 1"))
+    W2(("😀 2"))
+    W3(("😀 3"))
+    YOU(("😊 你"))
+    YOUOUT(("😱 你"))
+
+    D1 -->|存款| Pool
+    D2 -->|存款| Pool
+    D3 -->|存款| Pool
+    Pool -.->|提款| W1
+    Pool -.->|提款| W2
+    Pool -.->|提款| W3
+    YOU ==>|存款| Pool
+    Pool ==>|提款| YOUOUT
+
+    classDef danger fill:#f3e3dc,stroke:#993a31,stroke-width:2px,color:#281a03
+    class YOUOUT danger
+```
+
+3 個人存款、3 個人提款——沒人猜得出哪筆對哪筆，這就是你的匿名集。接著你存款、馬上提款：這次池子裡只剩你一個人，存提款直接兜在一起，隱私瞬間歸零。
+
+:::notes
+匿名集：能跟你混在一起、讓觀察者猜不出是誰的人數。
+等待期間，其實是在等更多人加入你的匿名集。
+如果你進場時沒有其他人在排隊，你就是唯一嫌疑犯。
+:::
+
++++ {"class": "chapter"}
+
 # 提款 Withdraw
 
 ```mermaid
@@ -363,11 +422,14 @@ sequenceDiagram
 
 ## 額外建議
 
-- [ ] 視需求用 Tor Browser 或 VPN 連線
-- [ ] 選擇常見的金額（0.1 ETH，不要奇怪的數字）
+- 視需求用 Tor Browser 或 VPN 連線
+- 忌諱：就你最特別
+  - 選擇常見的金額（0.1 ETH，不要奇怪的數字）
+  - 提款盡量小額，不要超越一般存款金額
 
 :::notes
 隱私池最主要的目的是清除鏈上蹤跡。鏈下需要其他技術配合
+小額：雖然大家可能沒這煩腦
 :::
 
 ---
