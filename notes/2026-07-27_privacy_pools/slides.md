@@ -369,14 +369,21 @@ sequenceDiagram
 
 # 零知識證明的部分
 
-- 像是一個比較智慧的數位簽章
-  - 知道私鑰的人才有辦法簽
-- 簽章 + 區塊鏈合約檢查提款資格
-  1. 屬於存過款的一員
-  2. 有在白名單內
-  3. 尚未提過款
+<ul>
+<li>像是一個比較智慧的數位簽章
+<ul><li>知道私鑰的人才有辦法簽</li></ul>
+</li>
+<li>簽章 + 區塊鏈合約檢查提款資格
+<ol>
+<li class="fragment">屬於存過款的一員<small>但不揭露你是誰</small></li>
+<li class="fragment">有在白名單內<small>證明你不是壞人</small></li>
+<li class="fragment">尚未提過款<small>不然你可以重複提款</small></li>
+</ol>
+</li>
+</ul>
 
 :::notes
+padlock again
 想像手機註冊存款者指紋
 :::
 
