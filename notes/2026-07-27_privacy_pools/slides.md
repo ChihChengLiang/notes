@@ -330,7 +330,7 @@ flowchart LR
   - 選擇要提款的存款紀錄（PA-1 之類）
   - 提款地址：**請用錢包產生全新地址**
   - 金額可以部分提款。
-  - 中繼人選項可以選預設的
+  - 中繼者選項可以選預設的
   - 按 Review Withdrawal （再次檢查後，按 Confirm）
 - 等待零知識證明產出完成即可
 
@@ -339,9 +339,10 @@ flowchart LR
 ## 提款的幕後機制
 
 ```mermaid
+%% fragment
 sequenceDiagram
     participant User as 使用者
-    participant Relayer as 中繼人
+    participant Relayer as 中繼者
     participant Pool as 隱私池（鏈上）
 
     User->>Relayer: 產生證明
@@ -349,6 +350,8 @@ sequenceDiagram
     Pool-->>Relayer: 手續費
     Pool-->>User: 提款金額（到全新地址）
 ```
+
+發送交易需要以太幣，有暴露幣流風險。因此有中繼者（Relayer）的設計。
 
 :::notes
 你的電腦有沒有熱熱的？
@@ -398,7 +401,7 @@ sequenceDiagram
 - **ASP 是中心化信任點**：ASP 決定誰是「乾淨」的。但作惡能力有限。
 - **法律地位仍不確定**：應該政府和我們一樣困惑
 - **工具需要一定技術門檻**：小閃失可能喪失隱私保證
-- 費用： 0xbow 收存款 0.5% ，中繼人收提款 0.1% ，以太幣存款手續費大約台幣 10 元有找。
+- 費用： 0xbow 收存款 0.5% ，中繼者收提款 0.1% ，以太幣存款手續費大約台幣 10 元有找。
 
 :::notes
 :::
@@ -410,7 +413,7 @@ sequenceDiagram
 1. 安裝了一個新錢包（Ambire），備份助記詞
 2. 連上 Privacy Pool，存入一筆 ETH
 3. 等待（示範用，實際上要更久）
-4. 用中繼人，把錢提到一個全新地址
+4. 用中繼者，把錢提到一個全新地址
 
 從頭到尾走過一次「打斷幣流連結」的完整流程。
 

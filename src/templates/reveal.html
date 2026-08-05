@@ -79,20 +79,40 @@ document.querySelectorAll('pre.mermaid.js-fragment-reveal').forEach((el) => {
   const svg = el.querySelector('svg');
   if (!svg) return;
   const nodes = Array.from(svg.querySelectorAll('.node'));
-  const edgePaths = Array.from(svg.querySelectorAll('.edgePaths > path'));
-  const edgeLabels = Array.from(svg.querySelectorAll('.edgeLabels > .edgeLabel'));
-  nodes.slice(1).forEach((node, i) => {
-    node.classList.add('fragment');
-    node.setAttribute('data-fragment-index', String(i));
-  });
-  edgePaths.forEach((path, i) => {
-    path.classList.add('fragment');
-    path.setAttribute('data-fragment-index', String(i));
-  });
-  edgeLabels.forEach((label, i) => {
-    label.classList.add('fragment');
-    label.setAttribute('data-fragment-index', String(i));
-  });
+  if (nodes.length > 0) {
+    // Flowcharts: the first node is always visible; each node after it
+    // becomes a fragment together with the edge (+ label) leading into it.
+    const edgePaths = Array.from(svg.querySelectorAll('.edgePaths > path'));
+    const edgeLabels = Array.from(svg.querySelectorAll('.edgeLabels > .edgeLabel'));
+    nodes.slice(1).forEach((node, i) => {
+      node.classList.add('fragment');
+      node.setAttribute('data-fragment-index', String(i));
+    });
+    edgePaths.forEach((path, i) => {
+      path.classList.add('fragment');
+      path.setAttribute('data-fragment-index', String(i));
+    });
+    edgeLabels.forEach((label, i) => {
+      label.classList.add('fragment');
+      label.setAttribute('data-fragment-index', String(i));
+    });
+    return;
+  }
+
+  // Sequence diagrams: participant boxes/lifelines stay always visible;
+  // each message becomes one fragment. Mermaid emits every message as a
+  // `.messageText` immediately followed by its `.messageLine0`/`.messageLine1`
+  // sibling (no shared wrapper element), in source order, so pairing up
+  // consecutive matches here reconstructs one fragment step per message.
+  const messageEls = Array.from(svg.querySelectorAll('.messageText, .messageLine0, .messageLine1'));
+  for (let i = 0; i < messageEls.length; i += 2) {
+    const index = i / 2;
+    [messageEls[i], messageEls[i + 1]].forEach((elm) => {
+      if (!elm) return;
+      elm.classList.add('fragment');
+      elm.setAttribute('data-fragment-index', String(index));
+    });
+  }
 });
 
 Reveal.initialize({
