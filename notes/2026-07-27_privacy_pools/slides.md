@@ -74,12 +74,77 @@ flowchart LR
 ```
 
 :::notes
-帳戶乍看之下只是一串亂碼
+在以太坊上，帳戶乍看之下只是一串亂碼
 你怎麼取得第一個幣的？交易所？朋友？工作薪水？
 東市 ...
 捐款（有些國家不喜歡你）
-You are what you buy. 認同 身份
+You are what you buy. 認同 身份 獨一無二的你
 :::
+
+---
+
+## 混幣器原理
+
+```mermaid
+%% fragment
+flowchart LR
+    Pool["🌪️ 龍捲風現金"]
+    D1(("😀 1"))
+    D2(("😀 2"))
+    D3(("😀 3"))
+    W3(("🦸 3"))
+    W1(("🦸 1"))
+    W2(("🦸 2"))
+    EX(("🏦 交易所"))
+    D4(("👿 4"))
+    W4(("🦸 4"))
+
+    D1 -->|存款| Pool
+    D2 -->|存款| Pool
+    D3 -->|存款| Pool
+    Pool -.->|提款| W3
+    Pool -.->|提款| W1
+    Pool -.->|提款| W2
+    EX -->|遭竊| D4
+    D4 -->|存款| Pool
+    Pool -.->|提款| W4
+
+```
+
+2019 Tornado Cash 龍捲風現金 
+
+
+---
+
+## 混幣器 + 白名單
+
+```mermaid
+%% fragment
+flowchart LR
+    Pool["🐟 隱私池 <br>🤨 ASP 管理白名單"]
+    D1(("😀 1"))
+    D2(("😀 2"))
+    D3(("😀 3"))
+    W3(("🦸 3"))
+    W1(("🦸 1"))
+    W2(("🦸 2"))
+    EX(("🏦 交易所"))
+    D4(("👿 4"))
+    W4(("👿 4"))
+
+    D1 -->|存款 ✅| Pool
+    D2 -->|存款 ✅| Pool
+    D3 -->|存款 ✅| Pool
+    Pool -.->|提款| W3
+    Pool -.->|提款| W1
+    Pool -.->|提款| W2
+    EX -->|遭竊| D4
+    D4 -->|存款 ❌| Pool
+    Pool ==>|怒退<br>（提款但暴露幣流）| W4
+```
+
+2025 Privacy Pools 隱私池 （ASP 審查，部分提款）
+
 
 ---
 
@@ -270,7 +335,7 @@ flowchart LR
 ```mermaid
 %% fragment
 flowchart LR
-    Pool["🏦 隱私池"]
+    Pool["🐟 隱私池"]
     D1(("😀 1"))
     D2(("😀 2"))
     D3(("😀 3"))
@@ -385,6 +450,40 @@ sequenceDiagram
 :::notes
 padlock again
 想像手機註冊存款者指紋
+:::
+
+---
+
+## 指紋比喻：三個集合
+
+```mermaid
+%% fragment
+flowchart LR
+    subgraph DEP["📥 存款集合"]
+        R1(("🫆"))
+        subgraph ASP["✅ 白名單子集"]
+            RYOU(("🫆 你"))
+        end
+    end
+
+    SECRET["🔑 你的秘密"]
+    RYOU -->|check| SECRET
+
+    L1(("🫆"))
+    SECRET -->|check| L1
+
+    subgraph WD["❌ 已提款集合"]
+        L2(("🫆"))
+    end
+
+    classDef highlight fill:#f3e3dc,stroke:#993a31,stroke-width:2px,color:#281a03
+    class RYOU,SECRET,L1 highlight
+```
+
+右拇指指紋（存款）要在白名單子集裡；秘密算出來的左拇指指紋，只要還沒出現在已提款集合裡就算數。兩邊都要通過，才能撥款。
+
+:::notes
+不用記 hash、不用記 Merkle tree，只要記得：兩個集合要對，一個集合不能重複出現。
 :::
 
 +++ {"class": "chapter"}

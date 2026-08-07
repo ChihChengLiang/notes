@@ -67,7 +67,20 @@ slideSections.forEach((el) => { el.style.display = 'block'; });
 // fade in one step at a time along with the rest of the slide's fragments.
 const fragmentDiagrams = Array.from(document.querySelectorAll('pre.mermaid'))
   .filter((el) => /%%\s*fragment\b/.test(el.textContent));
-fragmentDiagrams.forEach((el) => el.classList.add('js-fragment-reveal'));
+fragmentDiagrams.forEach((el) => {
+  el.classList.add('js-fragment-reveal');
+  // Stash declaration-order node names from the SOURCE text before mermaid
+  // replaces this element's content — once subgraphs are involved, mermaid
+  // groups the rendered `.node` DOM by cluster rather than declaration
+  // order, so DOM order can't be trusted as the reveal sequence.
+  const order = [];
+  const re = /^\s*(\w+)\s*(?:\(\(|\[|\()/gm;
+  let match;
+  while ((match = re.exec(el.textContent))) {
+    if (!order.includes(match[1])) order.push(match[1]);
+  }
+  el.dataset.fragmentOrder = order.join(',');
+});
 
 // suppressErrors: a bad diagram renders an inline error instead of throwing —
 // otherwise one broken diagram would reject this await and Reveal.initialize()
@@ -80,21 +93,49 @@ document.querySelectorAll('pre.mermaid.js-fragment-reveal').forEach((el) => {
   if (!svg) return;
   const nodes = Array.from(svg.querySelectorAll('.node'));
   if (nodes.length > 0) {
-    // Flowcharts: the first node is always visible; each node after it
-    // becomes a fragment together with the edge (+ label) leading into it.
-    const edgePaths = Array.from(svg.querySelectorAll('.edgePaths > path'));
-    const edgeLabels = Array.from(svg.querySelectorAll('.edgeLabels > .edgeLabel'));
-    nodes.slice(1).forEach((node, i) => {
+    // Flowcharts: the first declared node is always visible; each node after
+    // it becomes its own fragment, in SOURCE declaration order (see above —
+    // not DOM order, which subgraphs scramble). Edges are assigned by NAME
+    // (via mermaid's `data-id="L_<source>_<target>_<n>"`) to the LARGER of
+    // their two endpoints' reveal indices — not by array position — so a
+    // node with more than one incoming/outgoing edge still works.
+    const nameOf = (id) => (id.match(/-flowchart-(.+)-\d+$/) || [, id])[1];
+    const byName = new Map(nodes.map((n) => [nameOf(n.id), n]));
+    const declared = (el.dataset.fragmentOrder || '').split(',').filter((n) => byName.has(n));
+    byName.forEach((_, name) => { if (!declared.includes(name)) declared.push(name); });
+
+    const indexByName = new Map();
+    declared.slice(1).forEach((name, i) => {
+      const node = byName.get(name);
       node.classList.add('fragment');
       node.setAttribute('data-fragment-index', String(i));
+      indexByName.set(name, i);
+    });
+
+    const edgePaths = Array.from(svg.querySelectorAll('.edgePaths > path'));
+    const edgeIndices = edgePaths.map((path, i) => {
+      // A manually-named edge (`e1@==>`, used for the `animate: true` arrows
+      // elsewhere in this deck) loses its source/target in data-id — it's
+      // just the literal name "e1". Fall back to the edge's own position
+      // among edges in that case, matching this function's pre-rename behavior.
+      const m = (path.getAttribute('data-id') || '').match(/^L_(.+?)_(.+?)_\d+$/);
+      if (!m) return i;
+      return Math.max(indexByName.get(m[1]) ?? -1, indexByName.get(m[2]) ?? -1, 0);
     });
     edgePaths.forEach((path, i) => {
       path.classList.add('fragment');
-      path.setAttribute('data-fragment-index', String(i));
+      path.setAttribute('data-fragment-index', String(edgeIndices[i]));
     });
+
+    // Edge labels don't carry `data-id`, but mermaid emits them in the same
+    // order as their edges (as duplicate pairs — a visible copy plus a
+    // background copy), so distribute them proportionally across edges.
+    const edgeLabels = Array.from(svg.querySelectorAll('.edgeLabels > .edgeLabel'));
+    const labelsPerEdge = edgePaths.length > 0 ? (edgeLabels.length / edgePaths.length) || 1 : 1;
     edgeLabels.forEach((label, i) => {
+      const edgeIndex = Math.min(Math.floor(i / labelsPerEdge), edgeIndices.length - 1);
       label.classList.add('fragment');
-      label.setAttribute('data-fragment-index', String(i));
+      label.setAttribute('data-fragment-index', String(edgeIndices[edgeIndex] ?? 0));
     });
     return;
   }
