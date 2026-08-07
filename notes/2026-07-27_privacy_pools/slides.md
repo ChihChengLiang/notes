@@ -444,46 +444,6 @@ padlock again
 
 ---
 
-## 提款檢查
-
-```mermaid
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 20, "bottom": 10}}}}%%
-%% fragment
-flowchart LR
-    D1("🫆 D1 ✅")
-    D2("🫆 D2 ✅")
-    D3("🫆 D3 ❌")
-    W2("🫆 W2")
-    DYOU("🫆 D你 ✅")
-    W1("🫆 W1")
-    WYOU("🫆 W你")
-    SECRET["🔑 你的秘密"]
-    subgraph DEP["存款清單<br>（左手指紋）<br>"]
-      D1
-      D2
-      D3
-      DYOU
-    end
-
-    DYOU ===|檢查指紋| SECRET
-
-    SECRET ===|檢查指紋| WYOU
-
-    subgraph WD["已提款清單<br>（右手指紋）<br>"]
-      W2
-      W1
-      WYOU
-    end
-
-    classDef highlight fill:#f3e3dc,stroke:#993a31,stroke-width:2px,color:#281a03
-    class DYOU,WYOU,SECRET highlight
-```
-
-雜湊函式：資料的指紋 -- 幾乎獨一無二，不透露秘密（資料）本身。
-
-:::notes
-我不滿意這張圖。沒談到鏈上的檢查，含零知識證明的內容。但這套機制要討論攻守雙方各自會出錯的可能。本身非常複雜。
-:::
 
 +++ {"class": "chapter"}
 
@@ -589,8 +549,6 @@ Tornado Cash 不只是技術問題，也是法律問題。
 - 2022 年：美國財政部制裁 Tornado Cash 合約
 - 2023 年：開發者 Alexey Pertsev 在荷蘭被捕，判刑超過五年
 - Roman Storm 在美國被定罪
-
-**對你的意義：** 使用被制裁工具，在某些司法管轄區可能有法律風險。
 
 :::notes
 大家酌情使用
