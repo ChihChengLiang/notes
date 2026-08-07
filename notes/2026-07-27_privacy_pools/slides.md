@@ -287,24 +287,14 @@ flowchart LR
 
 ## ASP 關聯集提供者
 
-**關聯集（Association Set）** 在隱私池是允許清單。被允許日後才能提款。
-
-關聯集提供者會排除交易所遭竊，或是各種已知的犯罪帳戶。
-
-龍捲風現金的設計，讓北韓駭客與一般使用者混在一起。隱私池的設計讓他們分開。
+- **關聯集（Association Set）** ：允許日後提款的白名單。
+- **關聯集提供者（Association Set Provider, ASP）** ：維護白名單的單位。
+- **怒退（Rage quit）**：被 ASP 拒絕，使用者可以提款但暴露幣流
 
 :::notes
+誰決定誰是好人壞人？
 為善不欲為人知
 :::
-
----
-
-## ASP 作惡如何？
-
-如果 ASP 任意拒絕人怎麼辦？
-
-- 誰決定誰是好人壞人？
-- 怒退（Rage quit）：隱私池讓被拒絕的人可以安全提款，但不享有隱私效果 -- 存提款的金流連結不會斷開。
 
 
 +++ {"class": "chapter"}
@@ -454,36 +444,45 @@ padlock again
 
 ---
 
-## 指紋比喻：三個集合
+## 提款檢查
 
 ```mermaid
+%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 20, "bottom": 10}}}}%%
 %% fragment
 flowchart LR
-    subgraph DEP["📥 存款集合"]
-        R1(("🫆"))
-        subgraph ASP["✅ 白名單子集"]
-            RYOU(("🫆 你"))
-        end
+    D1("🫆 D1 ✅")
+    D2("🫆 D2 ✅")
+    D3("🫆 D3 ❌")
+    W2("🫆 W2")
+    DYOU("🫆 D你 ✅")
+    W1("🫆 W1")
+    WYOU("🫆 W你")
+    SECRET["🔑 你的秘密"]
+    subgraph DEP["存款清單<br>（左手指紋）<br>"]
+      D1
+      D2
+      D3
+      DYOU
     end
 
-    SECRET["🔑 你的秘密"]
-    RYOU -->|check| SECRET
+    DYOU ===|檢查指紋| SECRET
 
-    L1(("🫆"))
-    SECRET -->|check| L1
+    SECRET ===|檢查指紋| WYOU
 
-    subgraph WD["❌ 已提款集合"]
-        L2(("🫆"))
+    subgraph WD["已提款清單<br>（右手指紋）<br>"]
+      W2
+      W1
+      WYOU
     end
 
     classDef highlight fill:#f3e3dc,stroke:#993a31,stroke-width:2px,color:#281a03
-    class RYOU,SECRET,L1 highlight
+    class DYOU,WYOU,SECRET highlight
 ```
 
-右拇指指紋（存款）要在白名單子集裡；秘密算出來的左拇指指紋，只要還沒出現在已提款集合裡就算數。兩邊都要通過，才能撥款。
+雜湊函式：資料的指紋 -- 幾乎獨一無二，不透露秘密（資料）本身。
 
 :::notes
-不用記 hash、不用記 Merkle tree，只要記得：兩個集合要對，一個集合不能重複出現。
+我不滿意這張圖。沒談到鏈上的檢查，含零知識證明的內容。但這套機制要討論攻守雙方各自會出錯的可能。本身非常複雜。
 :::
 
 +++ {"class": "chapter"}

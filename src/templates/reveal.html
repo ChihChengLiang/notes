@@ -93,19 +93,19 @@ document.querySelectorAll('pre.mermaid.js-fragment-reveal').forEach((el) => {
   if (!svg) return;
   const nodes = Array.from(svg.querySelectorAll('.node'));
   if (nodes.length > 0) {
-    // Flowcharts: the first declared node is always visible; each node after
-    // it becomes its own fragment, in SOURCE declaration order (see above —
-    // not DOM order, which subgraphs scramble). Edges are assigned by NAME
-    // (via mermaid's `data-id="L_<source>_<target>_<n>"`) to the LARGER of
-    // their two endpoints' reveal indices — not by array position — so a
-    // node with more than one incoming/outgoing edge still works.
+    // Flowcharts: every node is its own fragment, in SOURCE declaration
+    // order (see above — not DOM order, which subgraphs scramble). Edges
+    // are assigned by NAME (via mermaid's `data-id="L_<source>_<target>_<n>"`)
+    // to the LARGER of their two endpoints' reveal indices — not by array
+    // position — so a node with more than one incoming/outgoing edge still
+    // works.
     const nameOf = (id) => (id.match(/-flowchart-(.+)-\d+$/) || [, id])[1];
     const byName = new Map(nodes.map((n) => [nameOf(n.id), n]));
     const declared = (el.dataset.fragmentOrder || '').split(',').filter((n) => byName.has(n));
     byName.forEach((_, name) => { if (!declared.includes(name)) declared.push(name); });
 
     const indexByName = new Map();
-    declared.slice(1).forEach((name, i) => {
+    declared.forEach((name, i) => {
       const node = byName.get(name);
       node.classList.add('fragment');
       node.setAttribute('data-fragment-index', String(i));
