@@ -6,50 +6,49 @@ date: 2026-08-26
 
 ## Introduction
 
-Does cryptography product create genuine new experience for users? 
+Does cryptography product create genuine new experience for users?
 
-I think I get this debate from a penal of Devcon Thailand 2024. Let me create straw person proponents of the camp.
+I think I got this debate from a panel at Devcon Thailand 2024. Let me create straw person proponents of the camp.
 
-Vitalik argued for no. Cryptography is just a "simulated trusted third party." Everything you can do with cryptography, you can do it with trusted third party.
+Vitalik argued for no. Cryptography is just a "simulated trusted third party." Everything you can do with cryptography, you can do it with a trusted third party.
 
-Barry argued for yes. Cryptography is true and real. There are essentially cases where trust is hard to estabilish and only cryptography helps you to build experiences we've never had before.
+Barry argued for yes. Cryptography is true and real. There are essentially cases where trust is hard to establish and only cryptography helps you build experiences we've never had before.
 
-We can argue the both camps are just perspective of viewing things. Take cryptocurrency for example, we could argue that is just a new form of payment, which we've already doing it with bank services. A final form of cryptocurrency should make you feel no difference with using a bank app, but offers more security and privacy. On the other hand, we could also argue that no level of bank coordination could build you this global book of balances that you can trust any amount sent from a stranger.
+We can argue both camps are just perspectives on viewing things. Take cryptocurrency for example, we could argue that it's just a new form of payment, which we're already doing with bank services. A final form of cryptocurrency should make you feel no different from using a bank app, but offer more security and privacy. On the other hand, we could also argue that no level of bank coordination could build you this global book of balances that you can trust for any amount sent from a stranger.
 
+I haven't really unpacked and described that debate in justice. But I think it would be very enlightening to unpack and spell out the weird nature of cryptographic products. That'll help us understand why, what, and how we are building, and who we build for.
 
-I think I haven't really unapcked and described that debate in justice. But I think it would be very enlightening to unpack and spell out the weired nature of cryptographic products. That'll help us understand why, what, and how we are building, and who we build for.
+Cryptography products are unlike the rest of the software products we use. You get impressed the first time an LLM prompts you with a thoughtful reply or draws you a realistic image. Cryptography products, on the other hand, feel unimpressive. Sending a crypto transaction takes a herculean effort -- you reason with gas fees, networks, tokens, addresses, and yet the result makes you wonder, what's that different from my web2 payment apps? You deposit and withdraw on privacy pools, lots of gymnastics of confirms and approvals. What are we getting? The unlinkability of your transactions -- can you see it or touch it? You might, if you know the theory and can read dashboards.
 
-Cryptography products are unlike the rest of the software products we used. You'll get impressed when the first time LLM prompts you a thoughtful reply or draw you a realistic image. Cryptography products, on the other hands, feels unimpressive. Sending a crypto transaction takes a heculian effort -- you reason with gas fees, networks, tokens, addresses, and yet, the result makes you wondering, what's that different from my web2 payment apps? You deposit and withdraw on privacy pools, lots gymnetics of confirms and approvals. What are we getting? The unlinkability of your transactions, can you see it or touch it? You might, if you know the thoery and can read dashboards.
+When we built cryptography product demos, we countless times asked "do we need to build the real stuff?" An FHE multiplayer game takes tremendous CPU and network bandwidth to run. How does that feel different from a centralized one? Only more friction is perceivable from the user's perspective. When we encountered a network problem at the demo venue, we considered disabling cryptography features to make the demo work. Would users feel any difference from that? Probably just less friction they experienced.
 
-When we built cryptography product demos, countless time we asked "do we need to build the real stuff"? A FHE multi player game takes tremendus CPU and network bandwidth to run. How does that feel different from a centralized one? Only more friction is perceivable from the users perspective. When we encountered the network problem in the demo venue, we considered to disable cryptography features to make the demo work. Would users feel any difference from that? Probably just less friction they experienced.
-
-In fact, most of the successful cryptography projects I can remembered, they remain silent and require minimum understanding from the users. I know http is not secure, and https is. What does that extra "s" give you? You have to dig three level deep in the UI to find out the detail. How many cryptography features on Signal chat app you can name? You probably don't, and you use it because of its reputation. Macbook has a network privacy feature. How did I became aware of it? because it makes my Steamstore app slow and I learned its existence and disable it.
+In fact, most of the successful cryptography projects I can remember remain silent and require minimum understanding from the users. I know http is not secure, and https is. What does that extra "s" give you? You have to dig three levels deep in the UI to find out the detail. How many cryptography features on the Signal chat app can you name? You probably can't, and you use it because of its reputation. MacBook has a network privacy feature. How did I become aware of it? Because it made my Steam app slow and I learned of its existence and disabled it.
 
 We named some products here, some build by non-profits, some for-profits, some governament standards. We'll come back to these.
 
 ## The Tale of Johnny
 
-In the 1990 paper "Why Johnny can't encrypt," the author listed five distinct properites of security products.
+In the 1990 paper "Why Johnny Can't Encrypt," the author listed five distinct properties of security products.
 
-- Unmotivated users. Security is usally the second concern for the users. They wanted their message sent, and privacy is assumed rather than something they should actively keep in mind. (TODO: is drill and hole in the wall discussion relavent?). One thing I remember is that Ukrane has lowest installation count of Signal app before the war, and then rose to the top after the war began, showing that security is only important when they are scarce. 
-- Abstraction. The value provided by security products are abstract.
-- Lack of Feedback. It's hard for users to know if they are doing the right action. If you write your password on a sticker note, you won't know what's wrong until it's all too late.
-- Barn door property. Once you let the horse leave the barn door, there's no way you can save it by closing the door. Lost or theft password and cryptocurrencies behave exactly this way.
-- Weakest link. Things break at the weakest part of the system. This means a user can't have just partial understandin of the system.
+- Unmotivated users. Security is usually the second concern for users. They want their message sent, and privacy is assumed rather than something they should actively keep in mind. (TODO: is the drill-and-hole-in-the-wall discussion relevant?). One thing I remember is that Ukraine had the lowest installation count of the Signal app before the war, and then it rose to the top after the war began, showing that security is only important when it's scarce.
+- Abstraction. The value provided by security products is abstract.
+- Lack of feedback. It's hard for users to know if they are doing the right thing. If you write your password on a sticky note, you won't know what's wrong until it's all too late.
+- Barn door property. Once you let the horse leave through the barn door, there's no way to save it by closing the door. Lost or stolen passwords and cryptocurrencies behave exactly this way.
+- Weakest link. Things break at the weakest part of the system. This means a user can't have just a partial understanding of the system.
 
-The paper was an analysis on UI of PGP software. But we've seen those exact properites on wallets.
+The paper was an analysis of PGP software's UI. But we've seen those exact properties in wallets.
 
-The user research followed that suggests users are very rational to be unmotivated (connects to privacy paradox). and there are debats on whether the UI should be explicit or implcit to users as much as possible.
+The user research that followed suggests users are very rational to be unmotivated (connects to the privacy paradox), and there are debates on whether the UI should be as explicit or implicit to users as possible.
 
-For me, I'd like to translate those properties of cryptography products into the language of economics. Because that would help us identify the information or huamn organization frictions and yield implication on how do we produce the product. The name is "credence good."
+For me, I'd like to translate those properties of cryptography products into the language of economics, because that would help us identify the information or human/organizational frictions and yield implications for how we produce the product. The name is "credence good."
 
 ## Credence good: Doctors and mechanics
 
-Products could have good or bad qualities. Some you can tell it before you buy it, like fresh fruits. Some after you buy it, like a can of juice. Some, however, you can't tell even if you have expericed it yourself. That's credence good.
+Products could have good or bad qualities. Some you can tell before you buy them, like fresh fruits. Some after you buy them, like a can of juice. Some, however, you can't tell even after you've experienced them yourself. That's a credence good.
 
-Do you know the treatment to your body by your doctor or to your car by your mechaics are necessary? You would never know. Services by the experts are invisible, just like cryptography. Classic results shows the problem of credence good is overtreatment, undertreatment, and overcharging. Solutions to the problems are characterized by if users are commited to the treatment after diagnosis from the expert? if the expert is legallly liable to not undertreat? and if the users have abilities to verify the treatment expost.
+Do you know whether the treatment your doctor gives your body, or your mechanic gives your car, is necessary? You would never know. Services by experts are invisible, just like cryptography. Classic results show the problems of credence goods are overtreatment, undertreatment, and overcharging. Solutions to these problems are characterized by whether users are committed to the treatment after diagnosis from the expert, whether the expert is legally liable for undertreating, and whether users have the ability to verify the treatment ex post.
 
-For goods, the closed products are food labels. Customer typically can't tell if bad ingredients were added in the food even after the consumption.
+The closest analogue for goods is food labels. Customers typically can't tell if bad ingredients were added to the food even after consumption.
 
 ## Weird product features
 
