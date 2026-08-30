@@ -89,6 +89,77 @@ const codeHandler = {
   },
 };
 
+// `:::{timeline}` directive: body is a definition list (`Date — Title\n: details`),
+// one term/description pair per event. Split each term on the first " — " into a
+// date and a title so they can render as separate columns.
+function splitTermDateTitle(children: any[]): { date: string; title: any[] } {
+  const first = children[0];
+  if (!first || first.type !== "text") return { date: "", title: children };
+  const idx = first.value.indexOf(" — ");
+  if (idx === -1) return { date: "", title: children };
+  const date = first.value.slice(0, idx);
+  const restText = first.value.slice(idx + 3);
+  const title = restText ? [{ type: "text", value: restText }, ...children.slice(1)] : children.slice(1);
+  return { date, title };
+}
+
+function extractTimelineEvents(body: any[]): any[] {
+  const events: any[] = [];
+  for (const node of body) {
+    if (node.type !== "definitionList") continue;
+    const children = node.children ?? [];
+    for (let i = 0; i < children.length; i += 2) {
+      const term = children[i];
+      const desc = children[i + 1];
+      if (term?.type !== "definitionTerm") continue;
+      const { date, title } = splitTermDateTitle(term.children ?? []);
+      events.push({
+        type: "timelineEvent",
+        date,
+        title,
+        children: desc?.type === "definitionDescription" ? desc.children ?? [] : [],
+      });
+    }
+  }
+  return events;
+}
+
+const timelineDirective = {
+  name: "timeline",
+  options: {
+    reverse: { type: Boolean, doc: "Render newest-first (default true)." },
+  },
+  body: { type: "myst" },
+  run(data: any) {
+    return [
+      {
+        type: "timeline",
+        reverse: data.options?.reverse !== false,
+        children: extractTimelineEvents(data.body ?? []),
+      },
+    ];
+  },
+};
+
+const timelineHandlers = {
+  timeline(h: any, node: any) {
+    const children = node.reverse ? [...(node.children ?? [])].reverse() : node.children ?? [];
+    return h(node, "div", { class: "timeline" }, h.all({ type: "wrap", children }));
+  },
+  timelineEvent(h: any, node: any) {
+    const dateEl = {
+      type: "element",
+      tagName: "div",
+      properties: { class: "timeline-date" },
+      children: node.date ? [{ type: "text", value: node.date }] : [],
+    };
+    const titleEl = h(node, "div", { class: "timeline-title" }, h.all({ type: "wrap", children: node.title ?? [] }));
+    const detailsEl = h(node, "div", { class: "timeline-details" }, h.all({ type: "wrap", children: node.children ?? [] }));
+    const bodyEl = h(node, "div", { class: "timeline-body" }, [titleEl, detailsEl]);
+    return h(node, "div", { class: "timeline-event" }, [dateEl, bodyEl]);
+  },
+};
+
 function makeHtmlOptions(bibCache: any) {
   return {
     hast: {
@@ -96,6 +167,7 @@ function makeHtmlOptions(bibCache: any) {
       handlers: {
         ...mathHandlers,
         ...codeHandler,
+        ...timelineHandlers,
         ...makeCitationHandlers(bibCache),
       } as any,
     },
@@ -140,6 +212,7 @@ export async function renderMyst(
 ): Promise<{ html: string; date: string | null; title: string | null }> {
   const tree = mystParse(content, {
     extensions: { frontmatter: true, math: true, citations: bibPath !== null },
+    directives: [timelineDirective as any],
   }) as any;
 
   // Extract frontmatter from first node if it's a yaml code block
@@ -176,6 +249,7 @@ export async function renderSlidesSections(
 ): Promise<{ sections: string[]; title: string | null }> {
   const tree = mystParse(content, {
     extensions: { frontmatter: true, math: true, blocks: true, citations: bibPath !== null },
+    directives: [timelineDirective as any],
   }) as any;
 
   let title: string | null = null;
