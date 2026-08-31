@@ -13,7 +13,9 @@ generated: true
 
 **Speakers:** Albert Ni (moderator), Brian "gubsheep" Gu, Vitalik Buterin, Barry Whitehat
 
-*Editor's note: This is a cleaned-up version of an auto-generated transcript. Punctuation, paragraph breaks, and speaker labels have been added, and obvious mis-transcriptions of technical terms have been corrected (e.g. "sarcs" → SNARKs, "FH" → FHE, "alisation/officiation" → obfuscation, "aisc/IO" → iO, "risk five" → RISC-V, "NPC" → MPC, "Cil attacks" → Sybil attacks, "zup pass" → Zupass). A few short passages near the beginning have no clear speaker cue in the source audio-to-text and are labeled with my best guess — these are flagged with "(uncertain)". A couple of proper nouns I couldn't confidently resolve are left bracketed.*
+**Date:** 2024-11-15
+
+*Editor's note: This is a cleaned-up version of an auto-generated transcript. Speaker labels have been added by machines and verified by a human.*
 
 ---
 
