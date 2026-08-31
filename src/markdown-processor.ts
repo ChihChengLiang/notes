@@ -160,6 +160,43 @@ const timelineHandlers = {
   },
 };
 
+// `:::{youtube} <url-or-id>` directive: renders a responsive, privacy-friendly
+// (youtube-nocookie.com) embed instead of a raw hand-pasted iframe.
+function extractYoutubeId(input: string): string {
+  const trimmed = input.trim();
+  const match = trimmed.match(
+    /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|watch\?v=|shorts\/))([\w-]{11})/
+  );
+  return match ? match[1] : trimmed;
+}
+
+const youtubeDirective = {
+  name: "youtube",
+  arg: { type: String, required: true, doc: "YouTube video ID or URL" },
+  options: {
+    title: { type: String, doc: "Accessible title for the embed" },
+  },
+  run(data: any) {
+    return [
+      {
+        type: "youtube",
+        videoId: extractYoutubeId(String(data.arg ?? "")),
+        title: data.options?.title ? String(data.options.title) : "YouTube video",
+      },
+    ];
+  },
+};
+
+const youtubeHandlers = {
+  youtube(_h: any, node: any) {
+    const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(node.videoId)}`;
+    return {
+      type: "raw",
+      value: `<div class="video-embed"><iframe src="${src}" title="${escapeHtml(node.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`,
+    };
+  },
+};
+
 function makeHtmlOptions(bibCache: any) {
   return {
     hast: {
@@ -168,6 +205,7 @@ function makeHtmlOptions(bibCache: any) {
         ...mathHandlers,
         ...codeHandler,
         ...timelineHandlers,
+        ...youtubeHandlers,
         ...makeCitationHandlers(bibCache),
       } as any,
     },
@@ -212,7 +250,7 @@ export async function renderMyst(
 ): Promise<{ html: string; date: string | null; title: string | null; generated: boolean }> {
   const tree = mystParse(content, {
     extensions: { frontmatter: true, math: true, citations: bibPath !== null },
-    directives: [timelineDirective as any],
+    directives: [timelineDirective as any, youtubeDirective as any],
   }) as any;
 
   // Extract frontmatter from first node if it's a yaml code block
@@ -251,7 +289,7 @@ export async function renderSlidesSections(
 ): Promise<{ sections: string[]; title: string | null }> {
   const tree = mystParse(content, {
     extensions: { frontmatter: true, math: true, blocks: true, citations: bibPath !== null },
-    directives: [timelineDirective as any],
+    directives: [timelineDirective as any, youtubeDirective as any],
   }) as any;
 
   let title: string | null = null;
