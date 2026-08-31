@@ -293,7 +293,7 @@ export async function renderReportHtml(
     navHtml,
     backLinkHtml: `<a class="nb-back-link" href="./">← ${escapeHtml(entry.title)}</a>`,
     bannerHtml: generated
-      ? `<div class="generated-banner">⚙ Machine-generated — not written or edited by CC.</div>`
+      ? `<div class="generated-banner">⚙ Machine-generated — not written by CC.</div>`
       : undefined,
   });
 
