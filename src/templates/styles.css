@@ -602,6 +602,26 @@ body:not(:has(.index-nb)) {
   top: 12px;
   right: 14px;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gh-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: var(--custom-3);
+  border: 1px solid var(--custom-5);
+  border-radius: 999px;
+  color: var(--custom-10);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: background 0.15s, color 0.15s;
+}
+.gh-link:hover {
+  background: var(--custom-12);
+  color: var(--custom-1);
 }
 .theme-seg {
   display: flex;
