@@ -222,7 +222,7 @@ export async function renderMyst(
   if (firstChild?.type === "code" && firstChild?.lang === "yaml") {
     tree.children.shift();
     const fm = (yaml.load(firstChild.value) as Record<string, any>) ?? {};
-    date = fm.date ? String(fm.date) : null;
+    date = fm.date instanceof Date ? fm.date.toISOString().slice(0, 10) : fm.date ? String(fm.date) : null;
     title = fm.title ? String(fm.title) : null;
   }
 
