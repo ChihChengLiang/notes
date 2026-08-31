@@ -532,6 +532,18 @@ body:not(:has(.index-nb)) {
   color: var(--custom-11);
 }
 
+.generated-banner {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  text-align: center;
+  color: var(--custom-9);
+  background: var(--custom-2);
+  border-radius: 6px;
+  padding: 0.5rem 0.9rem;
+  margin-bottom: 1rem;
+}
+
 .article-content h1 {
   text-align: center;
   border-bottom: none;
@@ -551,8 +563,8 @@ body:not(:has(.index-nb)) {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--custom-9);
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 
 .nb-article-orn {
@@ -561,6 +573,19 @@ body:not(:has(.index-nb)) {
   font-size: 0.9rem;
   letter-spacing: 0.5em;
   margin: 1.1rem 0 1.8rem;
+}
+
+.topic-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 1rem 0 1.8rem;
+}
+
+.topic-nav .nb-slides-link.generated {
+  background: var(--custom-2);
+  color: var(--custom-9);
 }
 
 .article-content h2 {

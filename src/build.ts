@@ -1,7 +1,7 @@
 import { mkdir, rm, readdir, copyFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join } from "path";
-import { getTopics, renderIndexHtml, renderSlides, renderTopicHtml, applyAssetPaths, STATIC_FILES } from "./site";
+import { parseSummary, renderIndexHtml, renderSlides, renderTopicHtml, renderReportHtml, applyAssetPaths, STATIC_FILES } from "./site";
 
 const IMAGE_EXTS = new Set([".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp", ".avif"]);
 
@@ -45,7 +45,7 @@ async function build() {
   const topicTemplate = applyAssetPaths(articleTemplate, "..");
   const indexTemplate = applyAssetPaths(articleTemplate, ".");
 
-  const topics = getTopics();
+  const topics = await parseSummary();
 
   // Build index page
   const indexHtml = await renderIndexHtml(indexTemplate, "static");
@@ -53,14 +53,15 @@ async function build() {
   console.log("✓ Generated index.html");
 
   // Build each topic
-  for (const topic of topics) {
+  for (const entry of topics) {
+    const topic = entry.slug;
     const topicDir = `${distDir}/${topic}`;
     await mkdir(topicDir);
 
     const slidesPath = `./notes/${topic}/slides.md`;
 
     // Render draft
-    const fullHtml = await renderTopicHtml(`./notes/${topic}`, topicTemplate);
+    const fullHtml = await renderTopicHtml(topic, topicTemplate, { linkStyle: "static" });
     if (fullHtml) {
       await Bun.write(`${topicDir}/index.html`, fullHtml);
       console.log(`✓ Generated ${topic}/index.html`);
@@ -70,9 +71,21 @@ async function build() {
     if (existsSync(slidesPath)) {
       const slidesHtml = await renderSlides(slidesPath, "../");
       await Bun.write(`${topicDir}/slides.html`, slidesHtml);
-      await copyImages(`./notes/${topic}`, topicDir);
       console.log(`✓ Generated ${topic}/slides.html`);
     }
+
+    // Render this topic's extra pages (reports, etc.), listed in notes/SUMMARY.md
+    for (const page of entry.pages) {
+      const reportHtml = await renderReportHtml(topic, page.slug, topicTemplate, { linkStyle: "static" });
+      if (reportHtml) {
+        await Bun.write(`${topicDir}/${page.slug}.html`, reportHtml);
+        console.log(`✓ Generated ${topic}/${page.slug}.html`);
+      }
+    }
+
+    // Images are copied unconditionally — reports may ship their own,
+    // independent of whether the topic has slides.
+    await copyImages(`./notes/${topic}`, topicDir);
   }
 
   console.log("\nBuild complete! Output in ./dist");

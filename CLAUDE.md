@@ -23,7 +23,9 @@ This is a **Bun + TypeScript** static site generator for research notes and slid
 
 ### Content discovery
 
-`src/site.ts:getTopics()` scans `notes/` for subdirectories. Each subdirectory with a `main.md` becomes a note; if `slides.md` also exists, a slides page is generated.
+`notes/SUMMARY.md` is the single source of truth for which topics exist, their order, and each topic's extra pages — nothing is discovered by scanning the filesystem. `src/site.ts:parseSummary()` parses it: top-level `- [title](topic/main.md)` entries are topics; a nested entry (`- [title](topic/report.md)`) is one of that topic's extra pages (e.g. an AI-assisted research report). A topic or page not listed there doesn't render, even if the `.md` file exists on disk. Link text is the canonical title everywhere (index, nav, page `<title>`). `slides.md` is the one exception — it's still auto-detected by file existence per topic, since there's no ordering/curation question for a single well-known filename.
+
+A report page can set `generated: true` in its own frontmatter to render a "Machine-generated" banner and a distinct nav-pill style, signaling it isn't the author's own writing.
 
 ### Key source files
 

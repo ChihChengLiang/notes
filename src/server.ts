@@ -1,5 +1,5 @@
 import { watch } from "fs";
-import { renderIndexHtml, renderSlides, renderTopicHtml, STATIC_FILES } from "./site";
+import { renderIndexHtml, renderSlides, renderTopicHtml, renderReportHtml, parseSummary, STATIC_FILES } from "./site";
 
 // Track connected clients for SSE
 const clients = new Set<ReadableStreamDefaultController>();
@@ -119,10 +119,19 @@ const server = Bun.serve({
     }
     if (sub === "") {
       const template = await Bun.file("./src/templates/article.html").text();
-      // alwaysReloadFiles: re-read bib on every request so edits are picked up without restart
-      const html = await renderTopicHtml(`./notes/${topic}`, template, { alwaysReloadFiles: true });
+      const html = await renderTopicHtml(topic, template, { linkStyle: "server" });
       if (!html) return new Response("Not found", { status: 404 });
       return new Response(html, { headers: { "Content-Type": "text/html" } });
+    }
+
+    // Report/sub-page route: /:topic/:slug — only slugs listed under the
+    // topic in notes/SUMMARY.md resolve; anything else falls through to 404.
+    const topics = await parseSummary();
+    const isReportSlug = topics.some((t) => t.slug === topic && t.pages.some((p) => p.slug === sub));
+    if (isReportSlug) {
+      const template = await Bun.file("./src/templates/article.html").text();
+      const html = await renderReportHtml(topic, sub, template, { linkStyle: "server" });
+      if (html) return new Response(html, { headers: { "Content-Type": "text/html" } });
     }
 
     return new Response("Not found", { status: 404 });

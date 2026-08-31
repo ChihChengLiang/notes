@@ -209,7 +209,7 @@ function postProcess(html: string): string {
 export async function renderMyst(
   content: string,
   bibPath: string | null
-): Promise<{ html: string; date: string | null; title: string | null }> {
+): Promise<{ html: string; date: string | null; title: string | null; generated: boolean }> {
   const tree = mystParse(content, {
     extensions: { frontmatter: true, math: true, citations: bibPath !== null },
     directives: [timelineDirective as any],
@@ -218,12 +218,14 @@ export async function renderMyst(
   // Extract frontmatter from first node if it's a yaml code block
   let date: string | null = null;
   let title: string | null = null;
+  let generated = false;
   const firstChild = tree.children[0];
   if (firstChild?.type === "code" && firstChild?.lang === "yaml") {
     tree.children.shift();
     const fm = (yaml.load(firstChild.value) as Record<string, any>) ?? {};
     date = fm.date instanceof Date ? fm.date.toISOString().slice(0, 10) : fm.date ? String(fm.date) : null;
     title = fm.title ? String(fm.title) : null;
+    generated = fm.generated === true;
   }
 
   // Extract title from first heading if not in frontmatter
@@ -240,7 +242,7 @@ export async function renderMyst(
   }
 
   const html = mystToHtml(tree, makeHtmlOptions(bibCache));
-  return { html: postProcess(html), date, title };
+  return { html: postProcess(html), date, title, generated };
 }
 
 export async function renderSlidesSections(
@@ -313,6 +315,10 @@ export async function renderSlidesSections(
   return { sections, title };
 }
 
+// Caller marks the insertion point with a `<!--toc-anchor-->` comment
+// (right after the title's date/nav row, before the ornamental divider) —
+// explicit, so this doesn't have to guess placement by regex-matching
+// whatever front-matter markup happens to precede the article body.
 export function injectToc(html: string): string {
   type Heading = { level: number; id: string; inner: string };
   const headings: Heading[] = [];
@@ -321,7 +327,7 @@ export function injectToc(html: string): string {
   while ((m = re.exec(html)) !== null) {
     headings.push({ level: parseInt(m[1][1]), id: m[2], inner: m[3] });
   }
-  if (headings.length < 2) return html;
+  if (headings.length < 2) return html.replace("<!--toc-anchor-->", "");
 
   function buildList(items: Heading[], from: number, minLevel: number): [string, number] {
     let out = "<ol>\n";
@@ -349,8 +355,5 @@ export function injectToc(html: string): string {
   const [list] = buildList(headings, 0, minLevel);
   const toc = `<nav class="toc">\n${list}</nav>\n`;
 
-  if (html.includes('class="note-meta"')) {
-    return html.replace(/(<div class="note-meta">[\s\S]*?<\/div>)/, `$1\n${toc}`);
-  }
-  return html.replace("</h1>", `</h1>\n${toc}`);
+  return html.replace("<!--toc-anchor-->", toc);
 }
