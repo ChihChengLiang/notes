@@ -169,19 +169,26 @@ hr {
 }
 
 .citation {
+  display: inline-block;
   color: var(--custom-9);
-  cursor: help;
+  cursor: pointer;
   position: relative;
   font-weight: 500;
+  font-size: 0.75em;
+  padding: 0.1em 0.6em;
+  border-radius: 999px;
+  background-color: var(--custom-3);
+  border: 1px solid var(--custom-6);
+  line-height: 1.6;
 }
 
 .citation:hover {
   color: var(--custom-10);
-  text-decoration: underline;
+  background-color: var(--custom-4);
 }
 
-/* Custom tooltip for citations */
-.citation-tooltip {
+/* Shared floating popover, used by both citation pills and footnote refs */
+.note-popover {
   position: absolute;
   bottom: 100%;
   left: 50%;
@@ -193,23 +200,29 @@ hr {
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 1000;
-  white-space: nowrap;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.2s ease;
   max-width: 500px;
   font-size: 0.9em;
   line-height: 1.4;
+  text-align: left;
+  font-weight: 400;
 }
 
-.citation:hover .citation-tooltip,
-.citation-tooltip:hover {
+.citation-tooltip {
+  white-space: nowrap;
+}
+
+.citation:hover .note-popover,
+.footnote-wrap:hover .note-popover,
+.note-popover:hover {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Bridge the gap between citation and tooltip so hover doesn't break */
-.citation-tooltip::before {
+/* Bridge the gap between the trigger and popover so hover doesn't break */
+.note-popover::before {
   content: '';
   position: absolute;
   top: 100%;
@@ -222,21 +235,8 @@ hr {
   color: var(--custom-12);
 }
 
-.citation-tooltip-doi {
-  display: inline-block;
-  margin-left: 8px;
-  color: var(--custom-11);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.citation-tooltip-doi:hover {
-  color: var(--custom-9);
-  text-decoration: underline;
-}
-
-/* Tooltip arrow */
-.citation-tooltip::after {
+/* Popover arrow */
+.note-popover::after {
   content: '';
   position: absolute;
   top: 100%;
@@ -244,6 +244,33 @@ hr {
   transform: translateX(-50%);
   border: 6px solid transparent;
   border-top-color: var(--custom-2);
+}
+
+/* Footnotes rendered as sidenote popovers instead of jumping to the
+   bottom-of-page list. The bottom list stays in the DOM as a fallback. */
+.footnote-wrap {
+  position: relative;
+}
+
+.footnote-wrap sup {
+  font-size: 0.75em;
+  color: var(--custom-9);
+}
+
+.footnote-wrap sup a {
+  color: inherit;
+  text-decoration: none;
+  cursor: help;
+}
+
+.footnote-wrap sup a:hover {
+  color: var(--custom-10);
+}
+
+.footnote-popover {
+  white-space: normal;
+  color: var(--custom-12);
+  text-align: left;
 }
 
 .bibliography {

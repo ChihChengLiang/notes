@@ -35,14 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const author = citation.dataset.citationAuthor;
     const year = citation.dataset.citationYear;
     const title = citation.dataset.citationTitle;
-    const doi = citation.dataset.citationDoi;
 
     // Skip if no data
     if (!author && !year && !title) return;
 
-    // Create tooltip element
+    // Create tooltip element (informational only — the pill itself is the link)
     const tooltip = document.createElement('div');
-    tooltip.className = 'citation-tooltip';
+    tooltip.className = 'note-popover citation-tooltip';
 
     // Build tooltip content
     let content = '';
@@ -55,18 +54,32 @@ document.addEventListener('DOMContentLoaded', () => {
     contentSpan.textContent = content;
     tooltip.appendChild(contentSpan);
 
-    // Add DOI link if available
-    if (doi) {
-      const doiLink = document.createElement('a');
-      doiLink.className = 'citation-tooltip-doi';
-      doiLink.href = `https://doi.org/${doi}`;
-      doiLink.target = '_blank';
-      doiLink.rel = 'noopener noreferrer';
-      doiLink.textContent = ' DOI →';
-      tooltip.appendChild(doiLink);
-    }
-
     // Append tooltip to citation
     citation.appendChild(tooltip);
+  });
+});
+
+// Footnote sidenote popover: show a footnote's content near its marker on
+// hover/click instead of forcing a jump to the bottom-of-page list. The
+// bottom list stays in the DOM untouched as a fallback (no-JS, print/PDF,
+// screen readers).
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('a[data-footnote-ref]').forEach(ref => {
+    const sup = ref.closest('sup');
+    if (!sup) return;
+    const targetId = ref.getAttribute('href')?.slice(1);
+    const item = targetId ? document.getElementById(targetId) : null;
+    if (!item) return;
+
+    const wrap = document.createElement('span');
+    wrap.className = 'footnote-wrap';
+    sup.parentNode.insertBefore(wrap, sup);
+    wrap.appendChild(sup);
+
+    const popover = document.createElement('div');
+    popover.className = 'note-popover footnote-popover';
+    popover.innerHTML = item.innerHTML;
+    popover.querySelectorAll('[data-footnote-backref]').forEach(el => el.remove());
+    wrap.appendChild(popover);
   });
 });

@@ -122,4 +122,5 @@ Real-world Tornado Cash-like systems have had critical bugs, though often differ
 > - Can't find out one of the user's wallet addresses unless the user has given it out or the adversary has a guess for what it is.
 > - ...
 
-[bibliography]
+:::{bibliography}
+:::

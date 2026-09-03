@@ -1,4 +1,3 @@
-import { dirname } from "path";
 import yaml from "js-yaml";
 import { renderMyst, renderSlidesSections, injectToc } from "./markdown-processor";
 
@@ -59,7 +58,7 @@ export async function readFrontmatterFlags(path: string): Promise<{ date: string
 }
 
 export async function renderSlides(slidesPath: string, root: string = "/"): Promise<string> {
-  const bibPath = await findBibPath(dirname(slidesPath));
+  const bibPath = await findBibPath();
   const content = await Bun.file(slidesPath).text();
   const { sections, title } = await renderSlidesSections(content, bibPath);
   const template = await Bun.file("./src/templates/reveal.html").text();
@@ -170,9 +169,9 @@ export function applyPageMeta(template: string, title: string, description: stri
     .replaceAll("{{og_description}}", escapeAttr(description));
 }
 
-async function findBibPath(topicDir: string): Promise<string | null> {
-  for (const ext of ["citation.bib", "citation.biblatex"]) {
-    const path = `${topicDir}/${ext}`;
+async function findBibPath(): Promise<string | null> {
+  for (const name of ["citations.bib", "citations.biblatex"]) {
+    const path = `./notes/${name}`;
     if (await Bun.file(path).exists()) return path;
   }
   return null;
@@ -244,7 +243,7 @@ export async function renderTopicHtml(
   const mainFile = Bun.file(`${topicDir}/main.md`);
   if (!(await mainFile.exists())) return null;
 
-  const bibPath = await findBibPath(topicDir);
+  const bibPath = await findBibPath();
   const content = await mainFile.text();
   const { html: bodyHtml, date, title } = await renderMyst(content, bibPath);
 
@@ -280,7 +279,7 @@ export async function renderReportHtml(
   const file = Bun.file(`${topicDir}/${slug}.md`);
   if (!(await file.exists())) return null;
 
-  const bibPath = await findBibPath(topicDir);
+  const bibPath = await findBibPath();
   const content = await file.text();
   const { html: bodyHtml, date, title, generated } = await renderMyst(content, bibPath);
 

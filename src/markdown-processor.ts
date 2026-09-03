@@ -42,16 +42,21 @@ function makeCitationHandlers(bibCache: any) {
     if (!bibEntry?.fields) return `<cite>[${label}]</cite>`;
 
     const firstAuthor = bibEntry.fields.author?.[0];
-    const authorName =
-      firstAuthor?.family?.[0]?.text ?? firstAuthor?.literal?.[0]?.text ?? "Unknown";
+    const authorName = firstAuthor?.family?.[0]?.text ?? firstAuthor?.literal?.[0]?.text ?? "";
     const hasMultiple = (bibEntry.fields.author?.length ?? 0) > 1;
     const authorText = hasMultiple ? `${authorName} et al.` : authorName;
     const year = bibEntry.fields.date ?? bibEntry.fields.year ?? "";
     const fullTitle = (bibEntry.fields.title ?? []).map((p: any) => p.text ?? "").join(" ");
     const title = fullTitle.length > 60 ? fullTitle.slice(0, 57) + "..." : fullTitle;
     const doi = bibEntry.fields.doi ?? "";
+    const url = bibEntry.fields.url ?? "";
+    const link = doi ? `https://doi.org/${doi}` : url;
+    const pillText = authorText ? `${authorText}, ${year}` : title || year;
 
-    return `<span class="citation" data-citation-author="${escapeHtml(authorText)}" data-citation-year="${escapeHtml(year)}" data-citation-title="${escapeHtml(title)}" data-citation-doi="${escapeHtml(doi)}">[${escapeHtml(authorText)}, ${escapeHtml(year)}]</span>`;
+    const attrs = `class="citation" data-citation-author="${escapeHtml(authorText)}" data-citation-year="${escapeHtml(year)}" data-citation-title="${escapeHtml(title)}"`;
+    return link
+      ? `<a ${attrs} href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(pillText)}</a>`
+      : `<span ${attrs}>${escapeHtml(pillText)}</span>`;
   }
 
   return {
@@ -64,6 +69,89 @@ function makeCitationHandlers(bibCache: any) {
         .map((c: any) => renderCiteNode(c))
         .join("");
       return { type: "raw", value: parts };
+    },
+  };
+}
+
+// `:::{bibliography}` directive: renders a "References" list of every source
+// actually cited (via `[@key]`) in the document, pulling full entries from
+// the global bibliography — nothing is hand-typed here.
+const bibliographyDirective = {
+  name: "bibliography",
+  run() {
+    return [{ type: "bibliography" }];
+  },
+};
+
+function collectCitedLabels(node: any, seen: Set<string>, order: string[]) {
+  if (!node || typeof node !== "object") return;
+  if (node.type === "cite") {
+    const label: string = node.label ?? node.identifier ?? "";
+    if (label && !seen.has(label)) {
+      seen.add(label);
+      order.push(label);
+    }
+  }
+  if (Array.isArray(node.children)) {
+    for (const child of node.children) collectCitedLabels(child, seen, order);
+  }
+}
+
+function joinTextFragments(fragments: any[] | undefined): string {
+  return (fragments ?? []).map((p: any) => p.text ?? "").join(" ");
+}
+
+function formatAuthorFull(a: any): string {
+  const family = a?.family?.[0]?.text;
+  const given = a?.given?.[0]?.text;
+  if (family) return given ? `${given} ${family}` : family;
+  return a?.literal?.[0]?.text ?? "";
+}
+
+function formatAuthorsFull(authors: any[] | undefined): string {
+  const names = (authors ?? []).map(formatAuthorFull).filter(Boolean);
+  if (names.length === 0) return "";
+  if (names.length === 1) return names[0];
+  return `${names.slice(0, -1).join(", ")} & ${names[names.length - 1]}`;
+}
+
+function renderBibliographyEntry(bibEntry: any): string {
+  const fields = bibEntry.fields ?? {};
+  const authors = formatAuthorsFull(fields.author);
+  const year = fields.date ?? fields.year ?? "";
+  const title = joinTextFragments(fields.title);
+  const venue = joinTextFragments(fields.booktitle ?? fields.journal);
+  const doi = fields.doi ?? "";
+  const url = fields.url ?? "";
+  const link = doi ? `https://doi.org/${doi}` : url;
+
+  const titleHtml = link
+    ? `<a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>`
+    : escapeHtml(title);
+
+  const lead = authors && year
+    ? `${escapeHtml(authors)} (${escapeHtml(year)}).`
+    : authors
+    ? `${escapeHtml(authors)}.`
+    : year
+    ? `${escapeHtml(year)}.`
+    : "";
+
+  const parts = [lead, `${titleHtml}.`, venue ? `${escapeHtml(venue)}.` : ""].filter(Boolean);
+  return `<div class="csl-entry">${parts.join(" ")}</div>`;
+}
+
+function makeBibliographyHandlers(bibCache: any, citedLabels: string[]) {
+  return {
+    bibliography(_h: any, _node: any) {
+      if (!bibCache || citedLabels.length === 0) return { type: "raw", value: "" };
+      const entries = citedLabels
+        .map((label) => Object.values(bibCache).find((e: any) => e.entry_key === label))
+        .filter(Boolean)
+        .map((e: any) => renderBibliographyEntry(e))
+        .join("\n");
+      if (!entries) return { type: "raw", value: "" };
+      return { type: "raw", value: `<div class="bibliography"><h2>References</h2>${entries}</div>` };
     },
   };
 }
@@ -197,7 +285,7 @@ const youtubeHandlers = {
   },
 };
 
-function makeHtmlOptions(bibCache: any) {
+function makeHtmlOptions(bibCache: any, citedLabels: string[] = []) {
   return {
     hast: {
       allowDangerousHtml: true,
@@ -207,6 +295,7 @@ function makeHtmlOptions(bibCache: any) {
         ...timelineHandlers,
         ...youtubeHandlers,
         ...makeCitationHandlers(bibCache),
+        ...makeBibliographyHandlers(bibCache, citedLabels),
       } as any,
     },
     stringifyHtml: { allowDangerousHtml: true },
@@ -250,7 +339,7 @@ export async function renderMyst(
 ): Promise<{ html: string; date: string | null; title: string | null; generated: boolean }> {
   const tree = mystParse(content, {
     extensions: { frontmatter: true, math: true, citations: bibPath !== null },
-    directives: [timelineDirective as any, youtubeDirective as any],
+    directives: [timelineDirective as any, youtubeDirective as any, bibliographyDirective as any],
   }) as any;
 
   // Extract frontmatter from first node if it's a yaml code block
@@ -279,7 +368,10 @@ export async function renderMyst(
     bibCache = await loadBibliography(bibPath);
   }
 
-  const html = mystToHtml(tree, makeHtmlOptions(bibCache));
+  const citedLabels: string[] = [];
+  collectCitedLabels(tree, new Set(), citedLabels);
+
+  const html = mystToHtml(tree, makeHtmlOptions(bibCache, citedLabels));
   return { html: postProcess(html), date, title, generated };
 }
 
@@ -289,7 +381,7 @@ export async function renderSlidesSections(
 ): Promise<{ sections: string[]; title: string | null }> {
   const tree = mystParse(content, {
     extensions: { frontmatter: true, math: true, blocks: true, citations: bibPath !== null },
-    directives: [timelineDirective as any, youtubeDirective as any],
+    directives: [timelineDirective as any, youtubeDirective as any, bibliographyDirective as any],
   }) as any;
 
   let title: string | null = null;
@@ -303,7 +395,10 @@ export async function renderSlidesSections(
   let bibCache: any = null;
   if (bibPath !== null) bibCache = await loadBibliography(bibPath);
 
-  const opts = makeHtmlOptions(bibCache);
+  const citedLabels: string[] = [];
+  collectCitedLabels(tree, new Set(), citedLabels);
+
+  const opts = makeHtmlOptions(bibCache, citedLabels);
   const sections: string[] = [];
 
   const renderPage = (children: any[]): string => {
