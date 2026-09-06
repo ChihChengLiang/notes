@@ -12,7 +12,12 @@ I think I got this inspiration from a panel at Devcon Thailand 2024 and some oth
 
 A **substitution view** says cryptography is just a "simulated trusted third party." Everything you can do with cryptography, you can do it with a trusted third party.
 
-A **novelty view** says cryptography is true and real. It creates a true constraints and restrictions to parties in the protocol. In enforces new physiscs in data such that they behave in a new way. There are essentially cases where trust is hard to establish and only cryptography helps you build experiences we've never had before.
+A **generation view** says cryptography is true and real. It creates a true constraints and restrictions to parties in the protocol. In enforces new physiscs in data such that they behave in a new way. There are essentially cases where trust is hard to establish and only cryptography helps you build experiences we've never had before.
+
+A similar way to frame them is:
+
+- **Defensive view:** Cryptography product is all about security -- No new utilities. The point to replace a trusted third party is to prevent the evil and harm they might do, which is a security improvement. 
+- **Offensive view:** Cryptography product can create new utilities. We're not saying weaponizing cryptography like creating the ransomware.
 
 We can argue both camps are just perspectives. Take cryptocurrency for example, we could argue that it's just a new form of payment, which we're already doing with bank services. A final form of cryptocurrency should make you feel no different from using a bank app, but offer more security and privacy. On the other hand, we could also argue that no level of bank coordination could build you this global book of balances that you can trust for any amount sent from a stranger.
 
@@ -104,6 +109,11 @@ In what conditions we can find opportunities for novelty?
 Zkemail
 ZKp2p
 Data derivatives
+
+## Implicit view vs Explicit view
+
+
+
 
 ## Weird product features
 
