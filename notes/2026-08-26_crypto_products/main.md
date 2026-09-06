@@ -14,11 +14,6 @@ A **substitution view** says cryptography is just a "simulated trusted third par
 
 A **generation view** says cryptography is true and real. It creates a true constraints and restrictions to parties in the protocol. In enforces new physiscs in data such that they behave in a new way. There are essentially cases where trust is hard to establish and only cryptography helps you build experiences we've never had before.
 
-A similar way to frame them is:
-
-- **Defensive view:** Cryptography product is all about security -- No new utilities. The point to replace a trusted third party is to prevent the evil and harm they might do, which is a security improvement. 
-- **Offensive view:** Cryptography product can create new utilities. We're not saying weaponizing cryptography like creating the ransomware.
-
 We can argue both camps are just perspectives. Take cryptocurrency for example, we could argue that it's just a new form of payment, which we're already doing with bank services. A final form of cryptocurrency should make you feel no different from using a bank app, but offer more security and privacy. On the other hand, we could also argue that no level of bank coordination could build you this global book of balances that you can trust for any amount sent from a stranger.
 
 I haven't really unpacked and described that debate in justice. But I think it would be very enlightening to unpack and spell out the weird nature of cryptographic products. That'll help us understand why, what, and how we are building, and who we build for.
