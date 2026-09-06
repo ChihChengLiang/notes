@@ -6,10 +6,12 @@
     "start": "bun run src/server.ts",
     "dev": "bun run src/server.ts",
     "build": "bun run src/build.ts",
-    "new-note": "bash new-note.sh"
+    "new-note": "bash new-note.sh",
+    "cite": "bun run src/cite.ts"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/prompts": "^2.4.9"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -19,6 +21,7 @@
     "highlight.js": "^11.11.1",
     "katex": "^0.17.0",
     "myst-parser": "^1.7.2",
-    "myst-to-html": "^1.7.2"
+    "myst-to-html": "^1.7.2",
+    "prompts": "^2.4.2"
   }
 }

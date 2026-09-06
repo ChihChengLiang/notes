@@ -30,7 +30,7 @@ We named some products here, some build by non-profits, some for-profits, some g
 
 ## The Tale of Johnny
 
-In the 1990 paper "Why Johnny Can't Encrypt," the author listed five distinct properties of security products.
+In the 1990 paper "Why Johnny Can't Encrypt," the author listed five distinct properties of security products. [@whittenWhyJohnnyCant1999]
 
 - Unmotivated users. Security is usually the second concern for users. They want their message sent, and privacy is assumed rather than something they should actively keep in mind. (TODO: is the drill-and-hole-in-the-wall discussion relevant?).
 - Abstraction. The value provided by security products is abstract.
@@ -48,7 +48,7 @@ Let's actually exam these properties carefully.
 
 ### The unmotivated user property
 
-> Security is usually a secondary goal.  People do not generally sit down at their computers wanting to manage their security; rather, they want to send email, browse web pages, or download software, and they want security in place to protect them while they do those things.  It is easy for people to put off learning about security, or to optimistically assume that their security is working, while they focus on their primary goals.  Designers of user interfaces for security should not assume that users will be motivated to read manuals or to go looking for security controls that are designed to be unobtrusive.  Furthermore, if security is too difficult or annoying, users may give up on it altogether.
+> Security is usually a secondary goal.  People do not generally sit down at their computers wanting to manage their security; rather, they want to send email, browse web pages, or download software, and they want security in place to protect them while they do those things.  It is easy for people to put off learning about security, or to optimistically assume that their security is working, while they focus on their primary goals.  Designers of user interfaces for security should not assume that users will be motivated to read manuals or to go looking for security controls that are designed to be unobtrusive.  Furthermore, if security is too difficult or annoying, users may give up on it altogether. [@whittenWhyJohnnyCant1999]
 
 Security is only an issue when the user realized its importance and has capacity to reason with it. Two instances I can recall here.
 
@@ -58,23 +58,23 @@ Security is only an issue when the user realized its importance and has capacity
 
 ### The abstraction property
 
-> Computer security management often involves security policies, which are systems of abstract rules for deciding whether to grant accesses to resources. The creation and management of such rules is an activity that programmers take for granted, but which may be alien and unintuitive to many members of the wider user population. User interface design for security will need to take this into account.
+> Computer security management often involves security policies, which are systems of abstract rules for deciding whether to grant accesses to resources. The creation and management of such rules is an activity that programmers take for granted, but which may be alien and unintuitive to many members of the wider user population. User interface design for security will need to take this into account. [@whittenWhyJohnnyCant1999]
 
 ### The lack of feedback property
 
-> The need to prevent dangerous errors makes it imperative to provide good feedback to the user, but providing good feedback for security management is a difficult problem.  The state of a security configuration is usually complex, and attempts to summarize it are not adequate.  Furthermore, the correct security configuration is the one which does what the user *really wants*, and since only the user knows what that is, it is hard for security software to perform much useful error checking.
+> The need to prevent dangerous errors makes it imperative to provide good feedback to the user, but providing good feedback for security management is a difficult problem.  The state of a security configuration is usually complex, and attempts to summarize it are not adequate.  Furthermore, the correct security configuration is the one which does what the user *really wants*, and since only the user knows what that is, it is hard for security software to perform much useful error checking. [@whittenWhyJohnnyCant1999]
 
 It's hard for users to know if they are doing the right thing. If you write your password on a sticky note, you won't know what's wrong until it's all too late.
 
 ### The barn door property
 
-> The proverb about the futility of locking the barn door after the horse is gone is descriptive of an important property of computer security:  once a secret has been left accidentally unprotected, even for a short time, there is no way to be sure that it has not already been read by an attacker. Because of this, user interface design for security needs to place a very high priority on making sure users understand their security well enough to keep from making potentially high-cost mistakes.
+> The proverb about the futility of locking the barn door after the horse is gone is descriptive of an important property of computer security:  once a secret has been left accidentally unprotected, even for a short time, there is no way to be sure that it has not already been read by an attacker. Because of this, user interface design for security needs to place a very high priority on making sure users understand their security well enough to keep from making potentially high-cost mistakes. [@whittenWhyJohnnyCant1999]
 
 Lost or stolen passwords and cryptocurrencies behave exactly this way.
 
 ### The weakest link property
 
-> It is well known that the security of a networked computer is only as strong as its weakest component. If a cracker can exploit a single error, the game is up. This means that users need to be guided to attend to all aspects of their security, not left to proceed through random exploration as they might with a word processor or a spreadsheet.
+> It is well known that the security of a networked computer is only as strong as its weakest component. If a cracker can exploit a single error, the game is up. This means that users need to be guided to attend to all aspects of their security, not left to proceed through random exploration as they might with a word processor or a spreadsheet. [@whittenWhyJohnnyCant1999]
 
 This means a user can't have just a partial understanding of the system.
 
