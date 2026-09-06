@@ -32,17 +32,9 @@ We named some products here, some build by non-profits, some for-profits, some g
 
 In the 1990 paper "Why Johnny Can't Encrypt," the author listed five distinct properties of security products. [@whittenWhyJohnnyCant1999]
 
-- Unmotivated users. Security is usually the second concern for users. They want their message sent, and privacy is assumed rather than something they should actively keep in mind. (TODO: is the drill-and-hole-in-the-wall discussion relevant?).
-- Abstraction. The value provided by security products is abstract.
-- Lack of feedback. It's hard for users to know if they are doing the right thing. If you write your password on a sticky note, you won't know what's wrong until it's all too late.
-- Barn door property. Once you let the horse leave through the barn door, there's no way to save it by closing the door. Lost or stolen passwords and cryptocurrencies behave exactly this way.
-- Weakest link. Things break at the weakest part of the system. This means a user can't have just a partial understanding of the system.
-
 The paper was an analysis of PGP software's UI. But we've seen those exact properties in wallets.
 
 The user research that followed suggests users are very rational to be unmotivated (connects to the privacy paradox), and there are debates on whether the UI should be as explicit or implicit to users as possible.
-
-For me, I'd like to translate those properties of cryptography products into the language of economics, because that would help us identify the information or human/organizational frictions and yield implications for how we produce the product. The name is "credence good."
 
 Let's actually exam these properties carefully.
 
@@ -82,11 +74,36 @@ It also means that a measure or product that improves a specific domain of secur
 
 ## Credence good: Doctors and mechanics
 
+For me, I'd like to translate those properties of cryptography products into the language of economics, because that would help us identify the information or human/organizational frictions and yield implications for how we produce the product. The name is "credence good."
+
 Products could have good or bad qualities. Some you can tell before you buy them, like fresh fruits. Some after you buy them, like a can of juice. Some, however, you can't tell even after you've experienced them yourself. That's a credence good.
 
 Do you know whether the treatment your doctor gives your body, or your mechanic gives your car, is necessary? You would never know. Services by experts are invisible, just like cryptography. Classic results show the problems of credence goods are overtreatment, undertreatment, and overcharging. Solutions to these problems are characterized by whether users are committed to the treatment after diagnosis from the expert, whether the expert is legally liable for undertreating, and whether users have the ability to verify the treatment ex post.
 
 The closest analogue for goods is food labels. Customers typically can't tell if bad ingredients were added to the food even after consumption.
+
+## Two paths for innovation
+
+### Substitution Path
+
+In this path, we assume users are ultimately agnostic to cryptography or not. Having 1 ETH on chain and 1 ETH in centralized exchange make no difference to them.
+
+Cryptography is invisible to them. Security decisions are made for them, unless they need to do something to violate it.
+
+Good examples
+
+- Signal Apps. Look, we have US minister at Deparement of War who launched invasion with Signal App. I don't think he is technically enough to reason deep cryptography. Yet, he is confident enough to trust an important decisions with it.
+    - Security decisions are made by the app designer. Users feel no difference than using Telegram. You can't send a file from Laptop to mobile though. There were some inconvenience but mostly bearable.
+- HTTPS. Browsers block access to non-https websites. But if a user intends to visit a HTTP website, maybe for web developing reason, the browser will mark the connection "insecure". It asked the user to go back, or the user can find a small text to insist visiting.
+
+
+### Novelty Path
+
+In what conditions we can find opportunities for novelty?
+
+Zkemail
+ZKp2p
+Data derivatives
 
 ## Weird product features
 
