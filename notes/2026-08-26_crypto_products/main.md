@@ -97,7 +97,7 @@ Good examples
 - HTTPS. Browsers block access to non-https websites. But if a user intends to visit a HTTP website, maybe for web developing reason, the browser will mark the connection "insecure". It asked the user to go back, or the user can find a small text to insist visiting.
 
 
-### Novelty Path
+### Generation Path
 
 In what conditions we can find opportunities for novelty?
 
@@ -107,7 +107,14 @@ Data derivatives
 
 ## Implicit view vs Explicit view
 
+If we want the users to know less about the cryptography at work. We can hide cryptography details behind. We call this implicit or invisibility view.
 
+If we want the users to be aware of what they are doing with the cryptography, we want them to be educated about the details. We call this explicit view.
+
+Note that by invisibility, we are saying a verification has been done behind the scene. The risk is addressed.
+
+- **Engineered invisibility:** complexity was resolved and then hidden. HTTPS is such example. The verification is behind the scene and the user can be out of the loop.
+- **Obscurity:** The complexity was never resolved and the risk not addressed. Blind signing a transaction is "obscure", but not Engineered invisibility.
 
 
 ## Weird product features
