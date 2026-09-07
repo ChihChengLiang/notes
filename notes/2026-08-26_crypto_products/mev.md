@@ -1,9 +1,10 @@
 ---
+title: MEV timeline
 date: 2026-08-31
 generated: true
 ---
 
-# MEV and Flashbot timeline
+# MEV timeline
 
 
 :::{timeline}

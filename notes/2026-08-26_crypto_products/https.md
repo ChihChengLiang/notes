@@ -1,5 +1,5 @@
 ---
-title: HTTPS, a timeline
+title: HTTPS timeline
 date: 2026-09-07
 generated: true
 ---

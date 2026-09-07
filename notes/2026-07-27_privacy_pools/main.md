@@ -21,7 +21,7 @@ Oct 28, 2016 — Zcash mainnet launches
 : Jens Groth publishes "On the Size of Pairing-based Non-interactive Arguments" at EUROCRYPT / IACR ePrint.[@groth16] Becomes the dominant zk-SNARK construction used by Zcash, Tornado Cash, and most later systems due to its small proof size (3 group elements) and fast verification.
 
 Jan–Feb 2017 — EIP-196 & EIP-197 proposed
-: Ethereum's precompiled contracts for elliptic-curve pairing on the alt_bn128 curve, co-authored by Vitalik Buterin and Christian Reitwiessner.[@eip196][@eip197] The primitive needed to verify zk-SNARKs cheaply inside the EVM — activated in the Byzantium hard fork later that year, making an on-chain SNARK mixer computationally feasible.
+: Ethereum's precompiled contracts for elliptic-curve pairing on the alt_bn128 curve, co-authored by Vitalik Buterin and Christian Reitwiessner.[@eip196] [@eip197] The primitive needed to verify zk-SNARKs cheaply inside the EVM — activated in the Byzantium hard fork later that year, making an on-chain SNARK mixer computationally feasible.
 
 2019 — Tornado Cash launches
 : Roman Storm, Roman Semenov & Alexey Pertsev publish the whitepaper and source code on the project's own GitHub.[@tornado-github] Reuses the Zerocash-lineage toolkit — Merkle-tree commitments, nullifiers, Groth16 zk-SNARKs — but as a generic, permissionless mixer bolted onto Ethereum, rather than a shielded pool inside a purpose-built currency.

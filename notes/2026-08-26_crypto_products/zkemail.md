@@ -1,5 +1,5 @@
 ---
-title: ZK Email, a timeline
+title: ZK Email timeline
 date: 2026-09-06
 generated: true
 ---
