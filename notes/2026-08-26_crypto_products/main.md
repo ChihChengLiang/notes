@@ -30,7 +30,9 @@ We named some products here, some build by non-profits, some for-profits, some g
 
 ## The Tale of Johnny
 
-In the 1990 paper "Why Johnny Can't Encrypt," the author listed five distinct properties of security products. [@whittenWhyJohnnyCant1999]
+> The design priorities required to achieve usable security ... are significantly different from those of general consumer software. [@whittenWhyJohnnyCant1999]
+
+In the 1990 paper "Why Johnny Can't Encrypt," the author lists five distinct properties to characterize security products. Those properties motivate us to think differently than general consumer software.
 
 The paper was an analysis of PGP software's UI. But we've seen those exact properties in wallets.
 
