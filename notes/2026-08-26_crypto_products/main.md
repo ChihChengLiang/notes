@@ -174,7 +174,7 @@ We can build some layers and tiers between the implicit and explict. I think the
 
 What does the framework we developed shed lights on these?
 
-I encountered bunch of weird cryptography feature ideas in the past.
+I encountered bunch of weird cryptography feature ideas in the past. They are weird in an interesting way. But I'll put them in a back burner. No expansion now.
 
 - Deterrence features (fraud proofs, slashing, rage-quit, nuclear MAD, burglar alarms, security cameras): the bad event they respond to is endogenous.
 - Insurance features (recovery phrases, 2FA backup codes, fire extinguishers, deposit insurance payouts): the triggering event is exogenous
@@ -182,3 +182,24 @@ I encountered bunch of weird cryptography feature ideas in the past.
 - Camouflage (deniable proofs, decoy volumes, mixnets): value comes from other people's constant, contentless usage.
     - In MACI, the anti-bribing feature require the user to send a swap-key action and take the bribe. 
     - In deniable proofs of zkID usage, expired proofs might still be valuable for marketing analysis, unless enough fake outdated proof is in circulation to make the data noisy enough.
+
+## What can we think better about crypto products?
+
+Originally, I started looking into this topic to find a kind of crypto exceptionalism that might shed some light on funding and sustainability topics. But that seems to be a longer goal. For this post, I think it is already valuable if we can get some views on product design. Here's my takeaway:
+
+### Diagnose the components
+
+What parts of the product is an "experiecne good" component? What parts are "credence good"?
+
+### Avoid market the credence-good part as a feature
+
+It is great to provide transparency on mechanism. But we shouldn't ask the users to do unpaid product audit by explaining cryptography to them. Try market how those credence component make the experiecne good component differnet.
+
+### Prefer absorb judgment over educate the user
+
+Ask should user solve this problem themself? Does this problem belong to your product? Maybe anti-virus is the OS problem. Should browser just default to block HTTP?
+
+I think this exercise helps positioning the product. Are we just an band-aid to the problem? Or are we fixing a root problem?
+
+
+
