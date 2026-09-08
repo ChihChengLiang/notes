@@ -49,6 +49,7 @@ Security is only an issue when the user realized its importance and has capacity
 1. Ukraine had the lowest installation count of the Signal app before the war, and then it rose to the top after the war began, showing that security is only important when it's scarce. [source](https://www.statista.com/chart/27161/pre-post-invasion-downloads-signal-telegram-ukraine-russia/).
 2. I remember in RightsCon there was security advisor who eventually gave up buying Youbikeys for activists, due to a tight funding. This showing the capacity matters too, even though the security demand exists.
 
+Security is an insurance to bad events, so for users to take actions, the bad events are bad and likely enough, and the insurance is affordable.
 
 ### The abstraction property
 
