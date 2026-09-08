@@ -107,6 +107,10 @@ Are there credence goods softwares? Yes.
 
 As we can see, credence products are terrible products. They are an ad hoc patch to some problems that shouldn't happen in the first place. [TODO: exapnd on this]
 
+So we can kind of decomposite a product into experience good component and credence good component. When we build an experience good with cryptography, that's the novelty part. We're saying something with clear causality, observable to even inexperienced users. Message sent, balance sent. They might have barn properties but they have feedbacks.
+
+
+
 ## Two paths for innovation
 
 ### Substitution Path
