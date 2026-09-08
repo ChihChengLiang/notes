@@ -112,29 +112,6 @@ So we can kind of decomposite a product into experience good component and crede
 
 Take ZKp2p for example. One usage is to use zkTLS to prove a transations on Venmo. Then you can use this to build a swap from USD to crypto. The users don't care how it is implemented in cryptography. The user can know that if their USD is successfully converted to crypto.
 
-## Two paths for innovation
-
-### Substitution Path
-
-In this path, we assume users are ultimately agnostic to cryptography or not. Having 1 ETH on chain and 1 ETH in centralized exchange make no difference to them.
-
-Cryptography is invisible to them. Security decisions are made for them, unless they need to do something to violate it.
-
-Good examples
-
-- Signal Apps. Look, we have US minister at Deparement of War who launched invasion with Signal App. I don't think he is technically enough to reason deep cryptography. Yet, he is confident enough to trust an important decisions with it.
-    - Security decisions are made by the app designer. Users feel no difference than using Telegram. You can't send a file from Laptop to mobile though. There were some inconvenience but mostly bearable.
-- HTTPS. Browsers block access to non-https websites. But if a user intends to visit a HTTP website, maybe for web developing reason, the browser will mark the connection "insecure". It asked the user to go back, or the user can find a small text to insist visiting.
-
-
-### Generation Path
-
-In what conditions we can find opportunities for novelty?
-
-Zkemail
-ZKp2p
-Data derivatives
-
 ## Implicit view vs Explicit view
 
 If we want the users to know less about the cryptography at work. We can hide cryptography details behind. We call this implicit or invisibility view.
