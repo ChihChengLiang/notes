@@ -158,7 +158,15 @@ We can build some layers and tiers between the implicit and explict. I think the
 - Infra got adopted, but require user's active attention. This is the explicit statge. Sometimes this is also an acceptable place to stop.
     - Limitation of automation: Sending a transaction requires a human check the receiver and balance. It is a part of the intent that machine can't decide for human. The gas fee decision is mostly delegated out today, this is mostly because of the dynamic fee mechanism reduce the need for human involvement.
     - Risk of Conflict of interest: Tools are all built by different parties. The verification process should be free from the CoI risk of the target. The Binance Proof of Reserve page shows you a elaborate explanation about merkle trees and a video on how to verify the PoR. Why can't they just show a green check on their website? Because if the green check is provided by the target you are verify against, it wouldn't be convincing.
-    - Stakes too high and errors too irreversible to delegate. 
+    - Stakes too high and errors too irreversible to delegate.
+    - The above assumes we reached the pareto frontier. If we're still inside, we ask where the inefficiency comes from.
+        - Expertise from user
+            - They can be educated: Self-soverign users
+        - Expertise can be borrowed. Automate out the decisions from the user. One example is the slash protection. In the beginning of merge, people need to carefully migrate their servers, so that no two same instances submit messages at the same time -- subject to heavy slashing penalty. Clients nowadays implement slash protection mechanism, which internalize the idea, and let the new machine observe the network and wait automatically to make sure they don't have dopperganger.
+            - Who to borrow?
+                - from feature provider: Browsers decide to make all HTTP unsafe. Set a smart default for you.
+                - From internation standard body.
+                - From government. TW Digital wallet build the mobile wallet for you.
 - Invisible. The infra is mature enough. It can work behind the scene and without human in the loop. HTTPS is like this. Users can still opt in to visit "unsafe" website if they cross some intentional friction.
 
 
