@@ -110,7 +110,7 @@ As we can see, credence products are terrible products. They are an ad hoc patch
 
 So we can kind of decomposite a product into experience good component and credence good component. When we build an experience good with cryptography, that's the novelty part. We're saying something with clear causality, observable to even inexperienced users. Message sent, balance sent. They might have barn properties but they have feedbacks.
 
-
+Take ZKp2p for example. One usage is to use zkTLS to prove a transations on Venmo. Then you can use this to build a swap from USD to crypto. The users don't care how it is implemented in cryptography. The user can know that if their USD is successfully converted to crypto.
 
 ## Two paths for innovation
 
@@ -146,11 +146,31 @@ Note that by invisibility, we are saying a verification has been done behind the
 - **Engineered invisibility:** complexity was resolved and then hidden. HTTPS is such example. The verification is behind the scene and the user can be out of the loop.
 - **Obscurity:** The complexity was never resolved and the risk not addressed. Blind signing a transaction is "obscure", but not Engineered invisibility.
 
+### Human in the Security Loop
+
+We can build some layers and tiers between the implicit and explict. I think the recent AI loop engineering concept is helpful here.
+
+- Vulnerable: This is the baseline. Users either do nothing or action subject to attacker's mercy. Example: HTTP with person in the middle attack. Blind transaction signing is too.
+- Niche infra: This is when an infra emerged but for some reasons it didn't widely deployed to reach the next stage. It could be,
+    - Threat not justifying it
+    - Too costly to deploy
+    - Other frictions
+- Infra got adopted, but require user's active attention. This is the explicit statge. Sometimes this is also an acceptable place to stop.
+    - Limitation of automation: Sending a transaction requires a human check the receiver and balance. It is a part of the intent that machine can't decide for human. The gas fee decision is mostly delegated out today, this is mostly because of the dynamic fee mechanism reduce the need for human involvement.
+    - Risk of Conflict of interest: Tools are all built by different parties. The verification process should be free from the CoI risk of the target. The Binance Proof of Reserve page shows you a elaborate explanation about merkle trees and a video on how to verify the PoR. Why can't they just show a green check on their website? Because if the green check is provided by the target you are verify against, it wouldn't be convincing.
+    - Stakes too high and errors too irreversible to delegate. 
+- Invisible. The infra is mature enough. It can work behind the scene and without human in the loop. HTTPS is like this. Users can still opt in to visit "unsafe" website if they cross some intentional friction.
+
 
 ## Weird product features
 
-This is another thread of discussion. I encountered bunch of weird cryptography feature ideas in the past. I list them here. Will expand in the future.
+What does the framework we developed shed lights on these?
+
+I encountered bunch of weird cryptography feature ideas in the past.
 
 - Deterrence features (fraud proofs, slashing, rage-quit, nuclear MAD, burglar alarms, security cameras): the bad event they respond to is endogenous.
 - Insurance features (recovery phrases, 2FA backup codes, fire extinguishers, deposit insurance payouts): the triggering event is exogenous
+    - Users' attentions are required during emergency. fire extinguishers requires some normal day training, so I guess same for recovery phrases and 2FA backup codes.
 - Camouflage (deniable proofs, decoy volumes, mixnets): value comes from other people's constant, contentless usage.
+    - In MACI, the anti-bribing feature require the user to send a swap-key action and take the bribe. 
+    - In deniable proofs of zkID usage, expired proofs might still be valuable for marketing analysis, unless enough fake outdated proof is in circulation to make the data noisy enough.
