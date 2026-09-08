@@ -74,6 +74,13 @@ This means a user can't have just a partial understanding of the system.
 
 It also means that a measure or product that improves a specific domain of security might feel like not valuable. Since it doesn't address the weakest link. A digital wallet with selective disclosure feature minimize a user's exposure of private data to a convenient store when getting their packages. But it might feel pointless if the user already exposed their private data through the store's membership program. That doesn't mean the wallet is a unneeded infrastructure. It just not being appreciated yet.
 
+### Anything else I'd like to add?
+
+#### Adversarial driven
+
+Security products are designed on the threat model assumption. So that includes the assumption to your attackers capabilities. You have to change how to use a multisig safe, when the north korean can hack the UI. You need to migrate to post quantum cryptography when you assume the attacker getting closer to break classic computing cryptography. 
+
+
 ## Credence good: Doctors and mechanics
 
 For me, I'd like to translate those properties of cryptography products into the language of economics, because that would help us identify the information or human/organizational frictions and yield implications for how we produce the product. The name is "credence good."
@@ -83,6 +90,22 @@ Products could have good or bad qualities. Some you can tell before you buy them
 Do you know whether the treatment your doctor gives your body, or your mechanic gives your car, is necessary? You would never know. Services by experts are invisible, just like cryptography. Classic results show the problems of credence goods are overtreatment, undertreatment, and overcharging. Solutions to these problems are characterized by whether users are committed to the treatment after diagnosis from the expert, whether the expert is legally liable for undertreating, and whether users have the ability to verify the treatment ex post.
 
 The closest analogue for goods is food labels. Customers typically can't tell if bad ingredients were added to the food even after consumption.
+
+- **Search goods:** quality can be checked *before* buying (an apple's freshness)
+- **Experience goods:** quality can be checked *after* using it (a restaurant meal, a movie)
+- **Credence goods:** can't judge quality even after using it, because you lack the expertise to evaluate it. (Docker's treatment, mechanic's fix)
+
+So I think most of the consumer softwares are search goods or experience goods. For Youtube or Netflix, you can browse what content you can see then subscribe. For an AI or an operating system, you probably need to use it to know if it suits you or not. 
+
+Are there credence goods softwares? Yes. 
+
+- Antivirus: Are they really doing a good job? You don't actually know
+- VPNs: If you use it for escaping geo-fensing, then it is an experience good. Are they really "no-logs"? You don't actually know.
+- Identity-theft/dark-web monitoring services. I heard this the first time. I never use one before. The service alert subscribers if something bad happens. Very likily you never know if it is doing a good job.
+- PC cleaner/optimizer: if claims some system performance problem being fixed. Most of the users have no knowledge to verify that.
+- Ad blockers / privacy browsers claiming to block trackers. I think if users wants to, they can open another browser to verify it. Otherwise, it just sits in the background and shows you how many ads and trackers are blocked. It's interesting to see how the product trying to get user's attention of their existence, while the best job they can do is to stay invisible.
+
+As we can see, credence products are terrible products. They are an ad hoc patch to some problems that shouldn't happen in the first place. [TODO: exapnd on this]
 
 ## Two paths for innovation
 
