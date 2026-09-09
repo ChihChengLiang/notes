@@ -139,6 +139,15 @@ I remember my neuro surgent friend who did a regular health check. He is out-exp
 
 I have personal experience too. I've developing zk related apps for years. However, when people hand me a new cryptography scheme, I realized a lack of capability to evaluate it. I noticed I'm only experienced at implementing cryptography, but not evaluating they are even sound in first place. That requires another type of years of training. I know when to question if a snark require a second phase setup, but take credence to a new snark scheme -- trusting cryptographers are doing their jobs well.
 
+### Resolve and refine on the substitution vs. generation
+
+With the credence discussion in place, we can kind of refine the substitution and the generation view.
+
+We shouldn't see them as a dichotomy like the introduction section did.
+
+zkp2p is an interesting case. From a substitution view, we can ask an exchange to accept Venmo payment, that reproduced zkp2p with a 3rd party setup. The problem is that, unlike most of the substitution cases where 3rd party solution preceed crypto solutions, zkp2p happened first.
+
+
 
 As we can see, credence goods are terrible products -- they're ad hoc patches for problems that shouldn't have existed in the first place. [TODO: expand on this]
 
