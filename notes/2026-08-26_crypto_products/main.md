@@ -30,22 +30,26 @@ We've named a few products here already -- some built by non-profits, some for-p
 
 ## Definitions and boundaries
 
-Crypto products, in our context, are products that use cryptography as a non-trivial component or feature.
+Crypto products, in our context, are products that use cryptography as a non-trivial component. Here we give only a rough definition here, because the Johnny properties listed below are what I consider the real distinguishing featues for crypto products.
 
 Here are crypto products:
-- Signal:
+- Signal messager: It contains many cryptography features. Let's just name one: Private Contact Discovery. It allows Signal to match your contacts without uploading the address book.
 - HTTPS: We could argue the a browser is a crypto product. It helps users to verify a signature.
 - PGP signer: users use digital signature here.
 - dark forest the game: it use zkp and smart contract has main in game mechanism
 - Cryptocurrency wallets. This is a crypto product and user needs to sign transactinos with it.
+- TOTP (Google Authenticator-style): User gets six digits from a derived from timestamp and shared secret with service. It's cryptography at work, so yes.
 
 Here are products that relates to cryptography or cryptocurrencies, but are not crypto products:
 
 - Rotki, a dashboard to help you keep track of your cryptocurrency portfolio.
 - Etherscan: A dashbord to help users to search a transaction or block histories of a blockchain.
 - l2beat: Reports a summary of L2 projects. Highly related to blockchain but users don't interact with cryptography 
-- Anti-virus software. It is a security product, but use no cryptography at all.
+- Anti-virus software. It is a security product, but the core feature is irrelavent to cryptography at all.
+- Bank apps: They might use HTTPS and authentication for users consent. But those are standard low level infrastructure. Users might need to login with password and do a 2FA sign-in. but those features are trivial.
+- SMS-based 2FA: User gets six digits sent to their phone. The point is to check if user own the phone number. No cryptography at work.
 
+We also exclude developer toolings from the definition of crypto products. Circom is a tooling to build zk circuits, but to write a circuit with it, the developer don't use any live cryptography feature at all.
 
 ## The Tale of Johnny
 
