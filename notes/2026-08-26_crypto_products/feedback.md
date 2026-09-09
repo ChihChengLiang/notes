@@ -2,37 +2,29 @@
 
 Not for publication (not in SUMMARY.md, won't render). Working notes on structure and argument gaps, for the author to resolve — no content written here.
 
-## Open threads (promised, not paid off)
+Updated after the "Definitions and boundaries" and "Credence-goodness is relative" / "Resolve and refine" additions.
 
-- [ ] **Substitution vs. generation view drops out.** The intro sets up this as the central dichotomy, but nothing after the Introduction section explicitly revisits it. The rest of the piece (Johnny's properties, credence goods, implicit/explicit) reads as an argument mostly *about* substitution-view products (invisible, credence-good, indistinguishable-from-a-trusted-third-party). Where do generation-view products (things crypto makes newly possible) fit this framework? Do they escape the credence-good trap because their novelty is visible, or are they just as opaque?
-- [ ] **"We'll come back to these" (non-profit / for-profit / government products) never happens.** Line ~29 promises a return to who builds these products, but the essay never sorts or revisits the named products along that axis. Either pay it off or cut the promise.
-- [ ] **Opening question never gets a direct answer.** "Do cryptography products create a genuinely new experience for users?" is the essay's frame, but the ending's three takeaways are about product-design tactics, not a verdict on the opening question. Worth a closing paragraph that answers it directly (even if the answer is "it depends, here's the axis").
-- [ ] **"Why, what, how, and who" (end of Introduction) is under-delivered.** The intro promises the piece will illuminate why/what/how we build and who we build for. The conclusion only really addresses "what" (which components) and a bit of "how" (absorb vs. educate). "Who builds this" is untouched.
+## Resolved since last pass
 
-## Frameworks that need bridging
+- [x] **Substitution vs. generation view no longer drops out.** "Resolve and refine on the substitution vs. generation" ties it back explicitly using the zkp2p example and the relativity-of-credence-goodness idea (layperson sees substitution, expert sees generation).
+- [x] **Abstraction property now has prose.** The new paragraphs on digital signatures and analogy-failure fill what was previously just a bare block quote.
+- [x] **"What counts as a crypto product" is now defined.** The new "Definitions and boundaries" section gives a working definition plus is/isn't lists (Signal, HTTPS, PGP, Dark Forest, wallets, TOTP vs. Rotki, Etherscan, l2beat, antivirus, bank apps, dev tooling).
+- [x] **Crypto-the-field vs. crypto-the-asset drift is substantially reduced.** Separating "crypto products" from "products related to cryptocurrencies" (Rotki, Etherscan, l2beat) gives readers a clear axis to hold onto.
+- [x] **One framework-bridging link now exists.** "Usually this is the abstraction, lack-of-feedback, and barn-door properties combining to produce the unmotivated-user problem" (under Underuse) explicitly connects Johnny's properties to the credence-good discussion. This was flagged as missing last round — worth doing the same for the other two properties (weakest link, adversarial-driven) if you want the bridge to feel complete.
 
-The essay builds three separate frameworks in sequence but doesn't state how they relate to each other. Right now it reads as three mini-essays stapled together:
+## Still open from before
 
-1. Johnny's five properties (+ your added "adversarial driven")
-2. Credence good / experience good / search good
-3. Implicit vs. explicit + the human-in-the-loop ladder
+- [ ] **"We'll come back to these" (non-profit / for-profit / government builders) still unpaid.** The new Definitions section categorizes products by crypto-or-not, not by who builds them. The promise from the intro is still just sitting there.
+- [ ] **Opening question still isn't answered head-on.** "Do cryptography products create a genuinely new experience for users?" now effectively *has* an answer buried in "Resolve and refine" (depends on the user's expertise), but it's never stated as an answer to the opening question, and the conclusion doesn't reference it either.
+- [ ] **"Why, what, how, and who"** — "what" is now well covered (Definitions section) and "how" gets partial coverage (underuse/misuse, absorb-vs-educate). "Who should build this" is still untouched anywhere in the piece.
+- [ ] **Implicit/explicit ladder still isn't bridged to credence goods.** Can a credence good ever reach "invisible," or is it structurally stuck at "requires attention" because verification is impossible by definition? Still the most natural unclaimed synthesis point.
+- [ ] **"Sometimes this is also an acceptable place to stop"** (adopted-but-requires-attention tier) — still asserted, not argued.
+- [ ] **Conclusion still only harvests the credence-good framework**, and now there's more on the table it could pull from: the underuse/misuse split, the relativity-of-credence-goodness point, and the substitution/generation resolution none currently show up in "What can we think better about crypto products?"
 
-- [ ] Is credence-good-ness a *cause* of some of Johnny's properties (e.g. lack of feedback, abstraction), or an independent lens on the same phenomenon? Right now they're presented as parallel without a stated relationship.
-- [ ] Where does a credence good sit on the implicit/explicit ladder? Can a credence good ever reach "invisible," or is it structurally stuck at "requires attention" because verification is impossible by definition? This feels like the most natural synthesis point in the piece and it's currently missing.
-- [ ] The conclusion's three takeaways only use the credence-good framework. Johnny's properties and the ladder don't cash out into the ending at all — either fold them in or make clear why they were scene-setting rather than load-bearing.
+## New since this pass
 
-## Uneven treatment
-
-- [ ] **The abstraction property section has no prose** — just the block quote, no worked example or commentary, unlike every other property (unmotivated user, feedback, barn door, weakest link, adversarial driven) which gets 1–2 paragraphs. Reads as an accidental gap rather than a deliberate short entry.
-- [ ] **"Sometimes this is also an acceptable place to stop"** (adopted-but-requires-attention tier) — under what conditions is stopping at "explicit" acceptable vs. a failure to reach "invisible"? Currently asserted, not argued.
-- [ ] **HTTPS is reused as the go-to invisibility example three times** (intro anecdote, engineered-invisibility bullet, ladder's "Invisible" tier). Consider whether a second example would carry more weight than repetition.
-
-## Definitional gaps
-
-- [ ] **What counts as a "cryptography product" is never pinned down.** Most of the worked examples in the credence-good section (antivirus, VPN, dark-web monitoring, PC cleaner, ad blockers) aren't cryptography products at all — they're security/privacy software more broadly, several with no cryptography involved. If the claim is "cryptography products are a subset of credence/security goods," that subset relationship should be stated; otherwise the essay's scope silently drifts from "cryptography" to "security software in general."
-- [ ] **"Crypto" drifts between two meanings** — cryptography-the-field (FHE games, zkID, wallets) and crypto-the-asset-class (cryptocurrency, USD-to-crypto swap). The intro's cryptocurrency example is doing double duty as both. Might be worth flagging explicitly where the argument is about cryptography-as-technique vs. cryptocurrency-as-asset, since they don't always face the same UX problem.
-
-## Smaller notes
-
-- [ ] MACI bullet and the zkID deniable-proof bullet are both fairly dense/jargon-heavy compared to the rest of "Weird product features" — but you've already flagged that whole section as back-burner, so may not be worth touching yet.
-- [ ] No counterargument or limits-of-the-analogy section for the credence-good framing itself (e.g., where the doctor/mechanic analogy breaks down for software). Not required, but its absence means the framework is asserted rather than stress-tested.
+- [ ] **SMS-2FA sits under the "Here are crypto products" list but is described as having no cryptography at work.** It reads like a deliberate contrast bullet (TOTP vs. SMS), but as currently placed it's a counter-example living inside the "yes" list rather than the "no" list — worth moving down to the "not crypto products" list, or making the contrast structure explicit (e.g. a paired sub-bullet).
+- [ ] **The claim "Johnny's properties are the *real* distinguishing feature of crypto products" is asserted but not tested against the examples.** The actual criterion used to sort the is/isn't lists is "does it use cryptography," not "does it exhibit Johnny's five properties." If there's a non-crypto product that also exhibits abstraction / lack-of-feedback / barn-door (e.g. legal contracts, insurance policies), Johnny's properties alone wouldn't distinguish crypto products either — worth either testing this claim against a counterexample or softening it.
+- [ ] **The credence-good section's software examples (antivirus, VPN, PC cleaner, ad blockers) are all things the new Definitions section explicitly excludes from "crypto products."** This was a soft tension before; now that crypto products have a strict definition, it's sharper. Probably fine as a deliberate move (establish the general economic concept with familiar examples, then narrow to crypto), but a single bridging sentence would keep a careful reader from wondering if the two sections contradict each other.
+- [ ] **The substitution/generation "resolution" quietly changes the question.** It resolves "is this cryptographically new" into "does this *feel* new to a given user" (a function of their expertise). That's a reasonable and interesting move, but it's a reframing of the original dichotomy rather than a resolution of it as originally posed — might be worth one sentence owning that shift explicitly, so it doesn't read as sleight of hand.
+- [ ] **HTTPS now appears as an example a fourth time** (added to the new Definitions list, on top of the intro anecdote, the engineered-invisibility bullet, and the ladder's "Invisible" tier). Was flagged as repetitive at 3; still true, more so now.

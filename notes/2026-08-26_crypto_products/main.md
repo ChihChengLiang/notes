@@ -30,25 +30,26 @@ We've named a few products here already -- some built by non-profits, some for-p
 
 ## Definitions and boundaries
 
-Crypto products, in our context, are products that operate cryptography as a non-trivial component. Here we give only a rough definition here, because the Johnny properties listed below are what I consider the real distinguishing featues for crypto products.
+Crypto products, in our context, are products that use cryptography as a non-trivial component. We give only a rough definition here, because the Johnny properties listed below are what I consider the real distinguishing features of crypto products.
 
 Here are crypto products:
-- Signal messager: It contains many cryptography features. Let's just name one: Private Contact Discovery. It allows Signal to match your contacts without uploading the address book.
-- HTTPS: We could argue the a browser is a crypto product. It helps users to verify a signature.
-- PGP signer: users use digital signature here.
-- dark forest the game: it use zkp and smart contract has main in game mechanism
-- Cryptocurrency wallets. This is a crypto product and user needs to sign transactinos with it.
-- TOTP (Google Authenticator-style): User gets six digits from a derived from timestamp and shared secret with service. It's cryptography at work, so yes. SMS-based 2FA: User gets six digits sent to their phone. The point is to check if user own the phone number. No cryptography at work.
+- **Signal messenger:** it contains many cryptography features. Let's just name one -- Private Contact Discovery, which lets Signal match your contacts without uploading your address book.
+- **HTTPS:** we could argue a browser is a crypto product -- it helps users verify a signature.
+- **PGP signing:** users use digital signatures here.
+- **Dark Forest (the game):** it uses ZKPs and smart contracts as a core in-game mechanism.
+- **Cryptocurrency wallets:** a crypto product, since the user needs to sign transactions with it.
+- **TOTP (Google Authenticator-style):** the user gets six digits derived from a timestamp and a secret shared with the service -- that's cryptography at work, so yes.
+- **SMS-based 2FA:** the user gets six digits sent to their phone. The point is just to check that they own the phone number -- no cryptography at work.
 
-Here are products that relates to cryptography or cryptocurrencies, but are not crypto products:
+Here are products that relate to cryptography or cryptocurrencies, but aren't crypto products:
 
-- Rotki, a dashboard to help you keep track of your cryptocurrency portfolio.
-- Etherscan: A dashbord to help users to search a transaction or block histories of a blockchain.
-- l2beat: Reports a summary of L2 projects. Highly related to blockchain but users don't interact with cryptography 
-- Anti-virus software. It is a security product, but the core feature is irrelavent to cryptography at all.
-- Bank apps: They might use HTTPS and password authentication. but the browser implements and verifies the protocol; the bank app merely consumes a browser that already did.
+- **Rotki:** a dashboard that helps you keep track of your cryptocurrency portfolio.
+- **Etherscan:** a dashboard that helps users search transaction or block history on a blockchain.
+- **l2beat:** reports a summary of L2 projects. Highly related to blockchain, but users don't interact with cryptography directly.
+- **Antivirus software:** a security product, but its core feature has nothing to do with cryptography.
+- **Bank apps:** they might use HTTPS and password authentication, but the browser implements and verifies the protocol -- the bank app merely consumes a browser that already did the work.
 
-We also exclude developer toolings from the definition of crypto products. Circom is a tooling to build zk circuits, but to write a circuit with it, the developer don't use any live cryptography feature at all.
+We also exclude developer tooling from the definition of crypto products. Circom is a tool for building ZK circuits, but writing a circuit with it doesn't involve using any live cryptography feature.
 
 ## The Tale of Johnny
 
@@ -77,11 +78,11 @@ Security is insurance against bad events. For users to act, the bad event has to
 
 > Computer security management often involves security policies, which are systems of abstract rules for deciding whether to grant accesses to resources. The creation and management of such rules is an activity that programmers take for granted, but which may be alien and unintuitive to many members of the wider user population. User interface design for security will need to take this into account. [@whittenWhyJohnnyCant1999]
 
-The original paper talked about policies. But let's recognize the fact that cryptography itself is abstract. 
+The original paper talked about policies, but let's recognize that cryptography itself is abstract.
 
-For example, what is a digital signature? We are attaching a docuemnt some very specific bytes, which is verifible with an algorithsm, that only people holds a specific knowledge, the secret key, could pass the algorithm check.
+For example, what is a digital signature? We're attaching a document to some very specific bytes, verifiable by an algorithm that only passes for someone holding a specific piece of knowledge -- the secret key.
 
-We have to rely on lots of analogies, like signing on a paper, keys to a door, to transfer users knowledge about physical world to reason the new physics of data. And sometimes the analogy failed in a spectacle way, like what does it mean to "sign" a message with a "key"? Typically, people sign on a paper with a pen.
+We have to rely on a lot of analogies -- signing a paper, keys to a door -- to transfer users' knowledge of the physical world so they can reason about this new physics of data. And sometimes the analogy fails in a spectacular way: what does it even mean to "sign" a message with a "key"? Typically, people sign a paper with a pen.
 
 ### The lack of feedback property
 
@@ -107,7 +108,7 @@ It also means a product that improves one specific domain of security can feel w
 
 #### Adversarial driven
 
-Security products are designed around a threat model assumption -- including assumptions about your attacker's capabilities. Bybit attack shows you have to change how you use a multisig safe once North Korean hackers can compromise the UI. You need to migrate to post-quantum cryptography once you assume attackers are getting closer to breaking classical cryptography.
+Security products are designed around a threat-model assumption -- including assumptions about your attacker's capabilities. The Bybit attack shows you have to change how you use a multisig safe once North Korean hackers can compromise the UI. You need to migrate to post-quantum cryptography once you assume attackers are getting closer to breaking classical cryptography.
 
 
 ## Credence good: Doctors and mechanics
@@ -136,30 +137,30 @@ Are there credence-good softwares? Yes.
 
 ### Credence-goodness is relative
 
-From the story of doctors and mechanics, we can tell that credence good is not an absolute property -- it depends on how much expertise you have to evaluate a a product.
+From the story of doctors and mechanics, we can tell that credence-goodness isn't an absolute property -- it depends on how much expertise you have to evaluate a product.
 
-I remember my neuro surgent friend who did a regular health check. He is out-expert than the doctor who proform the check on the neuro panel, so he can critically point out some nuances that the GP failed to see. This shows that the diagosis is not a credence good to my friend, at least on the neuro panel.
+I remember a friend of mine, a neurosurgeon, who went in for a regular health check. He's more expert than the doctor performing the check on the neuro panel, so he could critically point out nuances the GP missed. This shows the diagnosis wasn't a credence good to my friend, at least not on the neuro panel.
 
-I have personal experience too. I've developing zk related apps for years. However, when people hand me a new cryptography scheme, I realized a lack of capability to evaluate it. I noticed I'm only experienced at implementing cryptography, but not evaluating they are even sound in first place. That requires another type of years of training. I know when to question if a snark require a second phase setup, but take credence to a new snark scheme -- trusting cryptographers are doing their jobs well.
+I have personal experience too. I've been developing ZK-related apps for years. But when someone hands me a new cryptography scheme, I realize I lack the capability to evaluate it. I'm only experienced at implementing cryptography, not at evaluating whether it's even sound in the first place -- that requires a different, years-long kind of training. I know to question whether a SNARK needs a second-phase setup, but I take a new SNARK scheme on credence, trusting that the cryptographers did their jobs well.
 
-For experts or people have been in crypto long enough, lot's of products built on top of programmable cryptography feels like experience good to them. Not to the average users with no experiencce in cryptography. They use it like credence good.
+For experts, or people who've been in crypto long enough, a lot of products built on programmable cryptography feel like an experience good. Not so for the average user with no experience in cryptography -- to them, it's a credence good.
 
-We shouldn't think crypto products are just for experts. More people should enjoy the benefits the crypto products brings. Some of the features have positive externality too. We should minimize information leak from our everyday digital interactions. Those have real social costs to frauds and scams. More adoptions to crypto products have group immunity effects, so we should figure out a way for average people to adopt crypto products.
+We shouldn't think crypto products are just for experts. More people should get to enjoy the benefits they bring. Some of these features have positive externalities too: minimizing information leakage from our everyday digital interactions has real social costs attached to fraud and scams. Wider adoption of crypto products also has herd-immunity effects, so we should figure out how to get average people to adopt them.
 
-The main problem for average people to adopt crypto products is underuse and misuse.
+The main problem keeping average people from adopting crypto products is underuse and misuse.
 
-- underuse: People lack of information on the value of product. So they don't adopt. Usually this is abstraction + lack of feedback + barn door at work caused the unmotivated user.
-- misuse: People know the value of the product, lack of knowledge to use it properly. This includes overuse case.
+- **Underuse:** people lack information on the value of the product, so they don't adopt it. Usually this is the abstraction, lack-of-feedback, and barn-door properties combining to produce the unmotivated-user problem.
+- **Misuse:** people know the value of the product but lack the knowledge to use it properly. This includes the overuse case.
 
 ### Resolve and refine on the substitution vs. generation
 
-With the credence discussion in place, we can kind of refine the substitution and the generation view.
+With the credence-good discussion in place, we can refine the substitution and generation views.
 
-We shouldn't see them as a dichotomy like the introduction section did.
+We shouldn't treat them as a strict dichotomy, the way the introduction did.
 
-zkp2p is an interesting case. One use case is zkTLS proving a transaction on Venmo, which you can then use to build a swap from USD to crypto. The user doesn't care how it's implemented in cryptography -- they just want to know whether their USD was successfully converted. From a substitution view, we can ask an exchange to accept Venmo payment, that reproduced zkp2p with a 3rd party setup. The problem is that, unlike most of the substitution cases where 3rd party solution preceed crypto solutions, zkp2p happened first.
+zkp2p is an interesting case. One use case is zkTLS proving a transaction on Venmo, which you can then use to build a swap from USD to crypto. The user doesn't care how it's implemented in cryptography -- they just want to know whether their USD was successfully converted. From a substitution view, we could just ask an exchange to accept Venmo payments directly -- that reproduces zkp2p with a third-party setup instead. The problem is that, unlike most substitution cases, where the third-party solution precedes the crypto one, zkp2p came first.
 
-For the layperson, zkp2p is just a substitution of what they usually do in exchange. The USD to crypto swap remains the same. For experts, they see zkp2p is something new. 
+For the layperson, zkp2p is just a substitute for what they'd otherwise do at an exchange -- the USD-to-crypto swap feels the same either way. For experts, zkp2p is something genuinely new.
 
 So we can decompose a product into an experience-good component and a credence-good component. When we build the experience-good part with cryptography, that's the novelty: we're delivering something with clear causality, observable even to inexperienced users -- message sent, balance sent. It might still have the barn-door property, but at least it has feedback.
 
