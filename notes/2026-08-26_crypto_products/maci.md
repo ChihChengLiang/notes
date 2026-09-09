@@ -33,7 +33,7 @@ July 2019 — First implementation begins
 : Barry Whitehat starts building the first MACI implementation on GitHub, kicking off years of community development alongside contributors including Kendrick Tan, Kobi Gurkan, and Koh Wei Jie.[@barrywhitehat-maci-github]
 
 2020 — clr.fund launches the first production deployment
-: clr.fund runs Round 0, the first real-world use of MACI: ten recipient projects split a roughly $1,000 Ethereum Foundation matching pool, funded quadratically from seventeen contributors, with the quadratic-funding tally computed inside a MACI zk-SNARK.[@clrfund-round0-review]
+: Auryn Macmillan founds clr.fund,[@iqwiki-auryn-macmillan] which runs Round 0, the first real-world use of MACI: ten recipient projects split a roughly $1,000 Ethereum Foundation matching pool, funded quadratically from seventeen contributors, with the quadratic-funding tally computed inside a MACI zk-SNARK.[@clrfund-round0-review]
 
 October 2021 — MACI 1.0 released
 : The Ethereum Foundation's Privacy & Scaling Explorations (PSE) team ships MACI 1.0, a major rewrite audited by Hashcloak, with better developer experience and lower gas costs.[@maci-1-0-release-2021]
@@ -66,7 +66,7 @@ June 2026 — Ethereum Foundation winds down PSE
 : Amid cutting 54 jobs and roughly 40% of its budget, the Ethereum Foundation winds down Privacy & Scaling Explorations — the team that built, audited, and maintained MACI for its entire production life.[@unchained-ef-cuts-2026]
 
 June 2026 — Interfold arrives, without a trusted coordinator
-: Aragon backs the launch of Interfold, a generalized privacy protocol for voting and sealed-bid auctions that reaches a verifiable shared outcome from encrypted inputs via distributed, threshold execution — with no single trusted operator ever seeing the plaintext. Vitalik Buterin calls it "basically what I've been yelling at people to build with the MACI ideas... for almost a decade, and now it exists, in a generalized form."[@theblock-interfold-2026] [@vitalik-interfold-tweet-2026]
+: Gnosis Guild — co-founded by Auryn Macmillan, the same person who founded clr.fund in 2020[@iqwiki-auryn-macmillan] — launches Interfold, with Aragon backing it as a generalized privacy protocol for voting and sealed-bid auctions that reaches a verifiable shared outcome from encrypted inputs via distributed, threshold execution and no single trusted operator ever seeing the plaintext. Vitalik Buterin calls it "basically what I've been yelling at people to build with the MACI ideas... for almost a decade, and now it exists, in a generalized form."[@theblock-interfold-2026] [@vitalik-interfold-tweet-2026]
 
 August 19, 2026 — Interfold's Network Alpha goes live on mainnet
 : The protocol's first production deployment ships with deliberately bounded capacity: early ciphernode committees cap out at 19 operators with a 9-of-19 threshold required for decryption — a controlled rollout rather than the fully open, permissionless network the design ultimately targets.[@interfold-network-alpha-2026]
