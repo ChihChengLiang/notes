@@ -143,13 +143,22 @@ I remember my neuro surgent friend who did a regular health check. He is out-exp
 
 I have personal experience too. I've developing zk related apps for years. However, when people hand me a new cryptography scheme, I realized a lack of capability to evaluate it. I noticed I'm only experienced at implementing cryptography, but not evaluating they are even sound in first place. That requires another type of years of training. I know when to question if a snark require a second phase setup, but take credence to a new snark scheme -- trusting cryptographers are doing their jobs well.
 
+For experts or people have been in crypto long enough, lot's of products built on top of programmable cryptography feels like experience good to them. Not to the average users with no experiencce in cryptography. They use it like credence good.
+
+We shouldn't think crypto products are just for experts. More people should enjoy the benefits the crypto products brings. Some of the features have positive externality too. We should minimize information leak from our everyday digital interactions. Those have real social costs to frauds and scams. More adoptions to crypto products have group immunity effects, so we should figure out a way for average people to adopt crypto products.
+
+The main problem for average people to adopt crypto products is underuse and misuse.
+
+- underuse: People lack of information on the value of product. So they don't adopt.
+- misuse: People know the value of the product, lack of knowledge to use it properly. This includes overuse case.
+
 ### Resolve and refine on the substitution vs. generation
 
 With the credence discussion in place, we can kind of refine the substitution and the generation view.
 
 We shouldn't see them as a dichotomy like the introduction section did.
 
-zkp2p is an interesting case. From a substitution view, we can ask an exchange to accept Venmo payment, that reproduced zkp2p with a 3rd party setup. The problem is that, unlike most of the substitution cases where 3rd party solution preceed crypto solutions, zkp2p happened first.
+zkp2p is an interesting case. One use case is zkTLS proving a transaction on Venmo, which you can then use to build a swap from USD to crypto. The user doesn't care how it's implemented in cryptography -- they just want to know whether their USD was successfully converted. From a substitution view, we can ask an exchange to accept Venmo payment, that reproduced zkp2p with a 3rd party setup. The problem is that, unlike most of the substitution cases where 3rd party solution preceed crypto solutions, zkp2p happened first.
 
 
 
@@ -157,7 +166,6 @@ As we can see, credence goods are terrible products -- they're ad hoc patches fo
 
 So we can decompose a product into an experience-good component and a credence-good component. When we build the experience-good part with cryptography, that's the novelty: we're delivering something with clear causality, observable even to inexperienced users -- message sent, balance sent. It might still have the barn-door property, but at least it has feedback.
 
-Take ZKp2p, for example. One use case is zkTLS proving a transaction on Venmo, which you can then use to build a swap from USD to crypto. The user doesn't care how it's implemented in cryptography -- they just want to know whether their USD was successfully converted.
 
 ## Implicit view vs Explicit view
 
