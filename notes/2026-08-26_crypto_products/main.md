@@ -112,6 +112,15 @@ Are there credence-good softwares? Yes.
 - PC cleaner/optimizer: it claims to fix some system performance problem. Most users have no way to verify that.
 - Ad blockers / privacy browsers that claim to block trackers: a user could open a second browser to verify this if they wanted to, but otherwise it just sits in the background, showing you a running count of ads and trackers blocked. It's interesting how hard these products work for your attention, when the best job they could do is stay invisible.
 
+### Credence-goodness is relative
+
+From the story of doctors and mechanics, we can tell that credence good is not an absolute property -- it depends on how much expertise you have to evaluate a a product.
+
+I remember my neuro surgent friend who did a regular health check. He is out-expert than the doctor who proform the check on the neuro panel, so he can critically point out some nuances that the GP failed to see. This shows that the diagosis is not a credence good to my friend, at least on the neuro panel.
+
+I have personal experience too. I've developing zk related apps for years. However, when people hand me a new cryptography scheme, I realized a lack of capability to evaluate it. I noticed I'm only experienced at implementing cryptography, but not evaluating they are even sound in first place. That requires another type of years of training. I know when to question if a snark require a second phase setup, but take credence to a new snark scheme -- trusting cryptographers are doing their jobs well.
+
+
 As we can see, credence goods are terrible products -- they're ad hoc patches for problems that shouldn't have existed in the first place. [TODO: expand on this]
 
 So we can decompose a product into an experience-good component and a credence-good component. When we build the experience-good part with cryptography, that's the novelty: we're delivering something with clear causality, observable even to inexperienced users -- message sent, balance sent. It might still have the barn-door property, but at least it has feedback.
