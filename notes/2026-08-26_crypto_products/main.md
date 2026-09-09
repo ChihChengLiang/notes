@@ -30,7 +30,7 @@ We've named a few products here already -- some built by non-profits, some for-p
 
 ## Definitions and boundaries
 
-Crypto products, in our context, are products that use cryptography as a non-trivial component. Here we give only a rough definition here, because the Johnny properties listed below are what I consider the real distinguishing featues for crypto products.
+Crypto products, in our context, are products that operate cryptography as a non-trivial component. Here we give only a rough definition here, because the Johnny properties listed below are what I consider the real distinguishing featues for crypto products.
 
 Here are crypto products:
 - Signal messager: It contains many cryptography features. Let's just name one: Private Contact Discovery. It allows Signal to match your contacts without uploading the address book.
@@ -38,7 +38,7 @@ Here are crypto products:
 - PGP signer: users use digital signature here.
 - dark forest the game: it use zkp and smart contract has main in game mechanism
 - Cryptocurrency wallets. This is a crypto product and user needs to sign transactinos with it.
-- TOTP (Google Authenticator-style): User gets six digits from a derived from timestamp and shared secret with service. It's cryptography at work, so yes.
+- TOTP (Google Authenticator-style): User gets six digits from a derived from timestamp and shared secret with service. It's cryptography at work, so yes. SMS-based 2FA: User gets six digits sent to their phone. The point is to check if user own the phone number. No cryptography at work.
 
 Here are products that relates to cryptography or cryptocurrencies, but are not crypto products:
 
@@ -46,8 +46,7 @@ Here are products that relates to cryptography or cryptocurrencies, but are not 
 - Etherscan: A dashbord to help users to search a transaction or block histories of a blockchain.
 - l2beat: Reports a summary of L2 projects. Highly related to blockchain but users don't interact with cryptography 
 - Anti-virus software. It is a security product, but the core feature is irrelavent to cryptography at all.
-- Bank apps: They might use HTTPS and authentication for users consent. But those are standard low level infrastructure. Users might need to login with password and do a 2FA sign-in. but those features are trivial.
-- SMS-based 2FA: User gets six digits sent to their phone. The point is to check if user own the phone number. No cryptography at work.
+- Bank apps: They might use HTTPS and password authentication. But those are those are widely deployed measures and not unique to banks.
 
 We also exclude developer toolings from the definition of crypto products. Circom is a tooling to build zk circuits, but to write a circuit with it, the developer don't use any live cryptography feature at all.
 
@@ -108,7 +107,7 @@ It also means a product that improves one specific domain of security can feel w
 
 #### Adversarial driven
 
-Security products are designed around a threat model assumption -- including assumptions about your attacker's capabilities. You have to change how you use a multisig safe once North Korean hackers can compromise the UI. You need to migrate to post-quantum cryptography once you assume attackers are getting closer to breaking classical cryptography.
+Security products are designed around a threat model assumption -- including assumptions about your attacker's capabilities. Bybit attack shows you have to change how you use a multisig safe once North Korean hackers can compromise the UI. You need to migrate to post-quantum cryptography once you assume attackers are getting closer to breaking classical cryptography.
 
 
 ## Credence good: Doctors and mechanics
@@ -149,7 +148,7 @@ We shouldn't think crypto products are just for experts. More people should enjo
 
 The main problem for average people to adopt crypto products is underuse and misuse.
 
-- underuse: People lack of information on the value of product. So they don't adopt.
+- underuse: People lack of information on the value of product. So they don't adopt. Usually this is abstraction + lack of feedback + barn door at work caused the unmotivated user.
 - misuse: People know the value of the product, lack of knowledge to use it properly. This includes overuse case.
 
 ### Resolve and refine on the substitution vs. generation
@@ -161,8 +160,6 @@ We shouldn't see them as a dichotomy like the introduction section did.
 zkp2p is an interesting case. One use case is zkTLS proving a transaction on Venmo, which you can then use to build a swap from USD to crypto. The user doesn't care how it's implemented in cryptography -- they just want to know whether their USD was successfully converted. From a substitution view, we can ask an exchange to accept Venmo payment, that reproduced zkp2p with a 3rd party setup. The problem is that, unlike most of the substitution cases where 3rd party solution preceed crypto solutions, zkp2p happened first.
 
 
-
-As we can see, credence goods are terrible products -- they're ad hoc patches for problems that shouldn't have existed in the first place. [TODO: expand on this]
 
 So we can decompose a product into an experience-good component and a credence-good component. When we build the experience-good part with cryptography, that's the novelty: we're delivering something with clear causality, observable even to inexperienced users -- message sent, balance sent. It might still have the barn-door property, but at least it has feedback.
 
