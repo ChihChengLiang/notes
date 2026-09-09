@@ -28,6 +28,25 @@ I think understanding this strange nature of crypto products helps us think abou
 
 We've named a few products here already -- some built by non-profits, some for-profits, some government standards. We'll come back to these.
 
+## Definitions and boundaries
+
+Crypto products, in our context, are products that use cryptography as a non-trivial component or feature.
+
+Here are crypto products:
+- Signal:
+- HTTPS: We could argue the a browser is a crypto product. It helps users to verify a signature.
+- PGP signer: users use digital signature here.
+- dark forest the game: it use zkp and smart contract has main in game mechanism
+- Cryptocurrency wallets. This is a crypto product and user needs to sign transactinos with it.
+
+Here are products that relates to cryptography or cryptocurrencies, but are not crypto products:
+
+- Rotki, a dashboard to help you keep track of your cryptocurrency portfolio.
+- Etherscan: A dashbord to help users to search a transaction or block histories of a blockchain.
+- l2beat: Reports a summary of L2 projects. Highly related to blockchain but users don't interact with cryptography 
+- Anti-virus software. It is a security product, but use no cryptography at all.
+
+
 ## The Tale of Johnny
 
 > The design priorities required to achieve usable security ... are significantly different from those of general consumer software. [@whittenWhyJohnnyCant1999]
