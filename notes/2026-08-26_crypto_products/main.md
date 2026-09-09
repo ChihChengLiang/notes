@@ -46,7 +46,7 @@ Here are products that relates to cryptography or cryptocurrencies, but are not 
 - Etherscan: A dashbord to help users to search a transaction or block histories of a blockchain.
 - l2beat: Reports a summary of L2 projects. Highly related to blockchain but users don't interact with cryptography 
 - Anti-virus software. It is a security product, but the core feature is irrelavent to cryptography at all.
-- Bank apps: They might use HTTPS and password authentication. But those are those are widely deployed measures and not unique to banks.
+- Bank apps: They might use HTTPS and password authentication. but the browser implements and verifies the protocol; the bank app merely consumes a browser that already did.
 
 We also exclude developer toolings from the definition of crypto products. Circom is a tooling to build zk circuits, but to write a circuit with it, the developer don't use any live cryptography feature at all.
 
@@ -159,7 +159,7 @@ We shouldn't see them as a dichotomy like the introduction section did.
 
 zkp2p is an interesting case. One use case is zkTLS proving a transaction on Venmo, which you can then use to build a swap from USD to crypto. The user doesn't care how it's implemented in cryptography -- they just want to know whether their USD was successfully converted. From a substitution view, we can ask an exchange to accept Venmo payment, that reproduced zkp2p with a 3rd party setup. The problem is that, unlike most of the substitution cases where 3rd party solution preceed crypto solutions, zkp2p happened first.
 
-
+For the layperson, zkp2p is just a substitution of what they usually do in exchange. The USD to crypto swap remains the same. For experts, they see zkp2p is something new. 
 
 So we can decompose a product into an experience-good component and a credence-good component. When we build the experience-good part with cryptography, that's the novelty: we're delivering something with clear causality, observable even to inexperienced users -- message sent, balance sent. It might still have the barn-door property, but at least it has feedback.
 
