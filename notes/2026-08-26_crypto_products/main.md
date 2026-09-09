@@ -55,6 +55,12 @@ Security is insurance against bad events. For users to act, the bad event has to
 
 > Computer security management often involves security policies, which are systems of abstract rules for deciding whether to grant accesses to resources. The creation and management of such rules is an activity that programmers take for granted, but which may be alien and unintuitive to many members of the wider user population. User interface design for security will need to take this into account. [@whittenWhyJohnnyCant1999]
 
+The original paper talked about policies. But let's recognize the fact that cryptography itself is abstract. 
+
+For example, what is a digital signature? We are attaching a docuemnt some very specific bytes, which is verifible with an algorithsm, that only people holds a specific knowledge, the secret key, could pass the algorithm check.
+
+We have to rely on lots of analogies, like signing on a paper, keys to a door, to transfer users knowledge about physical world to reason the new physics of data. And sometimes the analogy failed in a spectacle way, like what does it mean to "sign" a message with a "key"? Typically, people sign on a paper with a pen.
+
 ### The lack of feedback property
 
 > The need to prevent dangerous errors makes it imperative to provide good feedback to the user, but providing good feedback for security management is a difficult problem.  The state of a security configuration is usually complex, and attempts to summarize it are not adequate.  Furthermore, the correct security configuration is the one which does what the user *really wants*, and since only the user knows what that is, it is hard for security software to perform much useful error checking. [@whittenWhyJohnnyCant1999]
