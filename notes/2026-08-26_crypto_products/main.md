@@ -26,15 +26,12 @@ In fact, most of the successful cryptography projects I can think of stay silent
 
 I think understanding this strange nature of crypto products helps us think about the relationship between the products and their users, who should build these products, and how.
 
-We've named a few products here already -- some built by non-profits, some for-profits, some government standards. We'll come back to these.
-
 ## Definitions and boundaries
 
 Crypto products, in our context, are products that use cryptography as a non-trivial component. We give only a rough definition here, because the Johnny properties listed below are what I consider the real distinguishing features of crypto products.
 
 Here are crypto products:
 - **Signal messenger:** it contains many cryptography features. Let's just name one -- Private Contact Discovery, which lets Signal match your contacts without uploading your address book.
-- **HTTPS:** we could argue a browser is a crypto product -- it helps users verify a signature.
 - **PGP signing:** users use digital signatures here.
 - **Dark Forest (the game):** it uses ZKPs and smart contracts as a core in-game mechanism.
 - **Cryptocurrency wallets:** a crypto product, since the user needs to sign transactions with it.
@@ -164,19 +161,11 @@ For the layperson, zkp2p is just a substitute for what they'd otherwise do at an
 
 So we can decompose a product into an experience-good component and a credence-good component. When we build the experience-good part with cryptography, that's the novelty: we're delivering something with clear causality, observable even to inexperienced users -- message sent, balance sent. It might still have the barn-door property, but at least it has feedback.
 
-
-## Implicit view vs Explicit view
+### Implicit, Explicit, and Human in the Security Loop
 
 If we want users to know less about the cryptography at work, we can hide the details -- call this the implicit, or invisibility, view.
 
 If we want users to be aware of what they're doing with the cryptography, we want them educated about the details -- call this the explicit view.
-
-Note that "invisibility" implies a verification has happened behind the scenes -- the risk has actually been addressed.
-
-- **Engineered invisibility:** the complexity was resolved and then hidden. HTTPS is an example -- verification happens behind the scenes and the user can stay out of the loop.
-- **Obscurity:** the complexity was never resolved and the risk was never addressed. Blind-signing a transaction is "obscure," not engineered invisibility.
-
-### Human in the Security Loop
 
 We can build layers and tiers between implicit and explicit. I think the recent human-in-the-loop concept from AI engineering is helpful here.
 
@@ -196,6 +185,7 @@ We can build layers and tiers between implicit and explicit. I think the recent 
             - an international standards body
             - the government -- Taiwan's digital wallet is built as a mobile wallet on your behalf
 - **Invisible:** the infra is mature enough to work behind the scenes with no human in the loop. HTTPS is like this -- users can still opt in to visit an "unsafe" site, but only by crossing some intentional friction.
+    - Note that by invisible we're saying the situation that risk is addressed, not sweeping risk under the carpet. Blind-signing is **obscurity**, not an engineered invisibility.
 
 
 ## Weird product features
