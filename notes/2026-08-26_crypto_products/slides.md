@@ -28,27 +28,74 @@ pro.mashbean.net — full protocol trace: OpenID4VP, offline QR, iOS implementat
 
 ---
 
-## This is a live test of a selective-disclosure credential.
+## Pack up a package the old way
+
+<div class="columns" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
+<div>
+
+- Say your name
+- Last 3 digits of phone number
+- Present an ID
+
+<small>Fields on this ID: name, birth day, issue date, photo, gender, ID number, names of parents, name of the spouse, military service status, birth and current address </small>
+
+</div>
+
+<div>
+
+![](asset/id.jpg)
+
+</div>
+</div>
+
+---
+
+## Pick up a package with Digital Wallet
+
+
+<div class="columns" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+<div class="fragment">
+
+<img src="asset/twdiw-credentials.jpg" style="max-width:100%;height:auto;max-height:380px;">
+
+Credentials
+
+</div>
+<div class="fragment">
+
+<img src="asset/twdiw-fields.jpg" style="max-width:100%;height:auto;max-height:380px;">
+
+Selective disclosure
+
+</div>
+<div class="fragment">
+
+<img src="asset/twdiw-qr.jpg" style="max-width:100%;height:auto;max-height:380px;">
+
+</div>
+<div class="fragment">
+
+<img src="asset/backup-android.jpg" style="max-width:100%;height:auto;max-height:380px;">
+My Slop
+</div>
+
+</div>
+
+:::notes
+This is the real screen, mid-flow, right before that barcode got scanned. All that cryptographic work underneath, and the output is a QR code — one that even expires, just like any other. "This barcode has expired" is visible right there. It behaves exactly like a normal QR code, failure modes included.
+:::
+
+---
+
+## Live test of a selective-disclosure credential.
 
 ![](asset/7-11_livetest.jpeg)
 
 **It looks exactly like scanning a QR code.**
 
 :::notes
-7-11 register, real test — a credential that reveals only what the clerk needs to know, nothing else. From the outside, completely indistinguishable from any other barcode scan.
-That's the whole talk in one photo: does cryptography create a genuinely new experience for users, or does the best version of it just look like nothing happened?
-:::
-
----
-
-## What's actually happening on the phone
-
-![](asset/backup-android.jpg)
-
-Matching a stored card → signing the presentation → posting it → requesting the barcode.
-
-:::notes
-This is the real screen, mid-flow, right before that barcode got scanned. All that cryptographic work underneath, and the output is a QR code — one that even expires, just like any other. "This barcode has expired" is visible right there. It behaves exactly like a normal QR code, failure modes included.
+I was full of excitement
+but the flow is very mundane
 :::
 
 +++
@@ -62,8 +109,7 @@ This is the real screen, mid-flow, right before that barcode got scanned. All th
 </ul>
 
 :::notes
-MacBook/Steam anecdote: found out about a network privacy feature only because it slowed down a game.
-FHE multiplayer game demo: "do we need to build the real thing?" — only difference users feel is more friction.
+Think about your first ChatGPT experience. 
 :::
 
 ---
@@ -94,19 +140,6 @@ Cryptocurrency as the example that cuts both ways: "just a better bank app" vs. 
 We'll come back to this — it's not actually a dichotomy.
 :::
 
----
-
-## What actually counts as a "crypto product"?
-
-Uses cryptography as a **non-trivial component**.
-
-| Crypto product | Not a crypto product |
-|---|---|
-| Signal (Private Contact Discovery) | Rotki, Etherscan, l2beat |
-| PGP signing | Antivirus software |
-| Dark Forest (ZK + smart contracts) | Bank apps — the *browser* did the crypto |
-| Wallets, TOTP codes | SMS-based 2FA (no cryptography at all) |
-
 +++
 
 ## Why Johnny Can't Encrypt (1999)
@@ -117,21 +150,11 @@ Uses cryptography as a **non-trivial component**.
 
 The paper studied one piece of software: **PGP**.
 
-+++
-
-## PGP: right diagnosis, wrong fix
-
-<ul>
-<li class="fragment">1991 — released free; Zimmermann immediately under criminal investigation for "munitions export"</li>
-<li class="fragment">Encrypted email never went mainstream — key management stayed too manual</li>
-<li class="fragment">But the pattern survives, invisibly: <b>git commit signing, <code>apt</code>/<code>rpm</code> packages, SecureDrop</b></li>
-</ul>
-
 :::notes
-The exact software Whitten & Tygar diagnosed in '99. Consumers never got past the abstraction; infrastructure quietly absorbed the pattern instead.
+Users sent their secret key through the email.
 :::
 
-+++
+---
 
 ## Five properties that make cryptography a UX minefield
 
@@ -271,6 +294,38 @@ Trust didn't disappear — it moved, and shrank.
 <li class="fragment"><b>A nonprofit</b> — Let's Encrypt, the Signal Foundation</li>
 <li class="fragment"><b>The government</b> — Taiwan's digital wallet, built and issued for you</li>
 </ul>
+
+---
+
+## Taiwan's digital wallet, in practice
+
+<div class="columns" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
+<div class="fragment">
+
+<img src="asset/twdiw-credentials.jpg" style="max-width:100%;height:auto;max-height:380px;">
+
+Stored credentials
+
+</div>
+<div class="fragment">
+
+<img src="asset/twdiw-fields.jpg" style="max-width:100%;height:auto;max-height:380px;">
+
+Selective disclosure — reveal only what's needed
+
+</div>
+<div class="fragment">
+
+<img src="asset/twdiw-qr.jpg" style="max-width:100%;height:auto;max-height:380px;">
+
+Same QR-code pattern, this time for FamilyMart pickup
+
+</div>
+</div>
+
+:::notes
+Same flow as the 7-11 test, but this time government-issued: a telecom credential, selective disclosure down to "last 3 digits" or "last 5 digits" of a phone number, and a QR code that expires just like the other one did.
+:::
 
 +++
 
