@@ -1,12 +1,12 @@
 ---
-title: The Nature of Cryptography Products
+title: The Weird Nature of Cryptography Products
 ---
 
 +++ {"class": "title-slide"}
 
-# The Nature of Cryptography Products
+# The Weird Nature of Cryptography Products
 
-**Why they're invisible — and what credence goods teach us about building them**
+**Do they have to be invisible?**
 
 CC · 2026
 
@@ -299,130 +299,56 @@ Every product decomposes into two parts:
 
 +++
 
-## Credence-goodness is relative
+## Loop-engineering in Security
 
-<ul>
-<li class="fragment">A neurosurgeon isn't fooled by a routine GP scan on the same panel</li>
-<li class="fragment">I've built ZK apps for years — I can <em>implement</em> a SNARK</li>
-<li class="fragment">I still can't tell you if a <b>new</b> SNARK scheme is sound. That's a different, years-long kind of training.</li>
-</ul>
-
-To an expert, a lot of crypto products feel like experience goods. To everyone else, they're credence goods.
-
-+++
-
-## Two ways adoption fails
-
-<ul>
-<li class="fragment"><b>Underuse</b> — people don't know the value (abstraction + no feedback + barn door → unmotivated)</li>
-<li class="fragment"><b>Misuse</b> — people know the value, but use it wrong</li>
-</ul>
-
-:::notes
-Why this matters beyond individual users: information-leak minimization has positive externalities (fraud, scams), and wider adoption has herd-immunity effects. Worth designing for the average person, not just experts.
-:::
-
-+++
-
-## So — substitution, or generation?
-
-**zkp2p:** zkTLS turns a Venmo receipt into a proof → swap USD for crypto.
-
-<ul>
-<li class="fragment">To the <b>layperson</b>: just another way to swap currency. Substitution.</li>
-<li class="fragment">To the <b>expert</b>: a 20-year-old email signature standard (DKIM), repurposed into a trustless proof. Generation.</li>
-</ul>
-
-Same product. Different answer, depending on who's asking.
-
-:::notes
-zkEmail is literally built on DKIM — the boring, 20-year-old anti-spam standard every email already carries. The move is finding new leverage in old, ambient infrastructure.
-:::
-
-+++
-
-## If it's stuck as a credence good — what do we do?
+<div class="columns">
+<div>
 
 ```mermaid
 %% fragment
-flowchart LR
+flowchart TD
     A["Vulnerable"] --> B["Niche infra"] --> C["Explicit<br/>(requires attention)"] --> D["Invisible"]
 ```
 
+</div>
+<div>
+
+<ul>
+<li class="fragment"> Why loop you in: Threats present </li>
+<li class="fragment"> Why loop you out: Delegation works </li>
+    <ul>
+    <li class="fragment"> Machines know your intent really well </li>
+    <li class="fragment"> People behind machines (devs, govs, standard bodies) are aligned with you</li>
+    </ul>
+</ul>
+</div>
+</div>
+
+:::notes
+
 A design ladder: from HTTP-under-attack, to a product nobody's adopted yet, to one that works but demands attention, to one nobody thinks about.
 
-+++
+:::
+
+---
 
 ## Case study: HTTPS's 23-year climb
 
 <ul>
 <li class="fragment">1995 — SSL ships, credit-card pages only; cracked within a minute</li>
-<li class="fragment">2010–13 — Firesheep, then Snowden: "encrypt sensitive pages" → "encrypt everything"</li>
+<li class="fragment">2010–13 — Snowden: "encrypt sensitive pages" → "encrypt everything"</li>
 <li class="fragment">2016 — Let's Encrypt makes certificates free</li>
 <li class="fragment">2018 — Chrome marks <em>all</em> HTTP "not secure"</li>
 </ul>
 
-**The bottleneck was coordination, not cost.**
+<div class="fragment">
+
+**The bottleneck was coordination**
+
+</div>
 
 :::notes
 Compute overhead was under 2% of CPU even in 2010. The real toll was $50–150/year per certificate plus manual renewal — Let's Encrypt (a nonprofit, ~$7M/year) removed that, Chrome (a browser vendor) supplied the social pressure to switch. Neither alone was enough.
-:::
-
-+++
-
-## Case study: MACI climbs the ladder by removing itself
-
-<ul>
-<li class="fragment">2019 — MACI: a trusted <b>coordinator</b> + a SNARK that only proves it didn't lie about the tally</li>
-<li class="fragment">The coordinator still <em>sees</em> every plaintext vote</li>
-<li class="fragment">2026 — <b>Interfold</b>: no coordinator. A rotating threshold committee, structurally unable to produce a single plaintext vote</li>
-<li class="fragment">Same week: MACI's own repository is archived</li>
-</ul>
-
-Trust didn't disappear — it moved, and shrank.
-
-+++
-
-## Who absorbs the judgment?
-
-<ul>
-<li class="fragment"><b>The user</b> — educated into self-sovereignty</li>
-<li class="fragment"><b>The feature provider</b> — Chrome deciding HTTP is unsafe</li>
-<li class="fragment"><b>A standards body</b> — IETF (DKIM, OpenPGP), NIST (post-quantum crypto)</li>
-<li class="fragment"><b>A nonprofit</b> — Let's Encrypt, the Signal Foundation</li>
-<li class="fragment"><b>The government</b> — Taiwan's digital wallet, built and issued for you</li>
-</ul>
-
----
-
-## Taiwan's digital wallet, in practice
-
-<div class="columns" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
-<div class="fragment">
-
-<img src="asset/twdiw-credentials.jpg" style="max-width:100%;height:auto;max-height:380px;">
-
-Stored credentials
-
-</div>
-<div class="fragment">
-
-<img src="asset/twdiw-fields.jpg" style="max-width:100%;height:auto;max-height:380px;">
-
-Selective disclosure — reveal only what's needed
-
-</div>
-<div class="fragment">
-
-<img src="asset/twdiw-qr.jpg" style="max-width:100%;height:auto;max-height:380px;">
-
-Same QR-code pattern, this time for FamilyMart pickup
-
-</div>
-</div>
-
-:::notes
-Same flow as the 7-11 test, but this time government-issued: a telecom credential, selective disclosure down to "last 3 digits" or "last 5 digits" of a phone number, and a QR code that expires just like the other one did.
 :::
 
 +++
@@ -435,13 +361,3 @@ Same flow as the 7-11 test, but this time government-issued: a telecom credentia
 <li class="fragment"><b>Prefer absorbing judgment over educating the user</b> — ask who should actually own this problem</li>
 </ol>
 
-+++ {"class": "centered"}
-
-## Cryptography products aren't unimpressive.
-
-They're credence goods, doing their job by staying invisible.
-
-+++ {"class": "centered"}
-
-
-## Q&A
