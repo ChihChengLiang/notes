@@ -16,7 +16,7 @@ Inspired by a panel at Devcon Thailand 2024, plus a bunch of private conversatio
 
 +++
 
-## Inspired by Mashbean's Innitiative
+## Inspired by Mashbean's Initiative
 
 ![](asset/mashbean-report.png)
 
@@ -28,7 +28,7 @@ pro.mashbean.net — full protocol trace: OpenID4VP, offline QR, iOS implementat
 
 ---
 
-## Pack up a package the old way
+## Pick up a package the old way
 
 <div class="columns">
 <div>
@@ -37,7 +37,7 @@ pro.mashbean.net — full protocol trace: OpenID4VP, offline QR, iOS implementat
 - Last 3 digits of phone number
 - Present an ID
 
-<small>Fields on this ID: name, birth day, issue date, photo, gender, ID number, names of parents, name of the spouse, military service status, birth and current address </small>
+<small>Fields on this ID: name, date of birth, issue date, photo, gender, ID number, parents' names, spouse's name, military service status, place of birth, and current address</small>
 
 </div>
 
@@ -50,7 +50,7 @@ pro.mashbean.net — full protocol trace: OpenID4VP, offline QR, iOS implementat
 
 ---
 
-## Pick up a package with Digital Wallet
+## Pick up a package with a digital wallet
 
 
 <div class="columns" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
@@ -76,7 +76,9 @@ Selective disclosure
 <div class="fragment">
 
 <img src="asset/backup-android.jpg" style="max-width:100%;height:auto;max-height:380px;">
+
 My Slop
+
 </div>
 
 </div>
@@ -86,7 +88,7 @@ My Slop
 
 ---
 
-## Live test of a selective-disclosure credential.
+## Live test of a selective-disclosure credential
 
 ![](asset/7-11_livetest.jpeg)
 
@@ -108,7 +110,7 @@ but the flow is very mundane
 </ul>
 
 :::notes
-Think about your first ChatGPT experience. 
+Think about your first ChatGPT experience.
 :::
 
 ---
@@ -122,7 +124,7 @@ Cryptography is a **simulated trusted third party**.
 
 Everything it does, a trusted party could also do.
 
-It reproduces an existing experience. 
+It reproduces an existing experience.
 
 </div>
 <div class="fragment">
@@ -133,7 +135,7 @@ Cryptography is **true and real**.
 
 It enforces a new physics on data — some trust could never be built any other way.
 
-Can it create new experience?
+Can it create a new experience?
 
 </div>
 </div>
@@ -147,14 +149,14 @@ You can't print money, you can't double spend.
 
 +++
 
-## Cryptography product exceptionalism
+## The exceptionalism of cryptography products
 
 > The design priorities required to achieve usable security ... are significantly **different** from those of general consumer software.
 >
 > — Whitten & Tygar, Why Johnny Can't Encrypt (1999)
 
 :::notes
-Users sent their secret key through the email.
+Users sent their secret key over email.
 :::
 
 ---
@@ -178,7 +180,7 @@ Weakest link: a selective-disclosure wallet feels pointless if you already leake
 
 ---
 
-### Unmotivated User
+### Unmotivated user
 
 <div class="fragment">
 
@@ -192,7 +194,7 @@ Security is a secondary goal.
 People do not generally sit down at their computers wanting to manage their security.
 Users want to get a message sent, 
 Signal installs in Ukraine spiked only after the invasion
-Let me show you what a motivated user looks like. From Mashbean: wear amour to get breakfast.
+Let me show you what a motivated user looks like. From Mashbean: wear armor to get breakfast.
 :::
 
 ---
@@ -208,7 +210,7 @@ Let me show you what a motivated user looks like. From Mashbean: wear amour to g
 Rules are alien and unintuitive to users.
 
 :::notes
-Analogy are heavily relied.
+Analogies are heavily relied upon.
 :::
 
 ---
@@ -230,7 +232,7 @@ Analogy are heavily relied.
 
 </div>
 
-You can't tell if you did it right
+You can't tell if you did it right.
 
 :::notes
 https://eips.ethereum.org/EIPS/eip-7730
@@ -247,7 +249,7 @@ Lost private keys behave exactly like a lock left open once.
 
 
 :::notes
-What can the Coldcard's users do when they lost crypto in hack?
+What can Coldcard users do once they've lost crypto to a hack?
 :::
 
 ---
@@ -256,12 +258,12 @@ What can the Coldcard's users do when they lost crypto in hack?
 
 [![](asset/security.png)](https://xkcd.com/538/)
 
-Security of a whole is only as strong as its weakest part.
+A system is only as strong as its weakest link.
 
 
 
 :::notes
-Lots of security improvement might go unappreciated, because not on your weakest part.
+Lots of security improvements might go unappreciated because they're not on your weakest link.
 
 A selective-disclosure wallet feels pointless if you already leaked the same data via a store loyalty program.
 :::
@@ -278,8 +280,8 @@ A selective-disclosure wallet feels pointless if you already leaked the same dat
 </ul>
 
 :::notes
-I started to revist cryptography products I've used in my life.
-I also tried to use econs language to describe those Johnny properties.
+I started to revisit cryptography products I've used in my life.
+I also tried to use econ language to describe those Johnny properties.
 :::
 
 ---
@@ -299,7 +301,7 @@ Every product decomposes into two parts:
 
 +++
 
-## Loop-engineering in Security
+## Loop-engineering in security
 
 <div class="columns">
 <div>
@@ -314,8 +316,8 @@ flowchart TD
 <div>
 
 <ul>
-<li class="fragment"> Why loop you in: Threats present </li>
-<li class="fragment"> Why loop you out: Delegation works </li>
+<li class="fragment">Why loop you in: a threat is present</li>
+<li class="fragment">Why loop you out: delegation works</li>
     <ul>
     <li class="fragment"> Machines know your intent really well </li>
     <li class="fragment"> People behind machines (devs, govs, standard bodies) are aligned with you</li>
@@ -343,7 +345,7 @@ A design ladder: from HTTP-under-attack, to a product nobody's adopted yet, to o
 
 <div class="fragment">
 
-**The bottleneck was coordination**
+**The bottleneck was coordination.**
 
 </div>
 
