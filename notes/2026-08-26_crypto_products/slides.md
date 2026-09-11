@@ -30,7 +30,7 @@ pro.mashbean.net — full protocol trace: OpenID4VP, offline QR, iOS implementat
 
 ## Pack up a package the old way
 
-<div class="columns" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
+<div class="columns">
 <div>
 
 - Say your name
@@ -82,7 +82,6 @@ My Slop
 </div>
 
 :::notes
-This is the real screen, mid-flow, right before that barcode got scanned. All that cryptographic work underneath, and the output is a QR code — one that even expires, just like any other. "This barcode has expired" is visible right there. It behaves exactly like a normal QR code, failure modes included.
 :::
 
 ---
@@ -123,8 +122,10 @@ Cryptography is a **simulated trusted third party**.
 
 Everything it does, a trusted party could also do.
 
+It reproduces an existing experience. 
+
 </div>
-<div>
+<div class="fragment">
 
 ### Generation view
 
@@ -132,23 +133,25 @@ Cryptography is **true and real**.
 
 It enforces a new physics on data — some trust could never be built any other way.
 
+Can it create new experience?
+
 </div>
 </div>
 
 :::notes
-Cryptocurrency as the example that cuts both ways: "just a better bank app" vs. "a global ledger no bank coordination could ever build."
-We'll come back to this — it's not actually a dichotomy.
+reproduce -- when we remove enough friction
+new experience -- if we are blind to abstraction
+
+You can't print money, you can't double spend.
 :::
 
 +++
 
-## Why Johnny Can't Encrypt (1999)
+## Cryptography product exceptionalism
 
-> The design priorities required to achieve usable security ... are significantly different from those of general consumer software.
+> The design priorities required to achieve usable security ... are significantly **different** from those of general consumer software.
 >
-> — Whitten & Tygar
-
-The paper studied one piece of software: **PGP**.
+> — Whitten & Tygar, Why Johnny Can't Encrypt (1999)
 
 :::notes
 Users sent their secret key through the email.
@@ -158,13 +161,12 @@ Users sent their secret key through the email.
 
 ## Five properties that make cryptography a UX minefield
 
-<ul>
-<li class="fragment"><b>Unmotivated user</b> — security is a secondary goal</li>
-<li class="fragment"><b>Abstraction</b> — a new physics of data, not of paper and pens</li>
-<li class="fragment"><b>No feedback</b> — you can't tell if you did it right</li>
-<li class="fragment"><b>Barn door</b> — once leaked, always leaked</li>
-<li class="fragment"><b>Weakest link</b> — one gap undoes the rest</li>
-</ul>
+- Unmotivated user
+- Abstraction
+- No feedback
+- Barn door
+- Weakest link
+
 
 :::notes
 Unmotivated: Signal installs in Ukraine spiked only after the invasion; a RightsCon security advisor gave up buying YubiKeys for activists over funding.
@@ -173,6 +175,97 @@ No feedback: write your password on a sticky note, you won't find out what's wro
 Barn door: lost private keys behave exactly like a lock left open once.
 Weakest link: a selective-disclosure wallet feels pointless if you already leaked the same data via a store loyalty program.
 :::
+
+---
+
+### Unmotivated User
+
+<div class="fragment">
+
+![](asset/motivated_user.jpg)
+
+</div>
+
+Security is a secondary goal.
+
+:::notes
+People do not generally sit down at their computers wanting to manage their security.
+Users want to get a message sent, 
+Signal installs in Ukraine spiked only after the invasion
+Let me show you what a motivated user looks like. From Mashbean: wear amour to get breakfast.
+:::
+
+---
+
+### Abstraction
+
+<div class="fragment">
+
+![](asset/signing.jpg)
+
+</div>
+
+Rules are alien and unintuitive to users.
+
+:::notes
+Analogy are heavily relied.
+:::
+
+---
+
+### No feedback
+
+<div class="columns">
+
+<div>
+
+![](asset/clear_sign1.png)
+
+</div>
+<div class="fragment">
+
+![](asset/clear_sign2.png)
+
+</div>
+
+</div>
+
+You can't tell if you did it right
+
+:::notes
+https://eips.ethereum.org/EIPS/eip-7730
+https://clearsigning.org/
+:::
+
+---
+
+### Barn door
+
+![](asset/barn.jpg)
+
+Lost private keys behave exactly like a lock left open once.
+
+
+:::notes
+What can the Coldcard's users do when they lost crypto in hack?
+:::
+
+---
+
+### Weakest link
+
+[![](asset/security.png)](https://xkcd.com/538/)
+
+Security of a whole is only as strong as its weakest part.
+
+
+
+:::notes
+Lots of security improvement might go unappreciated, because not on your weakest part.
+
+A selective-disclosure wallet feels pointless if you already leaked the same data via a store loyalty program.
+:::
+
 
 +++
 
@@ -184,7 +277,12 @@ Weakest link: a selective-disclosure wallet feels pointless if you already leake
 <li class="fragment"><b>Credence good</b> — can't judge quality even after using it (a doctor's treatment)</li>
 </ul>
 
-+++
+:::notes
+I started to revist cryptography products I've used in my life.
+I also tried to use econs language to describe those Johnny properties.
+:::
+
+---
 
 ## Cryptography products are credence goods
 
