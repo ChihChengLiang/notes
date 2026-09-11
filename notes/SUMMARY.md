@@ -9,6 +9,7 @@
   - [PGP timeline](2026-08-26_crypto_products/pgp.md)
   - [DKIM timeline](2026-08-26_crypto_products/dkim.md)
   - [MACI timeline](2026-08-26_crypto_products/maci.md)
+  - [TOTP timeline](2026-08-26_crypto_products/totp.md)
 - [Tornado Cash & Privacy Pools: Two Timelines](2026-07-27_privacy_pools/main.md)
 - [ML-DSA Concrete Rounding](2026-05-27_mldsa/main.md)
 - [Proof Engineering](2026-05-21_proof-engineering/main.md)
