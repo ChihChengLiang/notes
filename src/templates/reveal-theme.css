@@ -164,6 +164,79 @@
   border: 0;
 }
 
+/* === Browser frame (URL bar + screenshot) ===
+   Markup:
+   <div class="browser-frame">
+     <div class="browser-frame-bar">
+       <span class="browser-frame-dots"><span></span><span></span><span></span></span>
+       <span class="browser-frame-url">https://example.com/page</span>
+     </div>
+     <img src="asset/screenshot.png">
+   </div>
+*/
+.reveal .browser-frame {
+  position: relative;
+  display: inline-block;
+  max-width: 92%;
+  margin: 0.5rem auto;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--custom-2);
+  text-align: left;
+}
+
+.reveal .browser-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--custom-9);
+  border-radius: 8px;
+  pointer-events: none;
+  filter: url(#hand-drawn);
+}
+
+.reveal .browser-frame-bar {
+  display: flex;
+  align-items: center;
+  padding: 0.5em 0.7em;
+  border-bottom: 1px solid var(--custom-7);
+}
+
+.reveal .browser-frame-dots {
+  display: flex;
+  gap: 0.3em;
+  flex: none;
+}
+
+.reveal .browser-frame-dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--custom-8);
+}
+
+.reveal .browser-frame-url {
+  flex: 1;
+  margin-left: 0.5em;
+  padding: 0.25em 0.9em;
+  background: var(--custom-1);
+  border-radius: 999px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.55em;
+  color: var(--custom-11);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reveal .browser-frame img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: none;
+  height: auto;
+}
+
 /* === Layout helpers === */
 .columns {
   display: grid;

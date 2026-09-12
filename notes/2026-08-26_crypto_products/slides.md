@@ -28,6 +28,20 @@ pro.mashbean.net — full protocol trace: OpenID4VP, offline QR, iOS implementat
 
 ---
 
+## Browser-frame template demo
+
+<div class="browser-frame">
+<div class="browser-frame-bar">
+<span class="browser-frame-dots"><span></span><span></span><span></span></span>
+<span class="browser-frame-url">parity.fund/graypunk/</span>
+</div>
+
+![](asset/parity-graypunk.png)
+
+</div>
+
+---
+
 ## Pick up a package the old way
 
 <div class="columns">
