@@ -16,7 +16,7 @@ The scenario is setup in a balanced setting. In an extreme case, the work starts
 
 Are there rules in this rules world? Are there invariants in the ever changing landscape? Here are collections of ideas I felt helpful in thinking things.
 
-## Validating Good Ideas
+## How to use intelligence
 
 ### The Bitter Lesson
 
@@ -60,7 +60,7 @@ Examples:
 - Programing languages were designed to optimize human's ability to reason with computation. With AI's cheap and powerful mental labors, we can ask AI to write machine code and formal verification codes, aka the "Final Form."
 - Github is designed for human to collaborate on code projects. A pull request is meant to be read and understood. What would souce code management mean with AIs? Who should AI collaborate? Redesigns should be en route.
 
-## Seeing where this is going
+## What stays scarce when intelligence is cheap
 
 ### Jevons Paradox
 
@@ -71,4 +71,14 @@ Examples:
 - Efficient coal buring factories caused more consumption of coal.
 - Fuel efficient cars lead to more fuel use.
 - Tokens, or efficient use of computations would cause more demands.
+
+
+## Why the economy doesn't grow instantly
+
+software is about 2% of the economy. So imagine you have unlimited software, the economy only grows for 2%. That's because we have weakest links in the economy. https://www.youtube.com/watch?v=xBpGn3BDcOY
+
+
+## Security: where weakest links flip
+
+for security, weakest links behave differently, so virus, info attacks, nuclear weapons are dangerous
 
