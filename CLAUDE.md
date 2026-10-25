@@ -17,9 +17,9 @@ This is a **Bun + TypeScript** static site generator for research notes and slid
 
 ### Two output pipelines
 
-**Notes** (`notes/<topic>/main.md`) are rendered through `src/markdown-processor.ts` (markdown-it with plugins) into an HTML shell defined in `src/templates/article.html`.
+**Notes** (`notes/<topic>/main.md`) are rendered through `src/markdown-processor.ts` (MyST: `myst-parser` → `myst-to-html` with custom hast handlers) into an HTML shell defined in `src/templates/article.html`.
 
-**Slides** (`notes/<topic>/slides.md`) are rendered by `src/site.ts:renderSlides()` into `src/templates/reveal.html`, a reveal.js 5 presentation loaded from CDN. Styling is split across `reveal-base.css` (reveal.js defaults) and `reveal-theme.css` (warm paper palette + custom overrides).
+**Slides** (`notes/<topic>/slides.md`) are rendered by `src/site.ts:renderSlides()` into `src/templates/reveal.html`, a reveal.js 5 presentation loaded from CDN.
 
 ### Content discovery
 
@@ -30,14 +30,12 @@ A report page can set `generated: true` in its own frontmatter to render a "Mach
 ### Key source files
 
 - `src/site.ts` — shared rendering logic used by both server and build (index HTML, per-topic HTML, slides rendering)
-- `src/markdown-processor.ts` — markdown-it pipeline: syntax highlighting (highlight.js + custom Lean language), anchor headings, biblatex citations, mermaid fences, TOC injection, custom table/hr renderers
-- `src/diagram.ts` — renders mermaid fences to SVG at build time with Pele
-- `src/server.ts` — Bun HTTP server with SSE live-reload; watches `notes/` and `src/templates/`
-- `src/build.ts` — static build; outputs to `dist/`
+- `src/markdown-processor.ts` — MyST pipeline; extensions are set in the two `mystParse` calls (notes and slides). A bare `:::` fence with no `{directive}` renders as a code block, not a container
+- `src/server.ts` — Bun HTTP server with SSE live-reload; watches only `notes/` and `src/templates/`, so changes to `src/*.ts` need a server restart
 
 ### Template assets (`src/templates/`)
 
-Static files copied verbatim to `dist/`: `theme.css`, `styles.css`, `client.js`, `reveal-base.css`, `reveal-theme.css`, `reveal-print.css`. The `article.html` and `reveal.html` shells are never copied; they are inlined server-side.
+The `article.html` and `reveal.html` shells are never copied to `dist/`; they are inlined server-side. Other files are copied verbatim only if listed in `STATIC_FILES` in `src/build.ts`; add new template files there.
 
 ### Slides theme
 
@@ -47,11 +45,11 @@ Static files copied verbatim to `dist/`: `theme.css`, `styles.css`, `client.js`,
 
 ### Citation support
 
-Notes with a `citation.biblatex` file in their directory get biblatex citations rendered with author-year tooltips. The markdown-it-biblatex plugin handles inline `[@key]` syntax.
+All notes share one bibliography, `notes/citations.bib`. `bun run cite <query>` appends an entry from Zotero (via Better BibTeX); hand-written `@online` entries are fine too. Cite inline with `[@key]`, and end the note with a `:::{bibliography}` directive to list the cited sources.
 
 ### Math
 
-KaTeX is loaded from CDN in `article.html` and `reveal.html`, running client-side via `auto-render.min.js`. Delimiters: `$…$` (inline), `$$…$$` (display), `\(…\)`, `\[…\]`.
+Rendered at build time with KaTeX. Only `$…$` and `$$…$$` work; `\(…\)` and `\[…\]` are not parsed.
 
 ### Mermaid
 
