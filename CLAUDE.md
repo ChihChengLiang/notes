@@ -31,12 +31,13 @@ A report page can set `generated: true` in its own frontmatter to render a "Mach
 
 - `src/site.ts` — shared rendering logic used by both server and build (index HTML, per-topic HTML, slides rendering)
 - `src/markdown-processor.ts` — markdown-it pipeline: syntax highlighting (highlight.js + custom Lean language), anchor headings, biblatex citations, mermaid fences, TOC injection, custom table/hr renderers
+- `src/diagram.ts` — renders mermaid fences to SVG at build time with Pele
 - `src/server.ts` — Bun HTTP server with SSE live-reload; watches `notes/` and `src/templates/`
 - `src/build.ts` — static build; outputs to `dist/`
 
 ### Template assets (`src/templates/`)
 
-Static files copied verbatim to `dist/`: `theme.css`, `styles.css`, `client.js`, `mermaid-init.js`, `reveal-base.css`, `reveal-theme.css`, `reveal-print.css`. The `article.html` and `reveal.html` shells are never copied; they are inlined server-side.
+Static files copied verbatim to `dist/`: `theme.css`, `styles.css`, `client.js`, `reveal-base.css`, `reveal-theme.css`, `reveal-print.css`. The `article.html` and `reveal.html` shells are never copied; they are inlined server-side.
 
 ### Slides theme
 
@@ -54,4 +55,4 @@ KaTeX is loaded from CDN in `article.html` and `reveal.html`, running client-sid
 
 ### Mermaid
 
-Mermaid fences are rendered as `<pre class="mermaid">` by the markdown processor. `src/templates/mermaid-init.js` exports `initMermaid({ startOnLoad })` which reads the `--custom-*` CSS palette and passes it as mermaid `themeVariables`. Notes call it with `startOnLoad: true`; slides call it with `startOnLoad: false` and run mermaid manually in `Reveal.on('ready')`.
+Mermaid fences are rendered to SVG at build time by `src/diagram.ts` using [Pele](https://pele.run) — no diagram JS ships to the browser. Colors come from `--pele-*` CSS variables mapped onto the `--custom-*` palette in `styles.css` and `reveal-theme.css`, so dark mode switches without re-rendering. `$$…$$` in labels is typeset with KaTeX (width estimated, since there's no DOM). Label widths use a Noto Serif JP width table in `diagram.ts`; re-measure it if the font changes. Pele parses but doesn't draw `e1@{ animate: true }` or `animation:` in a classDef, so `diagram.ts` re-applies both with a style block scoped to the diagram. In slides, a `%% fragment` comment opts a diagram into per-node (flowchart) or per-message (sequence) click-to-reveal, wired in `reveal.html` via Pele's `data-id` attributes.

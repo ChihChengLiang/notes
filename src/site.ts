@@ -1,7 +1,7 @@
 import yaml from "js-yaml";
 import { renderMyst, renderSlidesSections, injectToc } from "./markdown-processor";
 
-export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "mermaid-init.js", "reveal-theme.css", "reveal-base.css", "reveal-print.css"] as const;
+export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "reveal-theme.css", "reveal-base.css", "reveal-print.css"] as const;
 
 export interface SummaryPage {
   slug: string;
@@ -307,6 +307,5 @@ export function applyAssetPaths(template: string, prefix: string): string {
   return template
     .replace(/href="\/theme\.css"/g, `href="${prefix}/theme.css"`)
     .replace(/href="\/styles\.css"/g, `href="${prefix}/styles.css"`)
-    .replace(/src="\/client\.js"/g, `src="${prefix}/client.js"`)
-    .replace(/from '\/mermaid-init\.js'/g, `from '${prefix}/mermaid-init.js'`);
+    .replace(/src="\/client\.js"/g, `src="${prefix}/client.js"`);
 }

@@ -50,108 +50,55 @@
 })();
 </script>
 <script type="module">
-import { initMermaid, mermaid } from '{{root}}mermaid-init.js';
-
-initMermaid({ startOnLoad: false });
-
-// reveal.css hides every slide but .present by default. Flowchart diagrams
-// measure themselves via SVG getBBox(), which Firefox reports as 0 for
-// elements under a display:none ancestor, so force all slides visible
-// while Mermaid renders, then hand control back to Reveal's own CSS.
-const slideSections = document.querySelectorAll('.slides > section, .slides > section > section');
-slideSections.forEach((el) => { el.style.display = 'block'; });
-
 // A `%% fragment` comment anywhere in a mermaid block opts it into per-node
 // click-to-reveal: the first node shows immediately, then each following
-// node (plus the edge leading into it) becomes a Reveal fragment, so they
+// node (plus the edges leading into it) becomes a Reveal fragment, so they
 // fade in one step at a time along with the rest of the slide's fragments.
-const fragmentDiagrams = Array.from(document.querySelectorAll('pre.mermaid'))
-  .filter((el) => /%%\s*fragment\b/.test(el.textContent));
-fragmentDiagrams.forEach((el) => {
-  el.classList.add('js-fragment-reveal');
-  // Stash declaration-order node names from the SOURCE text before mermaid
-  // replaces this element's content — once subgraphs are involved, mermaid
-  // groups the rendered `.node` DOM by cluster rather than declaration
-  // order, so DOM order can't be trusted as the reveal sequence.
-  const order = [];
-  const re = /^\s*(\w+)\s*(?:\(\(|\[|\()/gm;
-  let match;
-  while ((match = re.exec(el.textContent))) {
-    if (!order.includes(match[1])) order.push(match[1]);
-  }
-  el.dataset.fragmentOrder = order.join(',');
-});
-
-// suppressErrors: a bad diagram renders an inline error instead of throwing —
-// otherwise one broken diagram would reject this await and Reveal.initialize()
-// below would never run, breaking navigation for the entire deck.
-await mermaid.run({ querySelector: 'pre.mermaid', suppressErrors: true });
-slideSections.forEach((el) => { el.style.display = ''; });
-
-document.querySelectorAll('pre.mermaid.js-fragment-reveal').forEach((el) => {
+// Diagrams are pre-rendered by Pele at build time (src/diagram.ts), which also
+// stashes the source declaration order in `data-fragment-order`.
+document.querySelectorAll('.diagram.js-fragment-reveal').forEach((el) => {
   const svg = el.querySelector('svg');
   if (!svg) return;
-  const nodes = Array.from(svg.querySelectorAll('.node'));
-  if (nodes.length > 0) {
-    // Flowcharts: every node is its own fragment, in SOURCE declaration
-    // order (see above — not DOM order, which subgraphs scramble). Edges
-    // are assigned by NAME (via mermaid's `data-id="L_<source>_<target>_<n>"`)
-    // to the LARGER of their two endpoints' reveal indices — not by array
-    // position — so a node with more than one incoming/outgoing edge still
-    // works.
-    const nameOf = (id) => (id.match(/-flowchart-(.+)-\d+$/) || [, id])[1];
-    const byName = new Map(nodes.map((n) => [nameOf(n.id), n]));
+  const reveal = (elm, index) => {
+    elm.classList.add('fragment');
+    elm.setAttribute('data-fragment-index', String(index));
+  };
+
+  if (svg.classList.contains('pele-flowchart')) {
+    // Every node is its own fragment, in SOURCE declaration order.
+    const byName = new Map(Array.from(svg.querySelectorAll('.pele-node[data-id]'), (n) => [n.dataset.id, n]));
     const declared = (el.dataset.fragmentOrder || '').split(',').filter((n) => byName.has(n));
     byName.forEach((_, name) => { if (!declared.includes(name)) declared.push(name); });
+    const indexByName = new Map(declared.map((name, i) => [name, i]));
+    declared.forEach((name, i) => reveal(byName.get(name), i));
 
-    const indexByName = new Map();
-    declared.forEach((name, i) => {
-      const node = byName.get(name);
-      node.classList.add('fragment');
-      node.setAttribute('data-fragment-index', String(i));
-      indexByName.set(name, i);
+    // An edge `L_<source>_<target>_<n>` appears with the LATER of its two
+    // endpoints. A manually-named edge (`e1@==>`) loses its endpoints in
+    // data-id, so fall back to its position among edges. Edge labels share
+    // their edge's data-id.
+    const edgeIndex = new Map();
+    svg.querySelectorAll('.pele-edge[data-id]').forEach((edge, i) => {
+      const m = edge.dataset.id.match(/^L_(.+?)_(.+?)_\d+$/);
+      const index = m ? Math.max(indexByName.get(m[1]) ?? -1, indexByName.get(m[2]) ?? -1, 0) : i;
+      edgeIndex.set(edge.dataset.id, index);
+      reveal(edge, index);
     });
-
-    const edgePaths = Array.from(svg.querySelectorAll('.edgePaths > path'));
-    const edgeIndices = edgePaths.map((path, i) => {
-      // A manually-named edge (`e1@==>`, used for the `animate: true` arrows
-      // elsewhere in this deck) loses its source/target in data-id — it's
-      // just the literal name "e1". Fall back to the edge's own position
-      // among edges in that case, matching this function's pre-rename behavior.
-      const m = (path.getAttribute('data-id') || '').match(/^L_(.+?)_(.+?)_\d+$/);
-      if (!m) return i;
-      return Math.max(indexByName.get(m[1]) ?? -1, indexByName.get(m[2]) ?? -1, 0);
-    });
-    edgePaths.forEach((path, i) => {
-      path.classList.add('fragment');
-      path.setAttribute('data-fragment-index', String(edgeIndices[i]));
-    });
-
-    // Edge labels don't carry `data-id`, but mermaid emits them in the same
-    // order as their edges (as duplicate pairs — a visible copy plus a
-    // background copy), so distribute them proportionally across edges.
-    const edgeLabels = Array.from(svg.querySelectorAll('.edgeLabels > .edgeLabel'));
-    const labelsPerEdge = edgePaths.length > 0 ? (edgeLabels.length / edgePaths.length) || 1 : 1;
-    edgeLabels.forEach((label, i) => {
-      const edgeIndex = Math.min(Math.floor(i / labelsPerEdge), edgeIndices.length - 1);
-      label.classList.add('fragment');
-      label.setAttribute('data-fragment-index', String(edgeIndices[edgeIndex] ?? 0));
+    svg.querySelectorAll('.pele-edge-label[data-id]').forEach((label) => {
+      reveal(label, edgeIndex.get(label.dataset.id) ?? 0);
     });
     return;
   }
 
-  // Sequence diagrams: participant boxes/lifelines stay always visible;
-  // each message becomes one fragment. Mermaid emits every message as a
-  // `.messageText` immediately followed by its `.messageLine0`/`.messageLine1`
-  // sibling (no shared wrapper element), in source order, so pairing up
-  // consecutive matches here reconstructs one fragment step per message.
-  const messageEls = Array.from(svg.querySelectorAll('.messageText, .messageLine0, .messageLine1'));
-  for (let i = 0; i < messageEls.length; i += 2) {
-    const index = i / 2;
-    [messageEls[i], messageEls[i + 1]].forEach((elm) => {
-      if (!elm) return;
-      elm.classList.add('fragment');
-      elm.setAttribute('data-fragment-index', String(index));
+  if (svg.classList.contains('pele-sequence')) {
+    // Participants stay visible; each message (arrow + its label, which share
+    // a data-id `i<n>` in source order) becomes one fragment step.
+    const ids = [];
+    svg.querySelectorAll('.pele-message[data-id]').forEach((msg) => {
+      if (!ids.includes(msg.dataset.id)) ids.push(msg.dataset.id);
+    });
+    ids.forEach((id, index) => {
+      svg.querySelectorAll(`.pele-message[data-id="${id}"], .pele-edge-label[data-id="${id}"]`)
+        .forEach((elm) => reveal(elm, index));
     });
   }
 });
