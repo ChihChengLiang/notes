@@ -58,7 +58,7 @@ Be mindful on what process is currently designed to optimize for human productiv
 Examples:
 
 - Programing languages were designed to optimize human's ability to reason with computation. With AI's cheap and powerful mental labors, we can ask AI to write machine code and formal verification codes, aka the "Final Form."
-- Github is designed for human to collaborate on code projects. A pull request is meant to be read and understood. What would souce code management mean with AIs? Who should AI collaborate? Redesigns should be en route.
+- Github is designed for human to collaborate on code projects. A pull request is meant to be read and understood. What would souce code management mean with AIs? Who should AI collaborate? Redesigns should be en route. 2026-10-13 We're seeing [exact changes](https://www.anthropic.com/research/redesigning-source-control) happened, at 30k PRs merged per day, cloning a copy of source code no longer makes sense.
 
 ## What stays scarce when intelligence is cheap
 
