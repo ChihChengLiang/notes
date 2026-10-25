@@ -1,5 +1,6 @@
 import { render, PeleError } from "pele";
 import katex from "katex";
+import { roughen } from "./rough-svg.ts";
 
 // Mermaid fences are rendered to SVG at build time with Pele (https://pele.run),
 // so pages ship no diagram JS. Colors come from `--pele-*` CSS variables mapped
@@ -86,7 +87,7 @@ function extraStyles(source: string, scope: string): string {
     rules.push(`#${scope} .pele-edge[data-id="${m[1]}"] > path:first-child { stroke-dasharray: 9 5; animation: diagram-dash 0.6s linear infinite; }`);
   }
   for (const m of source.matchAll(/^\s*classDef\s+(\w+)\s+.*?\banimation:([^,\n]+)/gm)) {
-    rules.push(`#${scope} .pele-node.${m[1]} > :first-child { animation: ${m[2].trim()}; }`);
+    rules.push(`#${scope} .pele-node.${m[1]} > .pele-rough { animation: ${m[2].trim()}; }`);
   }
   return rules.length ? `<style>${rules.join("\n")}</style>` : "";
 }
@@ -105,12 +106,13 @@ function declarationOrder(source: string): string[] {
 export function renderDiagram(source: string): string {
   const scope = `diagram-${Bun.hash(source).toString(36)}`;
   try {
-    const { svg } = render(source, {
+    const { svg: peleSvg } = render(source, {
       idPrefix: `${scope}-`,
       fontFamily: FONT_FAMILY,
       measurer: notoSerifMeasurer,
       math: renderMath,
     });
+    const svg = roughen(peleSvg, Number(BigInt(Bun.hash(source)) % 2147483647n));
     const fragment = /%%\s*fragment\b/.test(source);
     const attrs = fragment
       ? ` class="diagram js-fragment-reveal" data-fragment-order="${escapeHtml(declarationOrder(source).join(","))}"`
