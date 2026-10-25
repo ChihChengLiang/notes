@@ -1,5 +1,6 @@
 # Summary
 
+- [Helpful Ideas to Think About AI](2026-10-05_ai_ideas/main.md)
 - [The Nature of Cryptography Products](2026-08-26_crypto_products/main.md)
   - [Programmable Cryptography and Ethereum — Devcon Panel](2026-08-26_crypto_products/pc_panel.md)
   - [MEV timeline](2026-08-26_crypto_products/mev.md)
