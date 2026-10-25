@@ -339,7 +339,7 @@ export async function renderMyst(
   bibPath: string | null
 ): Promise<{ html: string; date: string | null; title: string | null; generated: boolean }> {
   const tree = mystParse(content, {
-    extensions: { frontmatter: true, math: true, citations: bibPath !== null },
+    extensions: { frontmatter: true, math: true, strikethrough: true, citations: bibPath !== null },
     directives: [timelineDirective as any, youtubeDirective as any, bibliographyDirective as any],
   }) as any;
 
@@ -381,7 +381,7 @@ export async function renderSlidesSections(
   bibPath: string | null
 ): Promise<{ sections: string[]; title: string | null }> {
   const tree = mystParse(content, {
-    extensions: { frontmatter: true, math: true, blocks: true, citations: bibPath !== null },
+    extensions: { frontmatter: true, math: true, strikethrough: true, blocks: true, citations: bibPath !== null },
     directives: [timelineDirective as any, youtubeDirective as any, bibliographyDirective as any],
   }) as any;
 
