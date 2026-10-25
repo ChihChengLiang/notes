@@ -4,6 +4,7 @@ import katex from "katex";
 import hljs from "highlight.js";
 import yaml from "js-yaml";
 import leanHljs from "./lean.ts";
+import { renderDiagram } from "./diagram.ts";
 // @ts-ignore
 import { BibLatexParser } from "biblatex-csl-converter";
 
@@ -171,7 +172,7 @@ const codeHandler = {
   code(_h: any, node: any) {
     const lang: string | undefined = node.lang;
     if (lang === "mermaid") {
-      return { type: "raw", value: `<pre class="mermaid">${escapeHtml(node.value)}</pre>` };
+      return { type: "raw", value: renderDiagram(node.value) };
     }
     return { type: "raw", value: highlightCode(node.value, lang) };
   },

@@ -204,7 +204,7 @@ flowchart LR
     style C font-size:28px
     e1@{ animate: true }
 
-    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,stroke-dasharray:5 5,animation:mermaid-pulse 1.6s ease-in-out infinite
+    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,stroke-dasharray:5 5,animation:diagram-pulse 1.6s ease-in-out infinite
     class AA pulse
 ```
 
@@ -264,7 +264,7 @@ flowchart LR
     style C font-size:28px
     e1@{ animate: true }
 
-    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:mermaid-pulse 1.6s ease-in-out infinite
+    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:diagram-pulse 1.6s ease-in-out infinite
     class A pulse
 ```
 
@@ -314,7 +314,7 @@ flowchart LR
     e1@{ animate: true }
     e2@{ animate: true }
 
-    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:mermaid-pulse 1.6s ease-in-out infinite
+    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:diagram-pulse 1.6s ease-in-out infinite
     class B pulse
 ```
 
@@ -372,7 +372,7 @@ flowchart LR
     style B font-size:28px
     e2@{ animate: true }
 
-    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:mermaid-pulse 1.6s ease-in-out infinite
+    classDef pulse fill:#f3e3dc,stroke:#993a31,stroke-width:2px,font-size:28px,animation:diagram-pulse 1.6s ease-in-out infinite
     class C pulse
 ```
 

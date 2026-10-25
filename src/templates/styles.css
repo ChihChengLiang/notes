@@ -545,9 +545,42 @@ nav.toc li {
 /* sorry/admit stand out as a warning */
 .hljs-sorry { color: #a63220; font-weight: 600; }
 
-/* Mermaid diagram styling */
-.mermaid {
+/* Diagrams: mermaid fences pre-rendered to SVG by Pele (src/diagram.ts) */
+.pele {
+  /* masks edges behind labels; --custom-2 sits closest to the textured paper */
+  --pele-bg: var(--custom-2);
+  --pele-fg: var(--custom-12);
+  --pele-muted: var(--custom-10);
+  --pele-line: var(--custom-9);
+  --pele-surface: var(--custom-2);
+  --pele-surface-alt: var(--custom-3);
+  --pele-border: var(--custom-9);
+  --pele-accent: var(--custom-11);
+  --pele-font: "Noto Serif JP", Georgia, "Times New Roman", serif;
+}
+
+.diagram {
   padding: 1.5rem;
+  text-align: center;
+}
+
+.diagram-math {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+}
+
+.diagram-error {
+  color: #a63220;
+  white-space: pre-wrap;
+}
+
+/* Edges marked `e1@{ animate: true }` in the diagram source */
+@keyframes diagram-dash {
+  to { stroke-dashoffset: -14; }
 }
 
 /* ── Article: B lab notebook ── */
