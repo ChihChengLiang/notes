@@ -1,7 +1,7 @@
 import yaml from "js-yaml";
 import { renderMyst, renderSlidesSections, injectToc } from "./markdown-processor";
 
-export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "reveal-theme.css", "reveal-base.css", "reveal-print.css"] as const;
+export const STATIC_FILES = ["theme.css", "styles.css", "client.js", "dog.js", "reveal-theme.css", "reveal-base.css", "reveal-print.css"] as const;
 
 export interface SummaryPage {
   slug: string;
