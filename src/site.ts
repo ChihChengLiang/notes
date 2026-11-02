@@ -307,5 +307,6 @@ export function applyAssetPaths(template: string, prefix: string): string {
   return template
     .replace(/href="\/theme\.css"/g, `href="${prefix}/theme.css"`)
     .replace(/href="\/styles\.css"/g, `href="${prefix}/styles.css"`)
-    .replace(/src="\/client\.js"/g, `src="${prefix}/client.js"`);
+    .replace(/src="\/client\.js"/g, `src="${prefix}/client.js"`)
+    .replace(/src="\/dog\.js"/g, `src="${prefix}/dog.js"`);
 }
