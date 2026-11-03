@@ -934,3 +934,10 @@ body:has(.index-nb) {
   background: var(--custom-5);
   margin: 0 1rem;
 }
+
+/* Mobile: keep wide content from stretching the page, which pushes the fixed
+   theme bar off-screen. Code scrolls inside its block; anything else is clipped. */
+@media (max-width: 700px) {
+  html, body { overflow-x: clip; }
+  pre.hljs { overflow-x: auto; }
+}
